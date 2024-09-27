@@ -1,0 +1,2 @@
+arm_planning/arm_kinematics_solver:arm_planning/aubo_arm_planning:arm_planning/aubo_arm_urdf/aubo_arm_l:arm_planning/aubo_arm_urdf/aubo_arm_r:arm_planning/gripper_use:arm_planning/llm_msgs:arm_planning/test_planning:trac_ik/trac_ik_examples:trac_ik/trac_ik_lib:trajectory_planner
+-DCATKIN_DEVEL_PREFIX=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel -DCMAKE_INSTALL_PREFIX=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/install -G Unix Makefiles

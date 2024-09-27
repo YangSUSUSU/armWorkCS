@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -g -g  -shared -Wl,-soname,libarm_qpik_solver.so -o /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/libarm_qpik_solver.so CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.o   -L/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/lib 

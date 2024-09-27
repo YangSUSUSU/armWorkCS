@@ -1,0 +1,8 @@
+prefix=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/install
+
+Name: test_planning
+Description: Description of test_planning
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib -ltest_planning
+Requires: roscpp arm_kinematics_solver
