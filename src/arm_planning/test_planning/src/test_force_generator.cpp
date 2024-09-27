@@ -17,9 +17,13 @@ public:
         double time = ros::Time::now().toSec(); // 获取当前时间
         force_.header.frame_id = "left_flange"; // 设置坐标系
         force_.header.stamp = ros::Time::now(); // 设置时间戳    
-        force_.wrench.force.x = 0.0 + 15.0 *sin(0.2*time) + 1.0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
-        force_.wrench.force.y = 0.0 + 15.0 *sin(0.2*time + M_PI / 4) + 1.0*(rand() % 10 - 5) / 10.0; // 不同相位
-        force_.wrench.force.z = 0.0 + 15.0 * sin(0.2*time + M_PI / 2) + 1.0*(rand() % 10 - 5) / 10.0; // 不同相位
+        force_.wrench.force.x = 0.0 + 0 *sin(0.2*time) + 0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
+        force_.wrench.force.y = 0.0 + 0 *sin(0.2*time + M_PI / 4) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
+        force_.wrench.force.z = 0.0 + 0 * sin(0.2*time + M_PI / 2) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
+
+        force_.wrench.torque.x = 0.0 + 0.0 *sin(0.2*time) + 0.0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
+        force_.wrench.torque.y = 0.0 + 0.0 *sin(0.2*time + M_PI / 4) + 0.0*(rand() % 10 - 5) / 10.0; // 不同相位
+        force_.wrench.torque.z = 0.0 + 0.1 * sin(0.2*time + M_PI / 2) + 0.0*(rand() % 10 - 5) / 10.0; // 不同相位
 
         pub_.publish(force_);
     }

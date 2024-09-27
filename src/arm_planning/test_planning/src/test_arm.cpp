@@ -292,8 +292,11 @@ public:
     ArmController(ros::NodeHandle& nh) 
         : filter_(5) {  // 初始化平滑滤波器，窗口大小为5
         pub_ = nh.advertise<llm_msgs::hand_pose_req>("/hand_pose_req", 10);
-        sub_ = nh.subscribe("desired_position", 10, &ArmController::positionCallback, this);
-        joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
+        sub_ = nh.subscribe("desired_pose", 10, &ArmController::positionCallback, this);
+        // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
+                // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
+                joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
+
         test_trajectory_pub_ = nh.advertise<geometry_msgs::Point>("desired_trajectory", 10); // 初始化话题发布者
 
 
@@ -348,15 +351,19 @@ public:
         L_grasp_pose[2] = InitPoseT(2, 3);
     }
 
-    void positionCallback(const geometry_msgs::Vector3::ConstPtr& msg) {
+    void positionCallback(const geometry_msgs::Pose::ConstPtr& msg) {
         // 将接收到的位置数据传递给滤波器
-        std::array<double, 3> input_position = {msg->x, msg->y, msg->z};
+        std::array<double, 3> input_position = {msg->position.x, msg->position.y, msg->position.z};
         auto filtered_position = filter_.filter(input_position);
 
         // 更新 xx, yy, zz 为滤波后的值
         xx = filtered_position[0];
         yy = filtered_position[1];
         zz = filtered_position[2];
+        qx = msg->orientation.x;
+        qy = msg->orientation.y;
+        qz = msg->orientation.z;
+        qw = msg->orientation.w;
     }
 
     void first() {
@@ -370,6 +377,18 @@ public:
         L_grasp_pose = {0.432496 - 0.035, 0.162388 + 0.015, 0.276278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
         R_grasp_pose = {0.384662, -0.109894, 0.14731, 0.7415988, -0.01539735, 0.21900877, -0.63390008};
 
+        left_grasp_pose.hand_move_enable = 1;
+        left_grasp_pose.hand_side = 0;
+        left_grasp_pose.hand_reset = 1;
+        left_grasp_pose.pose_req.position.x = L_grasp_pose[0];
+        left_grasp_pose.pose_req.position.y = L_grasp_pose[1];
+        left_grasp_pose.pose_req.position.z = L_grasp_pose[2];
+        left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
+        left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
+        left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
+        left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
+        pub_.publish(left_grasp_pose);
+        // sleep(2);
         // 更新左抓握位置
         updateGraspPoses(left_grasp_pose, L_grasp_pose);
         // 更新右抓握位置
@@ -388,7 +407,7 @@ public:
 
     void initializeGraspPoses() {
         double time = ros::Time::now().toSec(); // 获取当前时间
-        ROS_INFO("Received desired position: x: %.8f, y: %.8f, z: %.8f", xx,yy,zz);
+        // ROS_INFO("Received desired position: x: %.8f, y: %.8f, z: %.8f", xx,yy,zz);
 
         Eigen::Vector3d delta_xyz(xx, yy, zz);
         auto nowTcp2b = Quat2T_matrix(L_grasp_pose);
@@ -404,10 +423,10 @@ public:
         left_grasp_pose.pose_req.position.x = L_grasp_pose[0];
         left_grasp_pose.pose_req.position.y = L_grasp_pose[1];
         left_grasp_pose.pose_req.position.z = L_grasp_pose[2];
-        left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
-        left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
-        left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
-        left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
+        left_grasp_pose.pose_req.orientation.x = qx;
+        left_grasp_pose.pose_req.orientation.y = qy;
+        left_grasp_pose.pose_req.orientation.z = qz;
+        left_grasp_pose.pose_req.orientation.w = qw;
 
         geometry_msgs::Point trajectory_point;
 
@@ -457,6 +476,10 @@ private:
     double xx;
     double yy;
     double zz;
+    double qx;
+    double qy;
+    double qz;
+    double qw;
 
     SmoothingFilter filter_; // 添加平滑滤波器
 };

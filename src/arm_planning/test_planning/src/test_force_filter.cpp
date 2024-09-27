@@ -89,30 +89,35 @@
 class SmoothingFilter {
 public:
     SmoothingFilter(size_t windowSize) : windowSize(windowSize), index(0) {
-        values.resize(windowSize, {0.0, 0.0, 0.0}); // 初始化数组
+        values.resize(windowSize, {0.0,0.0,0.0,0.0, 0.0, 0.0}); // 初始化数组
     }
 
-    std::array<double, 3> filter(const std::array<double, 3>& input_force) {
+    std::array<double, 6> filter(const std::array<double, 6>& input_force) {
         values[index] = input_force;
 
-        std::array<double, 3> smoothed_value = {0.0, 0.0, 0.0};
+        std::array<double, 6> smoothed_value = {0.0, 0.0, 0.0 , 0, 0, 0};
         for (const auto& val : values) {
             smoothed_value[0] += val[0];
             smoothed_value[1] += val[1];
             smoothed_value[2] += val[2];
+            smoothed_value[3] += val[3];
+            smoothed_value[4] += val[4];
+            smoothed_value[5] += val[5];
         }
 
         smoothed_value[0] /= windowSize;
         smoothed_value[1] /= windowSize;
         smoothed_value[2] /= windowSize;
-
+        smoothed_value[3] /= windowSize;
+        smoothed_value[4] /= windowSize;
+        smoothed_value[5] /= windowSize;
         index = (index + 1) % windowSize; // 更新索引
         return smoothed_value;
     }
 
 private:
     size_t windowSize; // 窗口大小
-    std::vector<std::array<double, 3>> values; // 存储最近的值
+    std::vector<std::array<double, 6>> values; // 存储最近的值
     int index; // 当前索引
 };
 
@@ -126,9 +131,10 @@ public:
     }
 
     void forceCallback(const geometry_msgs::WrenchStamped::ConstPtr& msg) {
-        std::array<double, 3> input_force = 
+        std::array<double, 6> input_force = 
         {
-            msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z
+            msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z,
+            msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z
         };
 
         auto filtered_force = filter_.filter(input_force);
@@ -139,6 +145,9 @@ public:
         output_msg.wrench.force.x = filtered_force[0];
         output_msg.wrench.force.y = filtered_force[1];
         output_msg.wrench.force.z = filtered_force[2];
+        output_msg.wrench.torque.x = filtered_force[4];
+        output_msg.wrench.torque.y = filtered_force[5];
+        output_msg.wrench.torque.z = filtered_force[6];
         pub_.publish(output_msg);
     }
 
