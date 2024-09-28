@@ -293,15 +293,14 @@ public:
         : filter_(5) {  // 初始化平滑滤波器，窗口大小为5
         pub_ = nh.advertise<llm_msgs::hand_pose_req>("/hand_pose_req", 10);
         sub_ = nh.subscribe("desired_pose", 10, &ArmController::positionCallback, this);
-        // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
-                // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
-                joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
+        joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
+        // joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
 
         test_trajectory_pub_ = nh.advertise<geometry_msgs::Point>("desired_trajectory", 10); // 初始化话题发布者
 
 
         first();
-        ros::Rate r(200);
+        ros::Rate r(199);
         while (ros::ok()) {
             initializeGraspPoses();
             publishGraspPoses();
@@ -387,7 +386,11 @@ public:
         left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
         left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
         left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
+        sleep(1);
         pub_.publish(left_grasp_pose);
+        sleep(1);
+
+
         // sleep(2);
         // 更新左抓握位置
         updateGraspPoses(left_grasp_pose, L_grasp_pose);
@@ -423,6 +426,10 @@ public:
         left_grasp_pose.pose_req.position.x = L_grasp_pose[0];
         left_grasp_pose.pose_req.position.y = L_grasp_pose[1];
         left_grasp_pose.pose_req.position.z = L_grasp_pose[2];
+        left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
+        left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
+        left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
+        left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
         left_grasp_pose.pose_req.orientation.x = qx;
         left_grasp_pose.pose_req.orientation.y = qy;
         left_grasp_pose.pose_req.orientation.z = qz;

@@ -49,8 +49,8 @@ public:
     AdmittanceController(ros::NodeHandle& nh) {
         // 初始化订阅者和发布者
         force_sub_ = nh.subscribe("filtered_force", 100, &AdmittanceController::forceCallback, this);
-        // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &AdmittanceController::jointStateCallback, this);
-        joint_state_sub = nh.subscribe("/joint_states", 10, &AdmittanceController::jointStateCallback, this);
+        joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &AdmittanceController::jointStateCallback, this);
+        //joint_state_sub = nh.subscribe("/joint_states", 10, &AdmittanceController::jointStateCallback, this);
 
         // position_pub_ = nh.advertise<geometry_msgs::Vector3>("desired_position", 100);
         position_pub_ = nh.advertise<geometry_msgs::Pose>("desired_pose", 100);
@@ -77,19 +77,21 @@ public:
     {
         // std::cout<<now_RR<<std::endl;
 
-        Eigen::Vector3d rotation_diff = rotationDifference(last_RR, now_RR);
-        const double M = 100.125;       //虚拟质量
-        const double B = 10.028;   //阻尼        
+        Eigen::Vector3d rotation_diff_A = rotationDifference(now_RR,last_RR);
+        const double M = 0.05;       //虚拟质量
+        const double B = 0.1;   //阻尼        
         double T=0.005;             //控制周期
+        Eigen::Vector3d rotation_diff = rotationDifference(last_RR,now_RR);
+
         Eigen::Vector3d  dv= rotation_diff/T;
-        Eigen::Vector3d  dxe=rotation_diff-(-dv)*T/2;  //减去自身期望运动分量
+        Eigen::Vector3d  dxe=rotation_diff_A-(-dv)*T/2;  //减去自身期望运动分量
         Eigen::Vector3d  temp_result = (torque-B*dxe)/M;
             // 使用 AngleAxis 直接将旋转矢量转换为旋转矩阵
         Eigen::AngleAxisd angle_axis(temp_result.norm(), temp_result.normalized());
         Eigen::Matrix3d rotation_matrix = angle_axis.toRotationMatrix();
         auto result = now_RR*rotation_matrix;
 
-        std::cout<<temp_result.transpose()<<std::endl;
+        // std::cout<<temp_result.transpose()<<std::endl;
 
         Eigen::Quaterniond quaternion(result); 
         return quaternion;
@@ -97,8 +99,8 @@ public:
     }
     double admittanceController_force(double last, double now, double force)
     {
-    const double M = 10.125;       //虚拟质量
-    const double B = 10.28;   //阻尼
+    const double M = 0.3;       //虚拟质量
+    const double B = 0.53;   //阻尼
     double T=0.005;             //控制周期
     double dv= (now-last)/T;
     double dxe=last-now-(-dv)*T/2;  //减去自身期望运动分量
@@ -128,7 +130,7 @@ public:
         arm_param_.eef_link="left_flange";
         arm_param_.joints_min ={-3.1415926,0        ,-2.268928,-1.779,-2.268928,-0.6454,-0.6454};
         arm_param_.joints_max ={0.7853981 ,1.7453292,2.2689280,0        , 2.268928, 0.6454, 0.6454};
-                if(first_force_received)
+        if(first_force_received)
         {
             sensorFrameMatrix<<0,-1,0,
                               1,0,0,
@@ -143,19 +145,19 @@ public:
             force(0)=msg->wrench.force.x;
             force(1)=msg->wrench.force.y;
             force(2)=msg->wrench.force.z;
-            force=now_R*force;
-            first_force_x=-force(0);
-            first_force_y=-force(1);
-            first_force_z=force(2);
-
+            force=sensorFrameMatrix*force;
+            first_force_x=-force(0)*30;
+            first_force_y=-force(1)*30;
+            first_force_z= force(2)*30;
+            std::cout<<first_force_x<<first_force_y<<first_force_z<<std::endl;
             Eigen::Vector3d torque;
             torque(0)=msg->wrench.torque.x;
             torque(1)=msg->wrench.torque.y;
             torque(2)=msg->wrench.torque.z;
             torque=sensorFrameMatrix*torque;
-            first_force_x=-torque(0);
-            first_force_y=-torque(1);
-            first_force_z=torque(2);
+            first_torque_x=-torque(0);
+            first_torque_y=-torque(1);
+            first_torque_z=torque(2);
             
             // slee
             position_pub_.publish(desired_position_);
@@ -172,10 +174,12 @@ public:
             force(1)=-force(1);
 
             Eigen::Vector3d torque;
-            torque(0)=msg->wrench.torque.x;
-            torque(1)=msg->wrench.torque.y;
-            torque(2)=msg->wrench.torque.z;
-            torque=now_R*torque;
+            torque(0)=msg->wrench.torque.x-first_torque_x;
+            torque(1)=msg->wrench.torque.y-first_torque_y;
+            torque(2)=msg->wrench.torque.z-first_torque_z;
+
+
+            torque=sensorFrameMatrix*torque;
             torque(0)=-torque(0);
             torque(1)=-torque(1);
 
@@ -277,9 +281,9 @@ private:
     double first_force_x=0.0;
     double first_force_y=0.0;
     double first_force_z=0.0;
-    double first_touqre_x=0.0;
-    double first_touqre_y=0.0;
-    double first_touqre_z=0.0;
+    double first_torque_x=0.0;
+    double first_torque_y=0.0;
+    double first_torque_z=0.0;
 
     bool first_force_received=true;
     ArmParam arm_param_;

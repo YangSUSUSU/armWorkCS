@@ -124,9 +124,9 @@ private:
 class ForceFilterNode {
 public:
     ForceFilterNode(ros::NodeHandle& nh) 
-        : filter_(200) {  // 设置窗口大小为5
-        // sub_ = nh.subscribe("human_arm_6dof_left", 10, &ForceFilterNode::forceCallback, this);
-        sub_ = nh.subscribe("noisy_force", 10, &ForceFilterNode::forceCallback, this);
+        : filter_(30) {  // 设置窗口大小为5
+        sub_ = nh.subscribe("human_arm_6dof_left", 10, &ForceFilterNode::forceCallback, this);
+        //sub_ = nh.subscribe("noisy_force", 10, &ForceFilterNode::forceCallback, this);
         pub_ = nh.advertise<geometry_msgs::WrenchStamped>("filtered_force", 10);
     }
 
@@ -145,9 +145,9 @@ public:
         output_msg.wrench.force.x = filtered_force[0];
         output_msg.wrench.force.y = filtered_force[1];
         output_msg.wrench.force.z = filtered_force[2];
-        output_msg.wrench.torque.x = filtered_force[4];
-        output_msg.wrench.torque.y = filtered_force[5];
-        output_msg.wrench.torque.z = filtered_force[6];
+        output_msg.wrench.torque.x = 0.001*filtered_force[3];
+        output_msg.wrench.torque.y = 0.001*filtered_force[4];
+        output_msg.wrench.torque.z = 0.001*filtered_force[5];
         pub_.publish(output_msg);
     }
 
