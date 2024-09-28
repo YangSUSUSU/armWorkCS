@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/nikooyang/aubo/aubo_ws2/aubo_ws2/build
 include arm_planning/llm_msgs/CMakeFiles/_llm_msgs_generate_messages_check_deps_hand_pose_req.dir/progress.make
 
 arm_planning/llm_msgs/CMakeFiles/_llm_msgs_generate_messages_check_deps_hand_pose_req:
-	cd /home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py llm_msgs /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg geometry_msgs/Point:std_msgs/Header:geometry_msgs/Pose:geometry_msgs/Quaternion
+	cd /home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py llm_msgs /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg std_msgs/Header:geometry_msgs/Pose:geometry_msgs/Point:geometry_msgs/Quaternion
 
 _llm_msgs_generate_messages_check_deps_hand_pose_req: arm_planning/llm_msgs/CMakeFiles/_llm_msgs_generate_messages_check_deps_hand_pose_req
 _llm_msgs_generate_messages_check_deps_hand_pose_req: arm_planning/llm_msgs/CMakeFiles/_llm_msgs_generate_messages_check_deps_hand_pose_req.dir/build.make

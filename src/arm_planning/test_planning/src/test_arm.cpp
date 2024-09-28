@@ -370,10 +370,13 @@ public:
         arm_param_.name = "left";
         arm_param_.base_link = "base_link";
         arm_param_.eef_link = "left_flange";
-        arm_param_.joints_min = {-3.1415926, 0, -2.268928, -1.779, -2.268928, -0.6454, -0.6454};
-        arm_param_.joints_max = {0.7853981, 1.7453292, 2.2689280, 0, 2.268928, 0.6454, 0.6454};
+        // arm_param_.joints_min = {-3.1415926, 0, -2.268928, -1.779, -2.268928, -0.6454, -0.6454};
+        arm_param_.joints_min ={-3.1415926,-0.174   ,-2.268928,-2.267,-3.14,-0.6454,-0.6454};
+        arm_param_.joints_max ={1.7853981 ,1.7453292,2.2689280,0        , 3.14, 0.6454, 0.6454};
 
-        L_grasp_pose = {0.432496 - 0.035, 0.162388 + 0.015, 0.276278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
+        L_grasp_pose = {0.432496-0.035, 0.162388 + 0.015, 0.276278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
+        // L_grasp_pose = {0.505169,0.323111,0.249817,0.0872157,0.631405,-0.11521,0.761871};
+
         R_grasp_pose = {0.384662, -0.109894, 0.14731, 0.7415988, -0.01539735, 0.21900877, -0.63390008};
 
         left_grasp_pose.hand_move_enable = 1;
@@ -386,9 +389,9 @@ public:
         left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
         left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
         left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
-        sleep(1);
+        
         pub_.publish(left_grasp_pose);
-        sleep(1);
+        
 
 
         // sleep(2);
@@ -408,24 +411,34 @@ public:
         grasp_pose.pose_req.orientation.w = grasp_pose_vals[6];
     }
 
-    void initializeGraspPoses() {
-        double time = ros::Time::now().toSec(); // 获取当前时间
-        // ROS_INFO("Received desired position: x: %.8f, y: %.8f, z: %.8f", xx,yy,zz);
-
+    void initializeGraspPoses() 
+    {
+        double radius = 0.11; // 圆的半径
+        double angular_velocity = 0.15; // 角速度
+        double time = ros::Time::now().toSec(); // 当前时间
+        Eigen::Vector3d ddddd;
+        ddddd(0) = radius * cos(angular_velocity * time);
+        ddddd(1) = radius * sin(angular_velocity * time);
+        ddddd(2) = 0;
         Eigen::Vector3d delta_xyz(xx, yy, zz);
         auto nowTcp2b = Quat2T_matrix(L_grasp_pose);
-        auto result = nowTcp2b * delta_xyz.homogeneous();
+        // auto result = nowTcp2b * delta_xyz.homogeneous();
+        auto result = nowTcp2b.block<3,3>(0,0) * delta_xyz;
+        ddddd=nowTcp2b.block<3,3>(0,0) * delta_xyz;
 
-        L_grasp_pose[0] = result(0);
-        L_grasp_pose[1] = result(1);
-        L_grasp_pose[2] = result(2);
+        // L_grasp_pose[0] = result(0);
+        // L_grasp_pose[1] = result(1);
+        // L_grasp_pose[2] = result(2);
 
         left_grasp_pose.hand_move_enable = 1;
         left_grasp_pose.hand_side = 0;
         left_grasp_pose.hand_reset = 1;
-        left_grasp_pose.pose_req.position.x = L_grasp_pose[0];
-        left_grasp_pose.pose_req.position.y = L_grasp_pose[1];
-        left_grasp_pose.pose_req.position.z = L_grasp_pose[2];
+        // left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+d_x;
+        // left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+d_y;
+        // left_grasp_pose.pose_req.position.z = L_grasp_pose[2];
+        left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+result(0)+ddddd(0);
+        left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+result(1)+ddddd(1);
+        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+result(2)+ddddd(2);;
         left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
         left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
         left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];

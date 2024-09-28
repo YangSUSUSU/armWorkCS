@@ -65,9 +65,9 @@ arm_planning/llm_msgs/CMakeFiles/llm_msgs_generate_messages_lisp: /home/nikooyan
 
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg
-/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg/hand_pose_req.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Lisp code from llm_msgs/hand_pose_req.msg"
 	cd /home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg -Illm_msgs:/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p llm_msgs -o /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs/msg

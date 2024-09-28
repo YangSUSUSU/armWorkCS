@@ -50,7 +50,7 @@ public:
         // 初始化订阅者和发布者
         force_sub_ = nh.subscribe("filtered_force", 100, &AdmittanceController::forceCallback, this);
         joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &AdmittanceController::jointStateCallback, this);
-        //joint_state_sub = nh.subscribe("/joint_states", 10, &AdmittanceController::jointStateCallback, this);
+        // joint_state_sub = nh.subscribe("/joint_states", 10, &AdmittanceController::jointStateCallback, this);
 
         // position_pub_ = nh.advertise<geometry_msgs::Vector3>("desired_position", 100);
         position_pub_ = nh.advertise<geometry_msgs::Pose>("desired_pose", 100);
@@ -72,57 +72,41 @@ public:
         Eigen::AngleAxisd angle_axis(R);
         return angle_axis.angle() * angle_axis.axis(); // 返回旋转矢量
     }
-    /*单自由度的导纳*/
+    /*ori的导纳*/
     Eigen::Quaterniond admittanceController_torque(Eigen::Matrix3d &last_RR,Eigen::Matrix3d &now_RR, Eigen::Vector3d &torque)
     {
         // std::cout<<now_RR<<std::endl;
 
         Eigen::Vector3d rotation_diff_A = rotationDifference(now_RR,last_RR);
         const double M = 0.05;       //虚拟质量
-        const double B = 0.1;   //阻尼        
+        const double B = 0.08;   //阻尼        
         double T=0.005;             //控制周期
         Eigen::Vector3d rotation_diff = rotationDifference(last_RR,now_RR);
 
         Eigen::Vector3d  dv= rotation_diff/T;
         Eigen::Vector3d  dxe=rotation_diff_A-(-dv)*T/2;  //减去自身期望运动分量
         Eigen::Vector3d  temp_result = (torque-B*dxe)/M;
-            // 使用 AngleAxis 直接将旋转矢量转换为旋转矩阵
+        // 使用 AngleAxis 直接将旋转矢量转换为旋转矩阵
         Eigen::AngleAxisd angle_axis(temp_result.norm(), temp_result.normalized());
         Eigen::Matrix3d rotation_matrix = angle_axis.toRotationMatrix();
         auto result = now_RR*rotation_matrix;
 
         // std::cout<<temp_result.transpose()<<std::endl;
-
+        
         Eigen::Quaterniond quaternion(result); 
         return quaternion;
 
     }
     double admittanceController_force(double last, double now, double force)
     {
-    const double M = 0.3;       //虚拟质量
-    const double B = 0.53;   //阻尼
-    double T=0.005;             //控制周期
+    const double M = 0.3;     //虚拟质量0.3
+    const double B = 0.53;    //阻尼0.5
+    double T=0.005;           //控制周期
     double dv= (now-last)/T;
-    double dxe=last-now-(-dv)*T/2;  //减去自身期望运动分量
-    return (force-B*dxe)/M;    //返回 ddxe
+    double dxe=last-now-(-dv)*T/2;  
+    return (force-B*dxe)/M;   //返回 ddxe
     }
-    // // Mass_offset(current code do not use,it's for reference)
-    // Vector6d transformWrench(const Vector6d& wrench, const Matrix3d& rotation, const Vector3d& translation)  
-    // {  
-    //     Vector3d force = wrench.topRows<3>();  
-    //     Vector3d torque = wrench.bottomRows<3>();  
-    
-    //     // 转换力  
-    //     Vector3d newForce = rotation * force;  
-    
-    //     // 转换力矩，考虑平移的影响  
-    //     Vector3d newTorque = rotation * torque + translation.cross(newForce);  
-    
-    //     Vector6d newWrench;  
-    //     newWrench << newForce, newTorque;  
-    
-    //     return newWrench;  
-    // }
+
     void forceCallback(const geometry_msgs::WrenchStamped::ConstPtr& msg) {
 
         arm_param_.name == "left";
@@ -135,21 +119,20 @@ public:
             sensorFrameMatrix<<0,-1,0,
                               1,0,0,
                               0,0, 1;
-            // auto temp=sensorFrameMatrix.Eigen::inverse();
-            // sensorFrameMatrix=temp;
-            // sensorFrameMatrix<<1,0,0,
+            // sensorFrameMatrix<<1, 0,0,
             //                     0,1,0,
-            //                     0,0,1;
+            //                     0,0, 1; 
             first_force_received=false;
             Eigen::Vector3d force;
             force(0)=msg->wrench.force.x;
             force(1)=msg->wrench.force.y;
             force(2)=msg->wrench.force.z;
             force=sensorFrameMatrix*force;
+            //
             first_force_x=-force(0)*30;
             first_force_y=-force(1)*30;
             first_force_z= force(2)*30;
-            std::cout<<first_force_x<<first_force_y<<first_force_z<<std::endl;
+            // std::cout<<first_force_x<<first_force_y<<first_force_z<<std::endl;
             Eigen::Vector3d torque;
             torque(0)=msg->wrench.torque.x;
             torque(1)=msg->wrench.torque.y;
@@ -183,42 +166,35 @@ public:
             torque(0)=-torque(0);
             torque(1)=-torque(1);
 
-            //std::cout << "===Position=======: " << position.transpose() << std::endl;
+            // 获取施加的力
+            double fx = force(0)-first_force_x;
+            double fy = force(1)-first_force_y;
+            double fz = force(2)-first_force_z;
 
-       // 获取施加的力
-        double fx = force(0)-first_force_x;
-        double fy = force(1)-first_force_y;
-        double fz = force(2)-first_force_z;
+            double delta_x;
+            delta_x=admittanceController_force(last_x, now_x, fx);
+            last_x=now_x;
+            double delta_y;
+            delta_y=admittanceController_force(last_y, now_y, fy);
+            last_y=now_y;
+            double delta_z;
+            delta_z=admittanceController_force(last_z, now_z, fz);
+            last_z=now_z;
 
-        double delta_x;
-        delta_x=admittanceController_force(last_x, now_x, fx);
-        last_x=now_x;
-        double delta_y;
-        delta_y=admittanceController_force(last_y, now_y, fy);
-        last_y=now_y;
-        double delta_z;
-        delta_z=admittanceController_force(last_z, now_z, fz);
-        last_z=now_z;
+            auto result_ori = admittanceController_torque(last_R, now_R, torque);
+            last_R=now_R;
 
-        auto result_ori = admittanceController_torque(last_R, now_R, torque);
-        last_R=now_R;
+            pose_msg.position.x = 0.001*(delta_x);  // 设置位置 x
+            pose_msg.position.y = 0.001*(delta_y); // 设置位置 y
+            pose_msg.position.z = 0.001*(delta_z);  // 设置位置 z
 
-        // desired_position_.x = 0.001*(delta_x);
-        // desired_position_.y = 0.001*(delta_y);
-        // desired_position_.z = 0.001*(delta_z);
+            pose_msg.orientation.x = result_ori.x();  // 设置姿态四元数 x
+            pose_msg.orientation.y = result_ori.y();  // 设置姿态四元数 y
+            pose_msg.orientation.z = result_ori.z();  // 设置姿态四元数 z
+            pose_msg.orientation.w = result_ori.w();   
 
-        pose_msg.position.x = 0.001*(delta_x);  // 设置位置 x
-        pose_msg.position.y = 0.001*(delta_y); // 设置位置 y
-        pose_msg.position.z = 0.001*(delta_z);  // 设置位置 z
+            position_pub_.publish(pose_msg);  // 发布消息
 
-        pose_msg.orientation.x = result_ori.x();  // 设置姿态四元数 x
-        pose_msg.orientation.y = result_ori.y();  // 设置姿态四元数 y
-        pose_msg.orientation.z = result_ori.z();  // 设置姿态四元数 z
-        pose_msg.orientation.w = result_ori.w();   
-
-        position_pub_.publish(pose_msg);  // 发布消息
-        // 发布期望位置
-        // position_pub_.publish(desired_position_);
         }
  
     }

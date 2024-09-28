@@ -65,9 +65,9 @@ arm_planning/llm_msgs/CMakeFiles/llm_msgs_generate_messages_cpp: /home/nikooyang
 
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg
-/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs/hand_pose_req.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating C++ code from llm_msgs/hand_pose_req.msg"

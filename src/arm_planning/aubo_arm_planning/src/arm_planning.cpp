@@ -15,8 +15,8 @@
 using namespace Eigen;
 using namespace std;
 
-// #define simulation
-#define real
+#define simulation
+// #define real
 #define LLM
 #define unveiling_ceremony
 // #define hug_emblem

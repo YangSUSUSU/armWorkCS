@@ -6,7 +6,7 @@
     default="False" />
   <param
     name="robot_description"
-    textfile="$(find aubo_arm_r)/urdf/AUBO_HRM_R.urdf" />
+    textfile="$(find aubo_arm_r)/urdf/aubo_arm_r.urdf" />
   <param
     name="use_gui"
     value="$(arg gui)" />
@@ -22,5 +22,5 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find aubo_arm_r)/rviz/auboR.rviz" />
+    args="-d $(find aubo_arm_r)/urdf.rviz" />
 </launch>
