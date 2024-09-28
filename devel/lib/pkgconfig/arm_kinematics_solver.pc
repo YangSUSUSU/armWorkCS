@@ -1,8 +1,0 @@
-prefix=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel
-
-Name: arm_kinematics_solver
-Description: Description of arm_kinematics_solver
-Version: 0.0.0
-Cflags: -I/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/arm_kinematics_solver/include
-Libs: -L${prefix}/lib -larm_kinematics_solver
-Requires: eigen_conversions kdl_conversions kdl_parser pluginlib roscpp rospy tf_conversions trac_ik_lib

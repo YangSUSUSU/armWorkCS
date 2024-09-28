@@ -1,8 +1,0 @@
-prefix=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel
-
-Name: admittanceController
-Description: Description of admittanceController
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib -ladmittanceController
-Requires: roscpp
