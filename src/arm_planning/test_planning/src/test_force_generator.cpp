@@ -8,29 +8,43 @@ class ForcePublisher {
 public:
     ForcePublisher(ros::NodeHandle& nh) 
     {
-        pub_ = nh.advertise<geometry_msgs::WrenchStamped>("noisy_force", 100);
+        pub_left_ = nh.advertise<geometry_msgs::WrenchStamped>("noisy_force_left", 10);  // 左侧传感器
+        pub_right_ = nh.advertise<geometry_msgs::WrenchStamped>("noisy_force_right", 10);  // 右侧传感器
         srand(static_cast<unsigned int>(time(0)));  // 随机数种子
     }
 
     void publishForce() {
-        geometry_msgs::WrenchStamped force_;
-       
+        geometry_msgs::WrenchStamped left_force_;
+        geometry_msgs::WrenchStamped right_force_;
+        
         double time = ros::Time::now().toSec(); // 获取当前时间
-        force_.header.frame_id = "left_flange"; // 设置坐标系
-        force_.header.stamp = ros::Time::now(); // 设置时间戳    
-        force_.wrench.force.x = 0.0 + 0 *sin(0.5*time) + 0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
-        force_.wrench.force.y = 0.0 + 0 *sin(0.2*time + M_PI / 4) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
-        force_.wrench.force.z = 0.0 + 15 * sin(0.5*time + M_PI / 2) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
 
-        force_.wrench.torque.x = 0.0 + 0.0 *sin(0.2*time) + 0.0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
-        force_.wrench.torque.y = 0.0 + 0.0 *sin(0.2*time + M_PI / 4) + 0.0*(rand() % 10 - 5) / 10.0; // 不同相位
-        force_.wrench.torque.z = 0.0 + 0.0 * sin(0.2*time + M_PI / 2) + 0.0*(rand() % 10 - 5) / 10.0; // 不同相位
+        // 左侧传感器数据
+        left_force_.header.frame_id = "left_flange"; // 设置左传感器坐标系
+        left_force_.header.stamp = ros::Time::now(); // 设置时间戳    
+        left_force_.wrench.force.x = 0.0 + 0.1 * sin(0.5 * time) + 0.0 * (rand() % 10 - 5);  // 模拟数据
+        left_force_.wrench.force.y = 0.0 + 10 * sin(0.2 * time + M_PI / 4) + 0.0 * (rand() % 10 - 5); 
+        left_force_.wrench.force.z = 0.0 + 0.1 * sin(0.5 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
+        left_force_.wrench.torque.x = 0.0;
+        left_force_.wrench.torque.y = 0.0;
+        left_force_.wrench.torque.z = 0.0;
+        pub_left_.publish(left_force_);
 
-        pub_.publish(force_);
+        // 右侧传感器数据
+        right_force_.header.frame_id = "right_flange"; // 设置右传感器坐标系
+        right_force_.header.stamp = ros::Time::now(); // 设置时间戳    
+        right_force_.wrench.force.x = 0.0 + 0.1 * sin(0.6 * time) + 0.0 * (rand() % 10 - 5);  // 模拟数据
+        right_force_.wrench.force.y = 0.0 + 10 * sin(0.3 * time + M_PI / 4) + 0.0 * (rand() % 10 - 5); 
+        right_force_.wrench.force.z = 0.0 + 0.1 * sin(0.6 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
+        right_force_.wrench.torque.x = 0.0;
+        right_force_.wrench.torque.y = 0.0;
+        right_force_.wrench.torque.z = 0.0;
+        pub_right_.publish(right_force_);
     }
 
 private:
-    ros::Publisher pub_;
+    ros::Publisher pub_left_;
+    ros::Publisher pub_right_;
 };
 
 int main(int argc, char** argv) {
