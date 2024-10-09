@@ -7,6 +7,9 @@ find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
     arm_kinematics_solver
 )
+# 找到 Orocos KDL 库
+find_package(orocos_kdl REQUIRED)
+
 catkin_package(
     LIBRARIES ${PROJECT_NAME}  
     CATKIN_DEPENDS roscpp arm_kinematics_solver
@@ -15,8 +18,11 @@ catkin_package(
 include_directories(
     # include
     ${catkin_INCLUDE_DIRS}
+    ${orocos_kdl_INCLUDE_DIRS}
 )
 add_executable(test_planning src/test_arm.cpp)
+
+add_executable(test_planning_force_calibration src/test_load_calibration.cpp)
 
 # 力数据生成器--sim used
 add_executable(test_planning_force_generator src/test_force_generator.cpp)
@@ -29,4 +35,9 @@ target_link_libraries(test_planning ${catkin_LIBRARIES})
 target_link_libraries(test_planning_ad ${catkin_LIBRARIES})
 target_link_libraries(test_planning_force_filter ${catkin_LIBRARIES})
 target_link_libraries(test_planning_force_generator ${catkin_LIBRARIES})
+target_link_libraries(test_planning_force_calibration 
+                            ${catkin_LIBRARIES}
+                            ${orocos_kdl_LIBRARIES}
+                            )
+
 

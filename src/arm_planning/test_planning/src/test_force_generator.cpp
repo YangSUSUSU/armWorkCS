@@ -20,7 +20,7 @@ public:
         force_.header.stamp = ros::Time::now(); // 设置时间戳    
         force_.wrench.force.x = 0.0 + 0 *sin(0.5*time) + 0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
         force_.wrench.force.y = 0.0 + 0 *sin(0.2*time + M_PI / 4) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
-        force_.wrench.force.z = 0.0 + 25 * sin(0.5*time + M_PI / 2) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
+        force_.wrench.force.z = 0.0 + 15 * sin(0.5*time + M_PI / 2) + 0*(rand() % 10 - 5) / 10.0; // 不同相位
 
         force_.wrench.torque.x = 0.0 + 0.0 *sin(0.2*time) + 0.0*(rand() % 10 - 5) / 100.0;  // 使用正弦函数并加噪声
         force_.wrench.torque.y = 0.0 + 0.0 *sin(0.2*time + M_PI / 4) + 0.0*(rand() % 10 - 5) / 10.0; // 不同相位

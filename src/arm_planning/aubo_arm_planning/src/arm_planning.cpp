@@ -23,13 +23,16 @@ using namespace std;
 // #define left_hello
 #define right_hello
 
-int hand_move = 0;
 int handReset = 0;
 uint32_t left_grasp_seq,right_grasp_seq;
 vector<double> left_grasp_pose(7);
 vector<double> right_grasp_pose(7);
-bool first_time = true;
-Eigen::VectorXd joint_test_last(7);
+bool left_first_time = true;
+bool right_first_time = true;
+
+Eigen::VectorXd joint_left_last(7);
+Eigen::VectorXd joint_right_last(7);
+
 
 DualArm::DualArm(ros::NodeHandle& nh)
 {
@@ -61,7 +64,8 @@ DualArm::DualArm(ros::NodeHandle& nh)
     right_arm_param_.joint_names = {"1", "2", "3", "4",
                                     "5", "6", "7"};
     
-    grasp_pose_subscriber   = nh.subscribe("/hand_pose_req",10,&DualArm::GraspPose_CallBack,this);
+    left_grasp_pose_subscriber   = nh.subscribe("/left_arm_pose_req",10,&DualArm::LeftGraspPose_CallBack,this);
+    right_grasp_pose_subscriber   = nh.subscribe("/right_arm_pose_req",10,&DualArm::RightGraspPose_CallBack,this);
 
     left_joints_subscriber  = nh.subscribe("/human_arm_state_left",10,&DualArm::LeftJointStatesCallback,this);
     right_joints_subscriber = nh.subscribe("/human_arm_state_right",10,&DualArm::RightJointStatesCallback,this);
@@ -112,23 +116,67 @@ bool DualArm::Judge_arrived(vector<double> cur_pose,vector<double> end_grasp_pos
     return true;
 }
 
-void DualArm::GraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos)
-{
-    // ROS_INFO("grasp_pos->hand_move_enable =%d",grasp_pos->hand_move_enable);
+// void DualArm::GraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos)
+// {
+//     // ROS_INFO("grasp_pos->hand_move_enable =%d",grasp_pos->hand_move_enable);
 
+//     if (grasp_pos->hand_move_enable==1)
+//     {
+//         handReset = grasp_pos -> hand_reset;
+
+//         if (grasp_pos->hand_side == 0)
+//         {
+//             left_grasp_pose[0] = grasp_pos->pose_req.position.x;
+//             left_grasp_pose[1] = grasp_pos->pose_req.position.y;
+//             left_grasp_pose[2] = grasp_pos->pose_req.position.z;
+//             left_grasp_pose[3] = grasp_pos->pose_req.orientation.x;
+//             left_grasp_pose[4] = grasp_pos->pose_req.orientation.y;
+//             left_grasp_pose[5] = grasp_pos->pose_req.orientation.z;
+//             left_grasp_pose[6] = grasp_pos->pose_req.orientation.w;
+//             left_arm_param_.arm_move_enable = grasp_pos->hand_move_enable;
+//             left_grasp_seq = grasp_pos->header.seq;
+//             left_arm_param_.which_arm = grasp_pos->hand_side ;
+            
+//             ROS_INFO("left_grasp_seq :%d",left_grasp_seq);
+//             ROS_INFO("Receive Left arm grasp pose = %f %f %f %f %f %f %f" , left_grasp_pose[0],left_grasp_pose[1],left_grasp_pose[2],left_grasp_pose[3],left_grasp_pose[4],left_grasp_pose[5],left_grasp_pose[6]);
+//             // Cartesian_Plan(left_grasp_pose,left_arm_param_,left_grasp_seq);
+//             // 异步规划左臂
+//             // std::thread([this]{
+//                 Cartesian_Plan(left_grasp_pose,left_arm_param_,left_grasp_seq);
+//             // }).detach();
+
+//         }
+//         if (grasp_pos->hand_side == 1)
+//         {
+//             right_grasp_pose[0] = grasp_pos->pose_req.position.x;
+//             right_grasp_pose[1] = grasp_pos->pose_req.position.y;
+//             right_grasp_pose[2] = grasp_pos->pose_req.position.z;
+//             right_grasp_pose[3] = grasp_pos->pose_req.orientation.x;
+//             right_grasp_pose[4] = grasp_pos->pose_req.orientation.y;
+//             right_grasp_pose[5] = grasp_pos->pose_req.orientation.z;
+//             right_grasp_pose[6] = grasp_pos->pose_req.orientation.w;
+//             right_arm_param_.arm_move_enable = grasp_pos->hand_move_enable;
+//             right_grasp_seq = grasp_pos->header.seq;
+//             right_arm_param_.which_arm = grasp_pos->hand_side;
+//             ROS_INFO("right_grasp_seq :%d",right_grasp_seq);
+//             ROS_INFO("Receive Right arm grasp pose = %f %f %f %f %f %f %f" , right_grasp_pose[0],right_grasp_pose[1],right_grasp_pose[2],right_grasp_pose[3],right_grasp_pose[4],right_grasp_pose[5],right_grasp_pose[6]);
+            
+//             // Cartesian_Plan(right_grasp_pose,right_arm_param_,right_grasp_seq);
+//             // 异步规划右臂
+//             // std::thread([this]{
+//                 Cartesian_Plan(right_grasp_pose,right_arm_param_,right_grasp_seq);
+//             // }).detach();
+//         }
+//     }
+     
+// }
+
+void DualArm::LeftGraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos)
+{
     if (grasp_pos->hand_move_enable==1)
     {
         handReset = grasp_pos -> hand_reset;
-        struct timeval timeNow;
-        gettimeofday(&timeNow, nullptr);
 
-        // // 转换为tm结构体
-        // struct tm* timeinfo;
-        // timeinfo = localtime(&timeNow.tv_sec);
-        // 打印时分
-        // std::cout << "Current time: " << std::to_string(double(timeNow.tv_sec + (timeNow.tv_usec / 1e6))) << std::endl;
-	    // std::cout << "Header time:" << std::to_string(double(grasp_pos->header.stamp.toSec())) << std::endl;
-        // ROS_INFO("grasp_pos->hand_move_enable  = %d" ,grasp_pos->hand_move_enable);
         if (grasp_pos->hand_side == 0)
         {
             left_grasp_pose[0] = grasp_pos->pose_req.position.x;
@@ -138,14 +186,26 @@ void DualArm::GraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_
             left_grasp_pose[4] = grasp_pos->pose_req.orientation.y;
             left_grasp_pose[5] = grasp_pos->pose_req.orientation.z;
             left_grasp_pose[6] = grasp_pos->pose_req.orientation.w;
-            hand_move = grasp_pos->hand_move_enable;
+            left_arm_param_.arm_move_enable = grasp_pos->hand_move_enable;
             left_grasp_seq = grasp_pos->header.seq;
             left_arm_param_.which_arm = grasp_pos->hand_side ;
+            
             ROS_INFO("left_grasp_seq :%d",left_grasp_seq);
             ROS_INFO("Receive Left arm grasp pose = %f %f %f %f %f %f %f" , left_grasp_pose[0],left_grasp_pose[1],left_grasp_pose[2],left_grasp_pose[3],left_grasp_pose[4],left_grasp_pose[5],left_grasp_pose[6]);
-            Cartesian_Plan(left_grasp_pose,left_arm_param_,left_grasp_seq);
 
+            Left_Cartesian_Plan(left_grasp_pose,left_arm_param_,left_grasp_seq);
         }
+        
+    }
+     
+}
+
+void DualArm::RightGraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos)
+{
+    if (grasp_pos->hand_move_enable==1)
+    {
+        handReset = grasp_pos -> hand_reset;
+
         if (grasp_pos->hand_side == 1)
         {
             right_grasp_pose[0] = grasp_pos->pose_req.position.x;
@@ -155,19 +215,18 @@ void DualArm::GraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_
             right_grasp_pose[4] = grasp_pos->pose_req.orientation.y;
             right_grasp_pose[5] = grasp_pos->pose_req.orientation.z;
             right_grasp_pose[6] = grasp_pos->pose_req.orientation.w;
-            hand_move = grasp_pos->hand_move_enable;
+            right_arm_param_.arm_move_enable = grasp_pos->hand_move_enable;
             right_grasp_seq = grasp_pos->header.seq;
-    
             right_arm_param_.which_arm = grasp_pos->hand_side;
             ROS_INFO("right_grasp_seq :%d",right_grasp_seq);
             ROS_INFO("Receive Right arm grasp pose = %f %f %f %f %f %f %f" , right_grasp_pose[0],right_grasp_pose[1],right_grasp_pose[2],right_grasp_pose[3],right_grasp_pose[4],right_grasp_pose[5],right_grasp_pose[6]);
-            
-            Cartesian_Plan(right_grasp_pose,right_arm_param_,right_grasp_seq);
 
+            Right_Cartesian_Plan(right_grasp_pose,right_arm_param_,right_grasp_seq);
         }
     }
      
 }
+
 
 void DualArm::LeftJoints_pub(const vector<double> pos, const VectorXd vel, ros::Publisher pub) {
 
@@ -287,16 +346,11 @@ std::vector<Eigen::Matrix4d> DualArm::minimumJerkInterpolationCartesian(const Ei
     return trajectory;
 }
 
-void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id)
+void DualArm::Left_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id)
 {
-    if(hand_move ==1)
-    {
-        // ros::Duration(1.0).sleep();
-
-        trajSPlannerObj = new Traj_S_Planner(7, frequency);
-        hand_move = 0;
-        if ((arm_param_.name == "left") )
+        if ((arm_param_.arm_move_enable == 1) && (arm_param_.name == "left") )
         {
+            arm_param_.arm_move_enable = 0;
             if ((arm_param_.which_arm == 0))
             {
                 ROS_INFO("Enter the Cartesian Plan,The left arm move ");
@@ -304,20 +358,6 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
             else
             {
                 ROS_INFO("The left arm not move " );
-                exit(0);
-            }
-            
-        }
-
-        if ((arm_param_.name == "right") )
-        {
-            if ((arm_param_.which_arm == 1))
-            {
-                ROS_INFO("Enter the Cartesian Plan,The right arm move " );
-            }
-            else
-            {
-                ROS_INFO("The right arm not move " );
                 exit(0);
             }
             
@@ -331,16 +371,9 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
         ROS_INFO("URDF Path=======: %s", urdf_path.c_str());
         ROS_INFO("Base Link=======: %s", (arm_param_.base_link).c_str());
         ROS_INFO("End Effector Link==: %s", (arm_param_.eef_link).c_str());
-        // if(Arrrived_GoalPose(kin_solver,arm_param_,goal_pose,id))
-        // {
-        //     ROS_INFO("Already in the goal_pose!!!Don't need Plan");
-        //     return ;
-        // }else{
-        //     ROS_INFO("Not in the goal_pose!!!Start Plan");
-        // }
+
         arm_kinematics::ArmQpIkSolver qpik_solver;
 
-        
         Eigen::VectorXd q_ik(7);
 
         //cartesian trajectory planning
@@ -351,30 +384,19 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
 
         #ifdef simulation
         Eigen::VectorXd joint_cur(7);
-        if(arm_param_.name == "left")
-        //==============================1
+
+        if (left_first_time)
         {
-            if (first_time)
-            {
-                /* code */
-                 joint_cur << -0.7, 0.60, 0, -0.78, 0.0, -0.40, 0.0;
-                 first_time=false;
-            }
-            else
-            {
-                joint_cur=joint_test_last;
-
-            }
-
-            //std::cout << "===Left joint current===: " << joint_cur.transpose() << std::endl;
-           
-        }else{
-            joint_cur << 0.7, -0.60, 0, 0.78, 0.0, 0.40, 0.0;
+            /* code */
+            joint_cur << -0.7, 0.60, 0, -0.78, 0.0, -0.40, 0.0;
+            left_first_time=false;
         }
-        // vector<double> joint_start = {-0.187,0.222,-1.4729,-0.93926,2.52457,0.3973,-0.23314};
-        
+        else
+        {
+            joint_cur=joint_left_last;
+
+        }
         vector<double> joint_start(joint_cur.data(),joint_cur.data()+joint_cur.size());
-        // vector<double> grasp_pose={0.0502, 0.4592, -0.054598 ,0.0441899, 0.992888, 0.0526805, 0.0971909};
         #endif
 
         #ifdef real
@@ -389,57 +411,25 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
         kin_solver.getFkSolution(InitPoseT, joint_start, error_string);
 
         vector<double> init_pose = TrajPlannerBase::T_matrix2Quat(InitPoseT);
-        // cout<<"joint_start"<<endl;
-        // copy(joint_start.cbegin(),joint_start.cend(),ostream_iterator<double>(cout," "));
-        // cout<<endl;
-        // vector<double> middle_pose(goal_pose);
-        // middle_pose[2] += 0.15;
-        // vector<double> start_up_pose(start_pose);
-        // start_up_pose[2] += 0.1;
-        // trajCartesianAllPoints.push_back(start_pose);
-        // trajCartesianAllPoints.push_back(start_up_pose);
-        
-        // trajCartesianAllPoints.push_back(goal_pose);
-
-        // ROS_INFO("Enter the initInterpolation");
-        // double duration = trajSPlannerObj->initInterpolation(trajCartesianAllPoints, cartesianVelocity, commandName);
-        // ROS_INFO("Finish the initInterpolation");
 
         #ifdef simulation
         // 定义 JointState 消息
         sensor_msgs::JointState joint_state_msg;
         joint_state_msg.name.resize(7);
         joint_state_msg.position.resize(7);
-
-        if(arm_param_.name == "left")
-        {
-            // 设置 JointState 消息中的关节名称和初始位置
-            joint_state_msg.name[0] = "left_joint1";
-            joint_state_msg.name[1] = "left_joint2";
-            joint_state_msg.name[2] = "left_joint3";
-            joint_state_msg.name[3] = "left_joint4";
-            joint_state_msg.name[4] = "left_joint5";
-            joint_state_msg.name[5] = "left_joint6";
-            joint_state_msg.name[6] = "left_joint7";
-        }else{
-            // 设置 JointState 消息中的关节名称和初始位置
-            joint_state_msg.name[0] = "right_joint1";
-            joint_state_msg.name[1] = "right_joint2";
-            joint_state_msg.name[2] = "right_joint3";
-            joint_state_msg.name[3] = "right_joint4";
-            joint_state_msg.name[4] = "right_joint5";
-            joint_state_msg.name[5] = "right_joint6";
-            joint_state_msg.name[6] = "right_joint7"; 
-        }
+        // 设置 JointState 消息中的关节名称和初始位置
+        joint_state_msg.name[0] = "left_joint1";
+        joint_state_msg.name[1] = "left_joint2";
+        joint_state_msg.name[2] = "left_joint3";
+        joint_state_msg.name[3] = "left_joint4";
+        joint_state_msg.name[4] = "left_joint5";
+        joint_state_msg.name[5] = "left_joint6";
+        joint_state_msg.name[6] = "left_joint7";
         #endif
         
-        // double t = 0;
         VectorXd vel(7);
         vel.setZero(7);
         ros::Rate loop_rate(frequency);
-        // Matrix4d last_T = InitPoseT;
-        // struct timeval begin_time;
-        // gettimeofday(&begin_time, NULL);
 
         // Define duration and number of samples
         Eigen::Matrix4d start_pose = InitPoseT;
@@ -503,16 +493,6 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
         int i=0;
         while (ros::ok() && i < cartesian_trajectory.size())
         {
-            
-            // std::cout << "activate_time is " << std::to_string(double(cur_time.tv_sec + cur_time.tv_usec / 1e6)) << std::endl;
-
-            // Matrix4d T;
-            // if(!trajSPlannerObj->calCartesianInterpolation(t, last_T, T))
-            // {
-            //     ROS_ERROR("Cartesian Interpolation failed!");
-            //     break;
-            // }
-            // last_T = T ;
 
             // ROS_INFO("Enter the IKqpSolution");
             
@@ -521,7 +501,7 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
             // ROS_INFO("Finish the IKqpSolution");
             //=====2
             joint_cur = q_ik;
-            joint_test_last =joint_cur;
+            joint_left_last =joint_cur;
             #ifdef real
 
             vector<double> newJoint;
@@ -530,35 +510,11 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
             {
                 newJoint[i] = q_ik(i);
             }
-            // cout<<"The newJoint joints = "<<endl;
-            // copy(newJoint.cbegin(),newJoint.cend(),ostream_iterator<double>(cout," "));
-            // cout<<endl;
 
-            if(arm_param_.name == "left")
-            {
-                
-                LeftJoints_pub(newJoint, vel, left_joints_publisher);
-                // ROS_INFO("LeftJoints_pub finish");
-                
-                // struct timeval cur_time;
-                // gettimeofday(&cur_time, NULL);
-                // double dTimeDiffUs = (cur_time.tv_sec - begin_time.tv_sec)*1000000 + (cur_time.tv_usec - begin_time.tv_usec);
-                // ROS_INFO("LeftJoints Control[%f]us: %f,%f,%f,%f,%f,%f,%f", dTimeDiffUs,newJoint[0],newJoint[1],newJoint[2],newJoint[3],newJoint[4],newJoint[5],newJoint[6]);
-            }else{
-                // struct timeval cur_time;
-                // gettimeofday(&cur_time, NULL);
-                // std::cout << "activate_time is " << std::to_string(double(cur_time.tv_sec + cur_time.tv_usec / 1e6)) << std::endl;
-                RightJoints_pub(newJoint, vel, right_joints_publisher);
-                // ROS_INFO("RightJoints_pub finish");
-                // struct timeval cur_time;
-                // gettimeofday(&cur_time, NULL);
-                // double dTimeDiffUs = (cur_time.tv_sec - begin_time.tv_sec)*1000000 + (cur_time.tv_usec - begin_time.tv_usec);
-                // ROS_INFO("RightJoints Control[%f]us: %f,%f,%f,%f,%f,%f,%f", dTimeDiffUs,newJoint[0],newJoint[1],newJoint[2],newJoint[3],newJoint[4],newJoint[5],newJoint[6]);
-                // ROS_INFO("Publish RightJoints to Control: %f,%f,%f,%f,%f,%f,%f",newJoint[0],newJoint[1],newJoint[2],newJoint[3],newJoint[4],newJoint[5],newJoint[6]);
-            }
+            LeftJoints_pub(newJoint, vel, left_joints_publisher);
+
             #endif
             
-            // t += 1.0/frequency;
             #ifdef simulation
             for (int i = 0; i < 7; i++)
             {
@@ -569,15 +525,9 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
             joint_state_pub.publish(joint_state_msg);
             #endif
             loop_rate.sleep();
-            // ros::SpinOnce();
+
         }
-        // struct timeval end_time;
-        // gettimeofday(&end_time, NULL);
-        // double dTimeDiffs = (end_time.tv_sec - begin_time.tv_sec);
-        // ROS_INFO("Publish Control time = [%f]s", dTimeDiffs);
-        ROS_INFO("Before delete trajSPlannerObj");
-        delete trajSPlannerObj;
-        ROS_INFO("After delete trajSPlannerObj");
+
 
         #ifdef LLM
         sleep(0.5);
@@ -587,23 +537,514 @@ void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,ui
         }else{
             ROS_INFO("Cartesian Trajectory Planning failed!");
         }
-        // to do
-        // llm_msgs::pose_action_status grasp_status;
-        // grasp_status.hand_move_success = 1;
-        // arrive_pose_publisher.publish(grasp_status);
-
-        // if(grasp_status.hand_move_success == 1)
-        // {
-        //     ROS_INFO("Cartesian Trajectory Planning finished!");
-        // }else{
-        //     ROS_INFO("Cartesian Trajectory Planning failed!");
-        // }
-        // std::cout << "hand_move_success_time is " << std::to_string(double(cur_time.tv_sec + cur_time.tv_usec / 1e6)) << std::endl;
+        
         #endif
 
-    }
-    
 }
+
+void DualArm::Right_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id)
+{
+        if ((arm_param_.arm_move_enable == 1) && (arm_param_.name == "right") )
+        {
+            arm_param_.arm_move_enable = 0;
+            if ((arm_param_.which_arm == 1))
+            {
+                ROS_INFO("Enter the Cartesian Plan,The right arm move ");
+            }
+            else
+            {
+                ROS_INFO("The right arm not move " );
+                exit(0);
+            }
+            
+        }
+    
+        // ROS_INFO("Grasp pose is %f %f %f %f %f %f %f", goal_pose[0],goal_pose[1],goal_pose[2],goal_pose[3],goal_pose[4],goal_pose[5],goal_pose[6]);
+        std::string urdf_path = ros::package::getPath("arm_kinematics_solver");
+        urdf_path += "/models/AUBO_HRM.urdf";
+        arm_kinematics::ArmKinematicsSolver kin_solver(urdf_path, arm_param_.base_link, arm_param_.eef_link, arm_param_.joints_min, arm_param_.joints_max);
+        ROS_INFO("ArmKinematicsSolver init success!");
+        ROS_INFO("URDF Path=======: %s", urdf_path.c_str());
+        ROS_INFO("Base Link=======: %s", (arm_param_.base_link).c_str());
+        ROS_INFO("End Effector Link==: %s", (arm_param_.eef_link).c_str());
+
+        arm_kinematics::ArmQpIkSolver qpik_solver;
+
+        Eigen::VectorXd q_ik(7);
+
+        //cartesian trajectory planning
+        vector<vector<double>> trajCartesianAllPoints;
+        string commandName = "Cartesian";
+        double cartesianVelocity = 0.45;
+        MatrixXd InitPoseT;
+
+        #ifdef simulation
+        Eigen::VectorXd joint_cur(7);
+
+        if (right_first_time)
+        {
+            /* code */
+            joint_cur << 0.7, -0.60, 0, 0.78, 0.0, 0.40, 0.0;
+            right_first_time=false;
+        }
+        else
+        {
+            joint_cur=joint_right_last;
+
+        }
+        vector<double> joint_start(joint_cur.data(),joint_cur.data()+joint_cur.size());
+        #endif
+
+        #ifdef real
+        // ros::Duration(1.0).sleep();
+        VectorXd joint_cur(7);
+        joint_cur<< arm_param_.joint_pos[0],arm_param_.joint_pos[1],arm_param_.joint_pos[2],arm_param_.joint_pos[3],arm_param_.joint_pos[4],arm_param_.joint_pos[5],arm_param_.joint_pos[6]; 
+        vector<double> joint_start(arm_param_.joint_pos);
+
+        #endif
+
+        
+        kin_solver.getFkSolution(InitPoseT, joint_start, error_string);
+
+        vector<double> init_pose = TrajPlannerBase::T_matrix2Quat(InitPoseT);
+
+        #ifdef simulation
+        // 定义 JointState 消息
+        sensor_msgs::JointState joint_state_msg;
+        joint_state_msg.name.resize(7);
+        joint_state_msg.position.resize(7);
+        // 设置 JointState 消息中的关节名称和初始位置
+        joint_state_msg.name[0] = "right_joint1";
+        joint_state_msg.name[1] = "right_joint2";
+        joint_state_msg.name[2] = "right_joint3";
+        joint_state_msg.name[3] = "right_joint4";
+        joint_state_msg.name[4] = "right_joint5";
+        joint_state_msg.name[5] = "right_joint6";
+        joint_state_msg.name[6] = "right_joint7";
+        #endif
+        
+        VectorXd vel(7);
+        vel.setZero(7);
+        ros::Rate loop_rate(frequency);
+
+        // Define duration and number of samples
+        Eigen::Matrix4d start_pose = InitPoseT;
+        Eigen::Matrix4d end_pose = Eigen::Matrix4d::Identity();
+        end_pose = TrajPlannerBase::Quat2T_matrix(goal_pose);
+        std::vector<Eigen::Matrix4d> cartesian_trajectory;
+        // Convert init_pose and goal_pose to Eigen::Quaterniond
+        Eigen::Quaterniond quat_init(init_pose[3], init_pose[4], init_pose[5], init_pose[6]);
+        Eigen::Quaterniond quat_goal(goal_pose[3], goal_pose[4], goal_pose[5], goal_pose[6]);
+
+        // Calculate the dot product of the two quaternions
+        double dot_product = fabs(quat_init.dot(quat_goal));
+        if(!handReset)
+        {
+            double duration1; // 2.5 seconds for the first segment
+            double duration2;// 2.5 seconds for the second segment
+            int num_samples1;
+            int num_samples2;
+            if(dot_product < 0.95)
+            {
+                // Define durations and number of samples for each segment
+                duration1 = 2; // 2.5 seconds for the first segment
+                duration2 = 1;// 2.5 seconds for the second segment
+                num_samples1 = 350;
+                num_samples2 = 175;
+            }else{
+                // Define durations and number of samples for each segment
+                duration1 = 1; // 2.5 seconds for the first segment
+                duration2 = 1; // 2.5 seconds for the second segment
+                num_samples1 = 150;
+                num_samples2 = 150;
+            }
+            
+            vector<double> middle_pose_temp(goal_pose);
+            middle_pose_temp[2] += 0.15;
+            Eigen::Matrix4d middle_pose = TrajPlannerBase::Quat2T_matrix(middle_pose_temp);
+            // Get the minimum jerk trajectory for each segment
+            std::vector<Eigen::Matrix4d> trajectory1 = minimumJerkInterpolationCartesian(start_pose, middle_pose, duration1, num_samples1);
+            std::vector<Eigen::Matrix4d> trajectory2 = minimumJerkInterpolationCartesian(middle_pose, end_pose, duration2, num_samples2);
+
+            // Combine the two segments
+            cartesian_trajectory.insert(cartesian_trajectory.end(), trajectory1.begin(), trajectory1.end());
+            cartesian_trajectory.insert(cartesian_trajectory.end(), trajectory2.begin(), trajectory2.end());
+        }
+        else{
+            int num_samples;
+            double duration;
+            if(dot_product < 0.95)
+            {
+                duration = 2.0; // 5 seconds
+                num_samples = 350;
+            }else{
+                duration = 1; // 5 seconds
+                num_samples = 175;
+            }
+            
+            // Get the minimum jerk trajectory in Cartesian space
+            cartesian_trajectory = minimumJerkInterpolationCartesian(start_pose, end_pose, duration, num_samples);
+        }
+        
+        int i=0;
+        while (ros::ok() && i < cartesian_trajectory.size())
+        {
+
+            // ROS_INFO("Enter the IKqpSolution");
+            
+            q_ik = qpik_solver.IKqpSolution(&kin_solver,frequency,cartesian_trajectory[i], joint_cur, error_string,arm_param_.joints_min,arm_param_.joints_max);
+            i++;
+            // ROS_INFO("Finish the IKqpSolution");
+            //=====2
+            joint_cur = q_ik;
+            joint_right_last =joint_cur;
+            #ifdef real
+
+            vector<double> newJoint;
+            newJoint.resize(7);
+            for (int i = 0; i < 7; i++)
+            {
+                newJoint[i] = q_ik(i);
+            }
+
+            RightJoints_pub(newJoint, vel, right_joints_publisher);
+
+            #endif
+            
+            #ifdef simulation
+            for (int i = 0; i < 7; i++)
+            {
+                joint_state_msg.position[i] = q_ik(i); 
+
+            }
+            joint_state_msg.header.stamp = ros::Time::now();
+            joint_state_pub.publish(joint_state_msg);
+            #endif
+            loop_rate.sleep();
+
+        }
+
+
+        #ifdef LLM
+        sleep(0.5);
+        if(Arrrived_GoalPose(kin_solver,arm_param_,goal_pose,id))
+        {
+            ROS_INFO("Cartesian Trajectory Planning finished!");
+        }else{
+            ROS_INFO("Cartesian Trajectory Planning failed!");
+        }
+        
+        #endif
+
+}
+
+// void DualArm::Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id)
+// {
+//         if ((arm_param_.arm_move_enable == 1) && (arm_param_.name == "left") )
+//         {
+//             arm_param_.arm_move_enable = 0;
+//             if ((arm_param_.which_arm == 0))
+//             {
+//                 ROS_INFO("Enter the Cartesian Plan,The left arm move ");
+//             }
+//             else
+//             {
+//                 ROS_INFO("The left arm not move " );
+//                 exit(0);
+//             }
+            
+//         }
+
+//         if ((arm_param_.arm_move_enable == 1) && (arm_param_.name == "right") )
+//         {
+//             arm_param_.arm_move_enable = 0;
+//             if ((arm_param_.which_arm == 1))
+//             {
+//                 ROS_INFO("Enter the Cartesian Plan,The right arm move " );
+//             }
+//             else
+//             {
+//                 ROS_INFO("The right arm not move " );
+//                 exit(0);
+//             }
+            
+//         }
+    
+//         // ROS_INFO("Grasp pose is %f %f %f %f %f %f %f", goal_pose[0],goal_pose[1],goal_pose[2],goal_pose[3],goal_pose[4],goal_pose[5],goal_pose[6]);
+//         std::string urdf_path = ros::package::getPath("arm_kinematics_solver");
+//         urdf_path += "/models/AUBO_HRM.urdf";
+//         arm_kinematics::ArmKinematicsSolver kin_solver(urdf_path, arm_param_.base_link, arm_param_.eef_link, arm_param_.joints_min, arm_param_.joints_max);
+//         ROS_INFO("ArmKinematicsSolver init success!");
+//         ROS_INFO("URDF Path=======: %s", urdf_path.c_str());
+//         ROS_INFO("Base Link=======: %s", (arm_param_.base_link).c_str());
+//         ROS_INFO("End Effector Link==: %s", (arm_param_.eef_link).c_str());
+//         // if(Arrrived_GoalPose(kin_solver,arm_param_,goal_pose,id))
+//         // {
+//         //     ROS_INFO("Already in the goal_pose!!!Don't need Plan");
+//         //     return ;
+//         // }else{
+//         //     ROS_INFO("Not in the goal_pose!!!Start Plan");
+//         // }
+//         arm_kinematics::ArmQpIkSolver qpik_solver;
+
+        
+//         Eigen::VectorXd q_ik(7);
+
+//         //cartesian trajectory planning
+//         vector<vector<double>> trajCartesianAllPoints;
+//         string commandName = "Cartesian";
+//         double cartesianVelocity = 0.45;
+//         MatrixXd InitPoseT;
+
+//         #ifdef simulation
+//         Eigen::VectorXd joint_cur(7);
+//         if(arm_param_.name == "left")
+//         //==============================1
+//         {
+//             if (left_first_time)
+//             {
+//                 /* code */
+//                  joint_cur << -0.7, 0.60, 0, -0.78, 0.0, -0.40, 0.0;
+//                  left_first_time=false;
+//             }
+//             else
+//             {
+//                 joint_cur=joint_test_last;
+
+//             }
+
+//             //std::cout << "===Left joint current===: " << joint_cur.transpose() << std::endl;
+           
+//         }else{
+//             joint_cur << 0.7, -0.60, 0, 0.78, 0.0, 0.40, 0.0;
+//         }
+//         // vector<double> joint_start = {-0.187,0.222,-1.4729,-0.93926,2.52457,0.3973,-0.23314};
+        
+//         vector<double> joint_start(joint_cur.data(),joint_cur.data()+joint_cur.size());
+//         // vector<double> grasp_pose={0.0502, 0.4592, -0.054598 ,0.0441899, 0.992888, 0.0526805, 0.0971909};
+//         #endif
+
+//         #ifdef real
+//         // ros::Duration(1.0).sleep();
+//         VectorXd joint_cur(7);
+//         joint_cur<< arm_param_.joint_pos[0],arm_param_.joint_pos[1],arm_param_.joint_pos[2],arm_param_.joint_pos[3],arm_param_.joint_pos[4],arm_param_.joint_pos[5],arm_param_.joint_pos[6]; 
+//         vector<double> joint_start(arm_param_.joint_pos);
+
+//         #endif
+
+        
+//         kin_solver.getFkSolution(InitPoseT, joint_start, error_string);
+
+//         vector<double> init_pose = TrajPlannerBase::T_matrix2Quat(InitPoseT);
+//         // cout<<"joint_start"<<endl;
+//         // copy(joint_start.cbegin(),joint_start.cend(),ostream_iterator<double>(cout," "));
+//         // cout<<endl;
+//         // vector<double> middle_pose(goal_pose);
+//         // middle_pose[2] += 0.15;
+//         // vector<double> start_up_pose(start_pose);
+//         // start_up_pose[2] += 0.1;
+//         // trajCartesianAllPoints.push_back(start_pose);
+//         // trajCartesianAllPoints.push_back(start_up_pose);
+        
+//         // trajCartesianAllPoints.push_back(goal_pose);
+
+//         // ROS_INFO("Enter the initInterpolation");
+//         // double duration = trajSPlannerObj->initInterpolation(trajCartesianAllPoints, cartesianVelocity, commandName);
+//         // ROS_INFO("Finish the initInterpolation");
+
+//         #ifdef simulation
+//         // 定义 JointState 消息
+//         sensor_msgs::JointState joint_state_msg;
+//         joint_state_msg.name.resize(7);
+//         joint_state_msg.position.resize(7);
+
+//         if(arm_param_.name == "left")
+//         {
+//             // 设置 JointState 消息中的关节名称和初始位置
+//             joint_state_msg.name[0] = "left_joint1";
+//             joint_state_msg.name[1] = "left_joint2";
+//             joint_state_msg.name[2] = "left_joint3";
+//             joint_state_msg.name[3] = "left_joint4";
+//             joint_state_msg.name[4] = "left_joint5";
+//             joint_state_msg.name[5] = "left_joint6";
+//             joint_state_msg.name[6] = "left_joint7";
+//         }else{
+//             // 设置 JointState 消息中的关节名称和初始位置
+//             joint_state_msg.name[0] = "right_joint1";
+//             joint_state_msg.name[1] = "right_joint2";
+//             joint_state_msg.name[2] = "right_joint3";
+//             joint_state_msg.name[3] = "right_joint4";
+//             joint_state_msg.name[4] = "right_joint5";
+//             joint_state_msg.name[5] = "right_joint6";
+//             joint_state_msg.name[6] = "right_joint7"; 
+//         }
+//         #endif
+        
+//         // double t = 0;
+//         VectorXd vel(7);
+//         vel.setZero(7);
+//         ros::Rate loop_rate(frequency);
+//         // Matrix4d last_T = InitPoseT;
+//         // struct timeval begin_time;
+//         // gettimeofday(&begin_time, NULL);
+
+//         // Define duration and number of samples
+//         Eigen::Matrix4d start_pose = InitPoseT;
+//         Eigen::Matrix4d end_pose = Eigen::Matrix4d::Identity();
+//         end_pose = TrajPlannerBase::Quat2T_matrix(goal_pose);
+//         std::vector<Eigen::Matrix4d> cartesian_trajectory;
+//         // Convert init_pose and goal_pose to Eigen::Quaterniond
+//         Eigen::Quaterniond quat_init(init_pose[3], init_pose[4], init_pose[5], init_pose[6]);
+//         Eigen::Quaterniond quat_goal(goal_pose[3], goal_pose[4], goal_pose[5], goal_pose[6]);
+
+//         // Calculate the dot product of the two quaternions
+//         double dot_product = fabs(quat_init.dot(quat_goal));
+//         if(!handReset)
+//         {
+//             double duration1; // 2.5 seconds for the first segment
+//             double duration2;// 2.5 seconds for the second segment
+//             int num_samples1;
+//             int num_samples2;
+//             if(dot_product < 0.95)
+//             {
+//                 // Define durations and number of samples for each segment
+//                 duration1 = 2; // 2.5 seconds for the first segment
+//                 duration2 = 1;// 2.5 seconds for the second segment
+//                 num_samples1 = 350;
+//                 num_samples2 = 175;
+//             }else{
+//                 // Define durations and number of samples for each segment
+//                 duration1 = 1; // 2.5 seconds for the first segment
+//                 duration2 = 1; // 2.5 seconds for the second segment
+//                 num_samples1 = 150;
+//                 num_samples2 = 150;
+//             }
+            
+//             vector<double> middle_pose_temp(goal_pose);
+//             middle_pose_temp[2] += 0.15;
+//             Eigen::Matrix4d middle_pose = TrajPlannerBase::Quat2T_matrix(middle_pose_temp);
+//             // Get the minimum jerk trajectory for each segment
+//             std::vector<Eigen::Matrix4d> trajectory1 = minimumJerkInterpolationCartesian(start_pose, middle_pose, duration1, num_samples1);
+//             std::vector<Eigen::Matrix4d> trajectory2 = minimumJerkInterpolationCartesian(middle_pose, end_pose, duration2, num_samples2);
+
+//             // Combine the two segments
+//             cartesian_trajectory.insert(cartesian_trajectory.end(), trajectory1.begin(), trajectory1.end());
+//             cartesian_trajectory.insert(cartesian_trajectory.end(), trajectory2.begin(), trajectory2.end());
+//         }
+//         else{
+//             int num_samples;
+//             double duration;
+//             if(dot_product < 0.95)
+//             {
+//                 duration = 2.0; // 5 seconds
+//                 num_samples = 350;
+//             }else{
+//                 duration = 1; // 5 seconds
+//                 num_samples = 175;
+//             }
+            
+//             // Get the minimum jerk trajectory in Cartesian space
+//             cartesian_trajectory = minimumJerkInterpolationCartesian(start_pose, end_pose, duration, num_samples);
+//         }
+        
+//         int i=0;
+//         while (ros::ok() && i < cartesian_trajectory.size())
+//         {
+            
+//             // std::cout << "activate_time is " << std::to_string(double(cur_time.tv_sec + cur_time.tv_usec / 1e6)) << std::endl;
+
+//             // Matrix4d T;
+//             // if(!trajSPlannerObj->calCartesianInterpolation(t, last_T, T))
+//             // {
+//             //     ROS_ERROR("Cartesian Interpolation failed!");
+//             //     break;
+//             // }
+//             // last_T = T ;
+
+//             // ROS_INFO("Enter the IKqpSolution");
+            
+//             q_ik = qpik_solver.IKqpSolution(&kin_solver,frequency,cartesian_trajectory[i], joint_cur, error_string,arm_param_.joints_min,arm_param_.joints_max);
+//             i++;
+//             // ROS_INFO("Finish the IKqpSolution");
+//             //=====2
+//             joint_cur = q_ik;
+//             joint_test_last =joint_cur;
+//             #ifdef real
+
+//             vector<double> newJoint;
+//             newJoint.resize(7);
+//             for (int i = 0; i < 7; i++)
+//             {
+//                 newJoint[i] = q_ik(i);
+//             }
+//             // cout<<"The newJoint joints = "<<endl;
+//             // copy(newJoint.cbegin(),newJoint.cend(),ostream_iterator<double>(cout," "));
+//             // cout<<endl;
+
+//             if(arm_param_.name == "left")
+//             {
+                
+//                 LeftJoints_pub(newJoint, vel, left_joints_publisher);
+//                 // ROS_INFO("LeftJoints_pub finish");
+                
+//                 // struct timeval cur_time;
+//                 // gettimeofday(&cur_time, NULL);
+//                 // double dTimeDiffUs = (cur_time.tv_sec - begin_time.tv_sec)*1000000 + (cur_time.tv_usec - begin_time.tv_usec);
+//                 // ROS_INFO("LeftJoints Control[%f]us: %f,%f,%f,%f,%f,%f,%f", dTimeDiffUs,newJoint[0],newJoint[1],newJoint[2],newJoint[3],newJoint[4],newJoint[5],newJoint[6]);
+//             }else{
+//                 // struct timeval cur_time;
+//                 // gettimeofday(&cur_time, NULL);
+//                 // std::cout << "activate_time is " << std::to_string(double(cur_time.tv_sec + cur_time.tv_usec / 1e6)) << std::endl;
+//                 RightJoints_pub(newJoint, vel, right_joints_publisher);
+//                 // ROS_INFO("RightJoints_pub finish");
+//                 // struct timeval cur_time;
+//                 // gettimeofday(&cur_time, NULL);
+//                 // double dTimeDiffUs = (cur_time.tv_sec - begin_time.tv_sec)*1000000 + (cur_time.tv_usec - begin_time.tv_usec);
+//                 // ROS_INFO("RightJoints Control[%f]us: %f,%f,%f,%f,%f,%f,%f", dTimeDiffUs,newJoint[0],newJoint[1],newJoint[2],newJoint[3],newJoint[4],newJoint[5],newJoint[6]);
+//                 // ROS_INFO("Publish RightJoints to Control: %f,%f,%f,%f,%f,%f,%f",newJoint[0],newJoint[1],newJoint[2],newJoint[3],newJoint[4],newJoint[5],newJoint[6]);
+//             }
+//             #endif
+            
+//             // t += 1.0/frequency;
+//             #ifdef simulation
+//             for (int i = 0; i < 7; i++)
+//             {
+//                 joint_state_msg.position[i] = q_ik(i); 
+
+//             }
+//             joint_state_msg.header.stamp = ros::Time::now();
+//             joint_state_pub.publish(joint_state_msg);
+//             #endif
+//             loop_rate.sleep();
+//             // ros::SpinOnce();
+//         }
+
+
+//         #ifdef LLM
+//         sleep(0.5);
+//         if(Arrrived_GoalPose(kin_solver,arm_param_,goal_pose,id))
+//         {
+//             ROS_INFO("Cartesian Trajectory Planning finished!");
+//         }else{
+//             ROS_INFO("Cartesian Trajectory Planning failed!");
+//         }
+//         // to do
+//         // llm_msgs::pose_action_status grasp_status;
+//         // grasp_status.hand_move_success = 1;
+//         // arrive_pose_publisher.publish(grasp_status);
+
+//         // if(grasp_status.hand_move_success == 1)
+//         // {
+//         //     ROS_INFO("Cartesian Trajectory Planning finished!");
+//         // }else{
+//         //     ROS_INFO("Cartesian Trajectory Planning failed!");
+//         // }
+//         // std::cout << "hand_move_success_time is " << std::to_string(double(cur_time.tv_sec + cur_time.tv_usec / 1e6)) << std::endl;
+//         #endif
+
+    
+    
+// }
 
 // 0.7958445725629495, 0.2782065906429096, -2.160228444539954, -2.130078052154062, 0.7684380883113876, -0.7372445889897331, -0.13617722696856294, 
 // -0.8562834156056438, -0.3744101957551576, 1.829003642915747, 2.146712156322697, -0.9412218493068566, 0.4309527275966223, 0.5659602942144225
@@ -1007,6 +1448,7 @@ int main(int argc, char *argv[])
     // //抱创新中心牌、会徽
     // thread hug_thread(Hug_Brand, ref(dual_arm));
     // hug_thread.detach();
+
     ros::spin();
     // ros::waitForShutdown();
 

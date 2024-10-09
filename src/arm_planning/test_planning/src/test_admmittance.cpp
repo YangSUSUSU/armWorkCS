@@ -48,9 +48,9 @@ public:
 
     AdmittanceController(ros::NodeHandle& nh) {
         // 初始化订阅者和发布者
-        force_sub_ = nh.subscribe("filtered_force", 100, &AdmittanceController::forceCallback, this);
-        joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &AdmittanceController::jointStateCallback, this);
-        // joint_state_sub = nh.subscribe("/joint_states", 10, &AdmittanceController::jointStateCallback, this);
+        force_sub_ = nh.subscribe("filtered_force", 10, &AdmittanceController::forceCallback, this);
+        // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &AdmittanceController::jointStateCallback, this);
+        joint_state_sub = nh.subscribe("/joint_states", 10, &AdmittanceController::jointStateCallback, this);
 
         // position_pub_ = nh.advertise<geometry_msgs::Vector3>("desired_position", 100);
         position_pub_ = nh.advertise<geometry_msgs::Pose>("desired_pose", 100);

@@ -19,18 +19,15 @@ struct ArmParam
     std::vector<std::string> joint_names;
     std::vector<double> joint_pos;
     std::vector<double> joint_vel;
-    std::vector<double> joint_eff;
     std::vector<double> joints_min;
     std::vector<double> joints_max;
     int which_arm;//0-left, 1-right
-    double max_line_vel, max_rot_vel, max_line_acc, max_rot_acc, max_line_jerk, max_rot_jerk;
-
+    int arm_move_enable;
     void resize()
     {
         joint_names.resize(n_joints);
         joint_pos.resize(n_joints);
         joint_vel.resize(n_joints);
-        joint_eff.resize(n_joints);
         joints_min.resize(n_joints);
         joints_max.resize(n_joints);
     };
@@ -46,11 +43,15 @@ class DualArm
 
         void LeftJoints_pub(const std::vector<double> pos, const Eigen::VectorXd vel, ros::Publisher pub);
         void RightJoints_pub(const std::vector<double> pos, const Eigen::VectorXd vel, ros::Publisher pub);
-        void GraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos);
+        void LeftGraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos);
+        void RightGraspPose_CallBack(const llm_msgs::hand_pose_req::ConstPtr& grasp_pos);
 
         bool Judge_arrived(std::vector<double> cur_pose,std::vector<double> end_grasp_pose);
-        void Cartesian_Plan(std::vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id);
+        // void Cartesian_Plan(std::vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id);
         // void Joints_Plan(std::vector<double> &goal_joints );
+        void Right_Cartesian_Plan(std::vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id);
+        void Left_Cartesian_Plan(std::vector<double> &goal_pose , ArmParam &arm_param_,uint32_t id);
+        
         void LeftJoints_Plan(std::vector<double> &goal_joints);
         void RightJoints_Plan(std::vector<double> &goal_joints);
         void Wave_Arm(std::vector<double> &goal_joints);
@@ -65,7 +66,10 @@ class DualArm
         ros::Publisher  right_joints_publisher;
 
         ros::Publisher  arrive_pose_publisher;
-        ros::Subscriber grasp_pose_subscriber;
+        // ros::Subscriber grasp_pose_subscriber;
+        ros::Subscriber left_grasp_pose_subscriber;
+        ros::Subscriber right_grasp_pose_subscriber;
+
         ros::Publisher test_trajectory_pub_; // test
 
         ros::Subscriber left_joints_subscriber;

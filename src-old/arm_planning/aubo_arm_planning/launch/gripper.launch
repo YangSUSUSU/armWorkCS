@@ -1,0 +1,7 @@
+<launch>
+    <!-- 加载 YAML 文件中的参数 -->
+    <rosparam command="load" file="$(find aubo_arm_planning)/param/config.yaml" />
+
+    <!-- 启动 GripperClient 节点 -->
+    <node name="gripper" pkg="aubo_arm_planning" type="gripper" output="screen"/>
+</launch>

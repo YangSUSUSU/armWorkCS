@@ -44,8 +44,8 @@ class ForceFilterNode {
 public:
     ForceFilterNode(ros::NodeHandle& nh) 
         : filter_(30) {  // 设置窗口大小为5
-        sub_ = nh.subscribe("human_arm_6dof_left", 10, &ForceFilterNode::forceCallback, this);
-        // sub_ = nh.subscribe("noisy_force", 10, &ForceFilterNode::forceCallback, this);
+        // sub_ = nh.subscribe("human_arm_6dof_left", 10, &ForceFilterNode::forceCallback, this);
+        sub_ = nh.subscribe("noisy_force", 10, &ForceFilterNode::forceCallback, this);
         pub_ = nh.advertise<geometry_msgs::WrenchStamped>("filtered_force", 10);
     }
 

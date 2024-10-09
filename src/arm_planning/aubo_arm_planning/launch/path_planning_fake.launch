@@ -14,7 +14,7 @@
   <arg name="left_chain_end" default="left_flange" />
   <arg name="right_chain_start" default="base_link" />
   <arg name="right_chain_end" default="right_flange" />
-  <node pkg="aubo_arm_planning" type="arm_planning" name="arm_planning" output="screen">
+  <node pkg="aubo_arm_planning" type="arm_planning" name="arm_planning" output="screen"  >
     <param name="left_chain_start" type="string" value="$(arg left_chain_start)"/>
     <param name="left_chain_end"   type="string" value="$(arg left_chain_end)"/>
     <param name="right_chain_start" type="string" value="$(arg right_chain_start)"/>
