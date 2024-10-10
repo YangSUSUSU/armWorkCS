@@ -3,7 +3,7 @@
 #include <geometry_msgs/WrenchStamped.h>
 #include <array>
 #include <vector>
-
+#define SIM
 class SmoothingFilter {
 public:
     SmoothingFilter(size_t windowSize) : windowSize(windowSize), index(0) {
@@ -40,7 +40,15 @@ private:
 class ForceFilterNode {
 public:
     ForceFilterNode(ros::NodeHandle& nh)
-        : filter_left_(30), filter_right_(30) {  // 为两个传感器设置滤波器窗口大小
+        : filter_left_(3), filter_right_(3) {  // 为两个传感器设置滤波器窗口大小
+
+        #ifdef SIMULATION_MODE
+                sub_left_ = nh.subscribe("noisy_force_left", 10, &ForceFilterNode::leftForceCallback, this);
+                sub_right_ = nh.subscribe("noisy_force_right", 10, &ForceFilterNode::rightForceCallback, this);
+        #else
+                sub_left_ = nh.subscribe("human_arm_6dof_left", 10, &ForceFilterNode::leftForceCallback, this);
+                sub_right_ = nh.subscribe("human_arm_6dof_right", 10, &ForceFilterNode::rightForceCallback, this);
+        #endif
         sub_left_ = nh.subscribe("noisy_force_left", 10, &ForceFilterNode::leftForceCallback, this);
         sub_right_ = nh.subscribe("noisy_force_right", 10, &ForceFilterNode::rightForceCallback, this);
         pub_left_ = nh.advertise<geometry_msgs::WrenchStamped>("filtered_force_left", 10);

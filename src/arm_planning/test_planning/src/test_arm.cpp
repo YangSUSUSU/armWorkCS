@@ -21,6 +21,8 @@
 #include <Eigen/Dense>
 #include <array>
 #include <vector>
+#define SIM
+
 
 class SmoothingFilter {
 public:
@@ -55,24 +57,30 @@ private:
 class ArmController {
 public:
     ArmController(ros::NodeHandle& nh) 
-        : filter_left(5),filter_right(5) {  // 初始化平滑滤波器，窗口大小为5
+        : filter_left(1),filter_right(1) {  // 初始化平滑滤波器，窗口大小为5
         left_arm_pub_ = nh.advertise<llm_msgs::hand_pose_req>("/left_arm_pose_req", 10);
         right_arm_pub_ = nh.advertise<llm_msgs::hand_pose_req>("/right_arm_pose_req", 10);
 
         left_sub = nh.subscribe("desired_pose_left", 10, &ArmController::positionCallback_left, this);
         right_sub = nh.subscribe("desired_pose_right", 10, &ArmController::positionCallback_right, this);
+        
+        #ifdef SIM
+            joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
+            // joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
 
+        #else
+            joint_state_sub_left = nh.subscribe("/human_arm_state_left" , 10, &ArmController::jointStateCallback_left, this);
+            joint_state_sub_right = nh.subscribe("/human_arm_state_right" , 10, &ArmController::jointStateCallback_right, this);
+
+
+        #endif
         // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
-        joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
-
-        // test_trajectory_pub_ = nh.advertise<geometry_msgs::Point>("desired_trajectory", 10); // 初始化话题发布者
-
 
         first();
-        ros::Rate r(199);
+        ros::Rate r(200);
         /////////////////////////
         while (ros::ok()) {
-            initializeGraspPoses();
+            command();
             publishGraspPoses();
             ros::spinOnce();    
             r.sleep();
@@ -113,9 +121,9 @@ public:
 
         Eigen::MatrixXd InitPoseT_left;
 
-        arm_kinematics::ArmKinematicsSolver kin_solver(urdf_path, arm_param_left.base_link, arm_param_left.eef_link, arm_param_left.joints_min, arm_param_left.joints_max);
+        arm_kinematics::ArmKinematicsSolver kin_solver_leftSim(urdf_path, arm_param_left.base_link, arm_param_left.eef_link, arm_param_left.joints_min, arm_param_left.joints_max);
 
-        kin_solver.getFkSolution(InitPoseT_left, joint_positions_L, error_string_left);
+        kin_solver_leftSim.getFkSolution(InitPoseT_left, joint_positions_L, error_string_left);
         // L_grasp_pose[0] = InitPoseT_left(0, 3);
         // L_grasp_pose[1] = InitPoseT_left(1, 3);
         // L_grasp_pose[2] = InitPoseT_left(2, 3);
@@ -126,15 +134,42 @@ public:
         std::string error_string_right;
 
         Eigen::MatrixXd InitPoseT_right;
-        arm_kinematics::ArmKinematicsSolver kin_solver_right(urdf_path, arm_param_right.base_link, arm_param_right.eef_link, arm_param_right.joints_min, arm_param_right.joints_max);
+        arm_kinematics::ArmKinematicsSolver kin_solver_rightSim(urdf_path, arm_param_right.base_link, arm_param_right.eef_link, arm_param_right.joints_min, arm_param_right.joints_max);
 
-        kin_solver.getFkSolution(InitPoseT_right, joint_positions_R, error_string_right);
+        kin_solver_rightSim.getFkSolution(InitPoseT_right, joint_positions_R, error_string_right);
         // R_grasp_pose[0] = InitPoseT_right(0, 3);
         // R_grasp_pose[1] = InitPoseT_right(1, 3);
         // R_grasp_pose[2] = InitPoseT_right(2, 3);
     }
+    void jointStateCallback_left(const sensor_msgs::JointState::ConstPtr& msg) 
+    {
+        std::string urdf_path = ros::package::getPath("arm_kinematics_solver");
+        urdf_path += "/models/AUBO_HRM.urdf";
+        auto joint_positions_L = msg->position; // 保存 joint position
 
+        std::string error_string_left;
 
+        Eigen::MatrixXd InitPoseT_left;
+
+        arm_kinematics::ArmKinematicsSolver kin_solver_left(urdf_path, arm_param_left.base_link, arm_param_left.eef_link, arm_param_left.joints_min, arm_param_left.joints_max);
+
+        kin_solver_left.getFkSolution(InitPoseT_left, joint_positions_L, error_string_left);
+
+    }
+    void jointStateCallback_right(const sensor_msgs::JointState::ConstPtr& msg) 
+    {
+        std::string urdf_path = ros::package::getPath("arm_kinematics_solver");
+        urdf_path += "/models/AUBO_HRM.urdf";
+        auto joint_positions_R = msg->position; // 保存 joint position
+
+        std::string error_string_right;
+
+        Eigen::MatrixXd InitPoseT_right;
+        arm_kinematics::ArmKinematicsSolver kin_solver_right(urdf_path, arm_param_right.base_link, arm_param_right.eef_link, arm_param_right.joints_min, arm_param_right.joints_max);
+
+        kin_solver_right.getFkSolution(InitPoseT_right, joint_positions_R, error_string_right);
+
+    }
 
     void positionCallback_left(const geometry_msgs::Pose::ConstPtr& msg) {
         // 将接收到的位置数据传递给滤波器
@@ -230,15 +265,15 @@ public:
         grasp_pose.pose_req.orientation.w = grasp_pose_vals[6];
     }
 
-    void initializeGraspPoses() 
+    void command () 
     {
         double radius = 0.08; // 圆的半径
         double angular_velocity = 0.15; // 角速度
         double time = ros::Time::now().toSec(); // 当前时间
         Eigen::Vector3d ddddd;
         ddddd(0) = radius * cos(angular_velocity * time);
-        ddddd(1) = radius * sin(angular_velocity * time);
-        ddddd(2) = 0;
+        ddddd(2) = radius * sin(angular_velocity * time);
+        ddddd(1) = 0;
         //左侧转换到法兰坐标系
         Eigen::Vector3d delta_xyz_left(xx_left, yy_left, zz_left);
         auto nowTcp2b_l = Quat2T_matrix(L_grasp_pose);
@@ -259,9 +294,12 @@ public:
         left_grasp_pose.hand_move_enable = 1;
         left_grasp_pose.hand_side = 0;
         left_grasp_pose.hand_reset = 1;
-        left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+ddddd(0)+result_left(0);
-        left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+ddddd(1)+result_left(1);
-        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+ddddd(2)+result_left(2);
+        left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+ddddd(0);
+        left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+ddddd(1);
+        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+ddddd(2);
+        // left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+ddddd(0)+result_left(0);
+        // left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+ddddd(1)+result_left(1);
+        // left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+ddddd(2)+result_left(2);
         left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
         left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
         left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
@@ -274,9 +312,12 @@ public:
         right_grasp_pose.hand_move_enable = 1;
         right_grasp_pose.hand_side = 1;
         right_grasp_pose.hand_reset = 1;  
-        right_grasp_pose.pose_req.position.x = R_grasp_pose[0]+ddddd(0)+result_right(0);
-        right_grasp_pose.pose_req.position.y = R_grasp_pose[1]+ddddd(1)+result_right(1);
-        right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+ddddd(2)+result_right(2);
+        // right_grasp_pose.pose_req.position.x = R_grasp_pose[0]+ddddd(0);
+        // right_grasp_pose.pose_req.position.y = R_grasp_pose[1]+ddddd(1);
+        // right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+ddddd(2);
+        right_grasp_pose.pose_req.position.x = R_grasp_pose[0]+result_right(0);
+        right_grasp_pose.pose_req.position.y = R_grasp_pose[1]+result_right(1);
+        right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+result_right(2);
         // right_grasp_pose.pose_req.orientation.x = qx_right;
         // right_grasp_pose.pose_req.orientation.y = qy_right;
         // right_grasp_pose.pose_req.orientation.z = qz_right;
@@ -299,7 +340,8 @@ public:
         // std::cout<<"distance: "<<dis<<std::endl;
     }
 
-    void publishGraspPoses() {
+    void publishGraspPoses() 
+    {
         left_arm_pub_.publish(left_grasp_pose);
         right_arm_pub_.publish(right_grasp_pose); // 如果需要右手抓握位置，可以取消注释
     }
@@ -333,6 +375,9 @@ private:
     ros::Subscriber right_sub;
 
     ros::Subscriber joint_state_sub;
+    ros::Subscriber joint_state_sub_left;
+    ros::Subscriber joint_state_sub_right;
+
     llm_msgs::hand_pose_req left_grasp_pose, right_grasp_pose;
     ArmParam arm_param_left;
     ArmParam arm_param_right;

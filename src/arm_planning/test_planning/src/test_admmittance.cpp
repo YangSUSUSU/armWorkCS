@@ -9,6 +9,34 @@
 #include <arm_kinematics_solver/arm_kinematics_solver.h>
 #include <sensor_msgs/JointState.h>
 
+
+// 定义仿真模式
+#define SIMULATION_MODE
+
+// 定义六个导纳控制的常量，通过条件编译区分仿真和真机模式
+#ifdef SIMULATION_MODE
+    // 仿真模式下的力 mbk 参数
+    #define FORCE_MASS 0.5        // 力控制中的质量 (kg)
+    #define FORCE_DAMPING 1.1     // 力控制中的阻尼 (Ns/m)
+    #define FORCE_STIFFNESS 50.0  // 力控制中的刚度 (N/m)
+
+    // 仿真模式下的力矩 mbk 参数
+    #define TORQUE_MASS 10.1       // 力矩控制中的质量 (kg·m²)
+    #define TORQUE_DAMPING 10.05   // 力矩控制中的阻尼 (Ns·m/rad)
+    #define TORQUE_STIFFNESS 20.0 // 力矩控制中的刚度 (N·m/rad)
+#else
+    // 真机模式下的力 mbk 参数
+    #define FORCE_MASS 1.0        // 力控制中的质量 (kg)
+    #define FORCE_DAMPING 1.5     // 力控制中的阻尼 (Ns/m)
+    #define FORCE_STIFFNESS 100.0 // 力控制中的刚度 (N/m)
+
+    // 真机模式下的力矩 mbk 参数
+    #define TORQUE_MASS 0.2       // 力矩控制中的质量 (kg·m²)
+    #define TORQUE_DAMPING 0.4    // 力矩控制中的阻尼 (Ns·m/rad)
+    #define TORQUE_STIFFNESS 40.0 // 力矩控制中的刚度 (N·m/rad)
+#endif
+
+
 using namespace std;
 using namespace Eigen;
 
@@ -42,7 +70,12 @@ public:
         initializeArmParams();
         
         force_sub_ = nh.subscribe("/filtered_force_"+arm_name , 10, &ArmController::forceCallback, this);
-        joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
+        #ifdef SIMULATION_MODE
+            joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
+        #else
+            joint_state_sub = nh.subscribe("/human_arm_state_"+arm_name , 10, &ArmController::jointStateCallback, this);
+
+        #endif
         position_pub_ = nh.advertise<geometry_msgs::Pose>("/desired_pose_"+arm_name , 100);
     }
 
@@ -59,43 +92,35 @@ public:
 
     void jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg) {
         joint_positions = msg->position;
-        joint_velocities = msg->velocity;
-        joint_efforts = msg->effort;
 
-        // ROS_INFO("[%s] JointState received:", (arm_param_.name ).c_str());
-        // for (int i = 0; i < 7; ++i) {
-        //     ROS_INFO("- Position: %.4f",
-        //                 joint_positions[i]
-        //                );
+        // ROS_INFO("Header:");
+        // ROS_INFO("  seq: %d", msg->header.seq);
+        // ROS_INFO("  stamp: %d.%d", msg->header.stamp.sec, msg->header.stamp.nsec);
+        // ROS_INFO("  frame_id: %s", msg->header.frame_id.c_str());
+
+        // // 打印关节名称
+        // ROS_INFO("Joint Names:");
+        // for (size_t i = 0; i < msg->name.size(); ++i) {
+        //     ROS_INFO("  Name[%lu]: %s", i, msg->name[i].c_str());
         // }
-        ROS_INFO("Header:");
-        ROS_INFO("  seq: %d", msg->header.seq);
-        ROS_INFO("  stamp: %d.%d", msg->header.stamp.sec, msg->header.stamp.nsec);
-        ROS_INFO("  frame_id: %s", msg->header.frame_id.c_str());
 
-        // 打印关节名称
-        ROS_INFO("Joint Names:");
-        for (size_t i = 0; i < msg->name.size(); ++i) {
-            ROS_INFO("  Name[%lu]: %s", i, msg->name[i].c_str());
-        }
+        // // 打印关节位置
+        // ROS_INFO("Joint Positions:");
+        // for (size_t i = 0; i < msg->position.size(); ++i) {
+        //     ROS_INFO("  Position[%lu]: %f", i, msg->position[i]);
+        // }
 
-        // 打印关节位置
-        ROS_INFO("Joint Positions:");
-        for (size_t i = 0; i < msg->position.size(); ++i) {
-            ROS_INFO("  Position[%lu]: %f", i, msg->position[i]);
-        }
+        // // 打印关节速度
+        // ROS_INFO("Joint Velocities:");
+        // for (size_t i = 0; i < msg->velocity.size(); ++i) {
+        //     ROS_INFO("  Velocity[%lu]: %f", i, msg->velocity[i]);
+        // }
 
-        // 打印关节速度
-        ROS_INFO("Joint Velocities:");
-        for (size_t i = 0; i < msg->velocity.size(); ++i) {
-            ROS_INFO("  Velocity[%lu]: %f", i, msg->velocity[i]);
-        }
-
-        // 打印关节力矩
-        ROS_INFO("Joint Efforts:");
-        for (size_t i = 0; i < msg->effort.size(); ++i) {
-            ROS_INFO("  Effort[%lu]: %f", i, msg->effort[i]);
-        }
+        // // 打印关节力矩
+        // ROS_INFO("Joint Efforts:");
+        // for (size_t i = 0; i < msg->effort.size(); ++i) {
+        //     ROS_INFO("  Effort[%lu]: %f", i, msg->effort[i]);
+        // }
         Eigen::MatrixXd InitPoseT;
         std::string error_string;
         std::string urdf_path = ros::package::getPath("arm_kinematics_solver");
@@ -126,7 +151,7 @@ private:
 
     void initializeForceTorque(const geometry_msgs::WrenchStamped::ConstPtr& msg) {
 
-               // 打印完整的 WrenchStamped 消息
+    // 打印完整的 WrenchStamped 消息
     // ROS_INFO("WrenchStamped Message:");
     // ROS_INFO("Header: seq: %d, stamp: [sec: %d, nsec: %d], frame_id: %s", 
     //          msg->header.seq, 
@@ -144,18 +169,39 @@ private:
     //          msg->wrench.torque.y, 
     //          msg->wrench.torque.z); 
 
+        #ifdef SIMULATION_MODE
 
-        sensorFrameMatrix << 0, -1, 0,
-                             1, 0, 0,
-                             0, 0, 1;
+            sensorFrameMatrix << 1, 0, 0,
+                                0, 1, 0,
+                                0, 0, 1;
+                Eigen::Vector3d force;
+        force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
+        force = sensorFrameMatrix * force;
 
+        first_force_x = 0;
+        first_force_y = 0;
+        first_force_z = 0;
+
+        Eigen::Vector3d torque;
+        torque << msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z;
+        torque = sensorFrameMatrix * torque;
+
+        first_torque_x = torque(0);
+        first_torque_y = torque(1);
+        first_torque_z = torque(2);
+
+        #else
+          
+            sensorFrameMatrix << 0, -1, 0,
+                                1, 0, 0,
+                                0, 0, 1;
         Eigen::Vector3d force;
         force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
         force = sensorFrameMatrix * force;
 
-        first_force_x = -force(0) * 30;
-        first_force_y = -force(1) * 30;
-        first_force_z = force(2) * 30;
+        first_force_x = -force(0) * 3;
+        first_force_y = -force(1) * 3;
+        first_force_z = force(2) * 3;
 
         Eigen::Vector3d torque;
         torque << msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z;
@@ -164,44 +210,87 @@ private:
         first_torque_x = -torque(0);
         first_torque_y = -torque(1);
         first_torque_z = torque(2);
+
+        #endif
+       
+
     }
 
     void updateForceTorque(const geometry_msgs::WrenchStamped::ConstPtr& msg) {
-        Eigen::Vector3d force;
-        force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
-        force = sensorFrameMatrix * force;
+         #ifdef SIMULATION_MODE
+                Eigen::Vector3d force;
+                force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
+                force = sensorFrameMatrix * force;
 
-        Eigen::Vector3d torque;
-        torque << msg->wrench.torque.x - first_torque_x, msg->wrench.torque.y - first_torque_y, msg->wrench.torque.z - first_torque_z;
-        torque = sensorFrameMatrix * torque;
+                Eigen::Vector3d torque;
+                torque << msg->wrench.torque.x - first_torque_x, msg->wrench.torque.y - first_torque_y, msg->wrench.torque.z - first_torque_z;
+                torque = sensorFrameMatrix * torque;
 
-        force(0) = -force(0);
-        force(1) = -force(1);
-        torque(0) = -torque(0);
-        torque(1) = -torque(1);
+                force(0) = force(0);
+                force(1) = force(1);
+                torque(0) = -torque(0);
+                torque(1) = -torque(1);
 
-        double fx = force(0) - first_force_x;
-        double fy = force(1) - first_force_y;
-        double fz = force(2) - first_force_z;
+                double fx = force(0) - first_force_x;
+                double fy = force(1) - first_force_y;
+                double fz = force(2) - first_force_z;
 
-        double delta_x = admittanceController_force(last_x, now_x, fx);
-        last_x = now_x;
-        double delta_y = admittanceController_force(last_y, now_y, fy);
-        last_y = now_y;
-        double delta_z = admittanceController_force(last_z, now_z, fz);
-        last_z = now_z;
+                double delta_x = admittanceController_force(last_x, now_x, fx);
+                last_x = now_x;
+                double delta_y = admittanceController_force(last_y, now_y, fy);
+                last_y = now_y;
+                double delta_z = admittanceController_force(last_z, now_z, fz);
+                last_z = now_z;
 
-        auto result_ori = admittanceController_torque(last_R, now_R, torque);
-        last_R = now_R;
+                auto result_ori = admittanceController_torque(last_R, now_R, torque);
+                last_R = now_R;
 
-        pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
-        pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
-        pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
+                pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
+                pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
+                pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
 
-        pose_msg.orientation.x = result_ori.x();  // 设置姿态四元数 x
-        pose_msg.orientation.y = result_ori.y();  // 设置姿态四元数 y
-        pose_msg.orientation.z = result_ori.z();  // 设置姿态四元数 z
-        pose_msg.orientation.w = result_ori.w();    // 设置姿态四元数 w
+                pose_msg.orientation.x = result_ori.x();  // 设置姿态四元数 x
+                pose_msg.orientation.y = result_ori.y();  // 设置姿态四元数 y
+                pose_msg.orientation.z = result_ori.z();  // 设置姿态四元数 z
+                pose_msg.orientation.w = result_ori.w();    // 设置姿态四元数 w
+         #else
+                Eigen::Vector3d force;
+                force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
+                force = sensorFrameMatrix * force;
+
+                Eigen::Vector3d torque;
+                torque << msg->wrench.torque.x - first_torque_x, msg->wrench.torque.y - first_torque_y, msg->wrench.torque.z - first_torque_z;
+                torque = sensorFrameMatrix * torque;
+
+                force(0) = -force(0);
+                force(1) = -force(1);
+                torque(0) = -torque(0);
+                torque(1) = -torque(1);
+
+                double fx = force(0) - first_force_x;
+                double fy = force(1) - first_force_y;
+                double fz = force(2) - first_force_z;
+
+                double delta_x = admittanceController_force(last_x, now_x, fx);
+                last_x = now_x;
+                double delta_y = admittanceController_force(last_y, now_y, fy);
+                last_y = now_y;
+                double delta_z = admittanceController_force(last_z, now_z, fz);
+                last_z = now_z;
+
+                auto result_ori = admittanceController_torque(last_R, now_R, torque);
+                last_R = now_R;
+
+                pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
+                pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
+                pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
+
+                pose_msg.orientation.x = result_ori.x();  // 设置姿态四元数 x
+                pose_msg.orientation.y = result_ori.y();  // 设置姿态四元数 y
+                pose_msg.orientation.z = result_ori.z();  // 设置姿态四元数 z
+                pose_msg.orientation.w = result_ori.w();    // 设置姿态四元数 w
+        #endif
+ 
     }
 
     void publishDesiredPose() {
@@ -219,8 +308,8 @@ private:
     }
 
     double admittanceController_force(double last, double now, double force) {
-        const double M = 10.3;  // 虚拟质量
-        const double B = 10.53; // 阻尼
+        const double M = FORCE_MASS;  // 虚拟质量
+        const double B = FORCE_DAMPING; // 阻尼
         double T = 0.005;      // 控制周期
         double dv = (now - last) / T;
         double dxe = last - now - (-dv) * T / 2;
@@ -229,8 +318,8 @@ private:
 
     Eigen::Quaterniond admittanceController_torque(const Eigen::Matrix3d &last_RR, const Eigen::Matrix3d &now_RR, const Eigen::Vector3d &torque) {
         Eigen::Vector3d rotation_diff_A = rotationDifference(now_RR, last_RR);
-        const double M = 10.05; // 虚拟质量
-        const double B = 10.08;  // 阻尼
+        const double M = TORQUE_MASS; // 虚拟质量
+        const double B = TORQUE_DAMPING;  // 阻尼
         double T = 0.005;       // 控制周期
         Eigen::Vector3d rotation_diff = rotationDifference(last_RR, now_RR);
 
@@ -250,6 +339,9 @@ private:
 
     ros::Subscriber force_sub_;
     ros::Subscriber joint_state_sub;
+    ros::Subscriber joint_state_sub_left;
+    ros::Subscriber joint_state_sub_right;
+
     ros::Publisher position_pub_;
 
     ArmParam arm_param_;
