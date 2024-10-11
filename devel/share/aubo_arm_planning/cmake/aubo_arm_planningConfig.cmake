@@ -67,14 +67,14 @@ set(aubo_arm_planning_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(aubo_arm_planning_SOURCE_PREFIX /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning)
-  set(aubo_arm_planning_DEVEL_PREFIX /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel)
+  set(aubo_arm_planning_SOURCE_PREFIX /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning)
+  set(aubo_arm_planning_DEVEL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/devel)
   set(aubo_arm_planning_INSTALL_PREFIX "")
   set(aubo_arm_planning_PREFIX ${aubo_arm_planning_DEVEL_PREFIX})
 else()
   set(aubo_arm_planning_SOURCE_PREFIX "")
   set(aubo_arm_planning_DEVEL_PREFIX "")
-  set(aubo_arm_planning_INSTALL_PREFIX /home/nikooyang/aubo/aubo_ws2/aubo_ws2/install)
+  set(aubo_arm_planning_INSTALL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/install)
   set(aubo_arm_planning_PREFIX ${aubo_arm_planning_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(aubo_arm_planning_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/include " STREQUAL " ")
+if(NOT "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/include " STREQUAL " ")
   set(aubo_arm_planning_INCLUDE_DIRS "")
-  set(_include_dirs "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/include")
+  set(_include_dirs "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_plannin
         message(FATAL_ERROR "Project 'aubo_arm_planning' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'aubo_arm_planning' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'aubo_arm_planning' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/${idir}'.  ${_report}")
     endif()
     _list_append_unique(aubo_arm_planning_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib;/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/ubuntu/WorkSpace/armWorkCS/devel/lib;/home/ubuntu/rosws/install_isolated/lib;/home/ubuntu/catkin_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

@@ -1,9 +1,12 @@
 file(REMOVE_RECURSE
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/libtrac_ik.pdb"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/libtrac_ik.so"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrac_ik.pdb"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrac_ik.so"
   "CMakeFiles/trac_ik.dir/src/kdl_tl.cpp.o"
+  "CMakeFiles/trac_ik.dir/src/kdl_tl.cpp.o.d"
   "CMakeFiles/trac_ik.dir/src/nlopt_ik.cpp.o"
+  "CMakeFiles/trac_ik.dir/src/nlopt_ik.cpp.o.d"
   "CMakeFiles/trac_ik.dir/src/trac_ik.cpp.o"
+  "CMakeFiles/trac_ik.dir/src/trac_ik.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

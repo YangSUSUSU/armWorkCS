@@ -67,14 +67,14 @@ set(trac_ik_lib_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(trac_ik_lib_SOURCE_PREFIX /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trac_ik/trac_ik_lib)
-  set(trac_ik_lib_DEVEL_PREFIX /home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel)
+  set(trac_ik_lib_SOURCE_PREFIX /home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib)
+  set(trac_ik_lib_DEVEL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/devel)
   set(trac_ik_lib_INSTALL_PREFIX "")
   set(trac_ik_lib_PREFIX ${trac_ik_lib_DEVEL_PREFIX})
 else()
   set(trac_ik_lib_SOURCE_PREFIX "")
   set(trac_ik_lib_DEVEL_PREFIX "")
-  set(trac_ik_lib_INSTALL_PREFIX /home/nikooyang/aubo/aubo_ws2/aubo_ws2/install)
+  set(trac_ik_lib_INSTALL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/install)
   set(trac_ik_lib_PREFIX ${trac_ik_lib_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(trac_ik_lib_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "include;/usr/include;/usr/local/include " STREQUAL " ")
+if(NOT "include;/usr/include " STREQUAL " ")
   set(trac_ik_lib_INCLUDE_DIRS "")
-  set(_include_dirs "include;/usr/include;/usr/local/include")
+  set(_include_dirs "include;/usr/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -116,7 +116,7 @@ if(NOT "include;/usr/include;/usr/local/include " STREQUAL " ")
   endforeach()
 endif()
 
-set(libraries "trac_ik;/usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0;nlopt")
+set(libraries "trac_ik;/usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0;nlopt")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/nikooyang/aubo/aubo_ws2/aubo_ws2/install/lib;/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/ubuntu/WorkSpace/armWorkCS/install/lib;/home/ubuntu/rosws/install_isolated/lib;/home/ubuntu/catkin_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

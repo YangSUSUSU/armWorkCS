@@ -1,30 +1,18 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
-  )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trajectory_planner/src/interpolation.cpp" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trajectory_planner/CMakeFiles/trajectory_planner.dir/src/interpolation.cpp.o"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trajectory_planner/src/sVelocityPlanner.cpp" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trajectory_planner/CMakeFiles/trajectory_planner.dir/src/sVelocityPlanner.cpp.o"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trajectory_planner/src/traj_cp_planner.cpp" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_cp_planner.cpp.o"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trajectory_planner/src/traj_planner_base.cpp" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_planner_base.cpp.o"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trajectory_planner/src/traj_s_planner.cpp" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_s_planner.cpp.o"
-  )
-set(CMAKE_CXX_COMPILER_ID "GNU")
-
-# Preprocessor definitions for this target.
-set(CMAKE_TARGET_DEFINITIONS_CXX
-  "ROSCONSOLE_BACKEND_LOG4CXX"
-  "ROS_BUILD_SHARED_LIBS=1"
-  "ROS_PACKAGE_NAME=\"trajectory_planner\""
-  "trajectory_planner_EXPORTS"
   )
 
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trajectory_planner/include"
-  "/opt/ros/noetic/include"
-  "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner/src/interpolation.cpp" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/interpolation.cpp.o" "gcc" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/interpolation.cpp.o.d"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner/src/sVelocityPlanner.cpp" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/sVelocityPlanner.cpp.o" "gcc" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/sVelocityPlanner.cpp.o.d"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner/src/traj_cp_planner.cpp" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_cp_planner.cpp.o" "gcc" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_cp_planner.cpp.o.d"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner/src/traj_planner_base.cpp" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_planner_base.cpp.o" "gcc" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_planner_base.cpp.o.d"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner/src/traj_s_planner.cpp" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_s_planner.cpp.o" "gcc" "trajectory_planner/CMakeFiles/trajectory_planner.dir/src/traj_s_planner.cpp.o.d"
   )
 
 # Targets to which this target links.

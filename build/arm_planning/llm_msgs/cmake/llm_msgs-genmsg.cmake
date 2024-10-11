@@ -2,7 +2,7 @@
 
 message(STATUS "llm_msgs: 3 messages, 5 services")
 
-set(MSG_I_FLAGS "-Illm_msgs:/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg;-Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg;-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg")
+set(MSG_I_FLAGS "-Illm_msgs:/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg;-Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg;-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg")
 
 # Find all generators
 find_package(gencpp REQUIRED)
@@ -17,44 +17,44 @@ add_custom_target(llm_msgs_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" "geometry_msgs/Pose:geometry_msgs/Quaternion:std_msgs/Header:geometry_msgs/Point"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" "std_msgs/Header:geometry_msgs/Pose:geometry_msgs/Quaternion:geometry_msgs/Point"
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" "std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" "std_msgs/Header"
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" "std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" "std_msgs/Header"
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" ""
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" ""
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" ""
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" ""
 )
 
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
 add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "llm_msgs" "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" ""
 )
 
 #
@@ -64,19 +64,19 @@ add_custom_target(_llm_msgs_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
@@ -84,31 +84,31 @@ _generate_msg_cpp(llm_msgs
 
 ### Generating Services
 _generate_srv_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_cpp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/llm_msgs
@@ -126,21 +126,21 @@ add_custom_target(llm_msgs_generate_messages_cpp
 add_dependencies(llm_msgs_generate_messages llm_msgs_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_cpp _llm_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -153,19 +153,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS llm_msgs_generate_messages_cpp)
 ### Section generating for lang: geneus
 ### Generating Messages
 _generate_msg_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
@@ -173,31 +173,31 @@ _generate_msg_eus(llm_msgs
 
 ### Generating Services
 _generate_srv_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_eus(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/llm_msgs
@@ -215,21 +215,21 @@ add_custom_target(llm_msgs_generate_messages_eus
 add_dependencies(llm_msgs_generate_messages llm_msgs_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_eus _llm_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -242,19 +242,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS llm_msgs_generate_messages_eus)
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
@@ -262,31 +262,31 @@ _generate_msg_lisp(llm_msgs
 
 ### Generating Services
 _generate_srv_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_lisp(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/llm_msgs
@@ -304,21 +304,21 @@ add_custom_target(llm_msgs_generate_messages_lisp
 add_dependencies(llm_msgs_generate_messages llm_msgs_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_lisp _llm_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -331,19 +331,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS llm_msgs_generate_messages_lisp)
 ### Section generating for lang: gennodejs
 ### Generating Messages
 _generate_msg_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
@@ -351,31 +351,31 @@ _generate_msg_nodejs(llm_msgs
 
 ### Generating Services
 _generate_srv_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_nodejs(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/llm_msgs
@@ -393,21 +393,21 @@ add_custom_target(llm_msgs_generate_messages_nodejs
 add_dependencies(llm_msgs_generate_messages llm_msgs_generate_messages_nodejs)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_nodejs _llm_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -420,19 +420,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS llm_msgs_generate_messages_nodejs)
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
 )
 _generate_msg_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
@@ -440,31 +440,31 @@ _generate_msg_py(llm_msgs
 
 ### Generating Services
 _generate_srv_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
 )
 _generate_srv_py(llm_msgs
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv"
+  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/llm_msgs
@@ -482,21 +482,21 @@ add_custom_target(llm_msgs_generate_messages_py
 add_dependencies(llm_msgs_generate_messages llm_msgs_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
+get_filename_component(_filename "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv" NAME_WE)
 add_dependencies(llm_msgs_generate_messages_py _llm_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

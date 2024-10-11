@@ -1,8 +1,8 @@
-# Install script for directory: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning
+# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -37,30 +37,35 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planning.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planning.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning/cmake" TYPE FILE FILES
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig.cmake"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig-version.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/aubo_arm_planning" TYPE PROGRAM FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/move_to_2.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/aubo_arm_planning" TYPE PROGRAM FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/move_to_2.py")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/config")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/config")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_planning/launch")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/launch")
 endif()
 

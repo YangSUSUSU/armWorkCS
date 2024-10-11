@@ -21,7 +21,7 @@
 #include <Eigen/Dense>
 #include <array>
 #include <vector>
-#define SIM
+// #define SIM
 
 
 class SmoothingFilter {
@@ -57,7 +57,7 @@ private:
 class ArmController {
 public:
     ArmController(ros::NodeHandle& nh) 
-        : filter_left(1),filter_right(1) {  // 初始化平滑滤波器，窗口大小为5
+        : filter_left(3),filter_right(3) {  // 初始化平滑滤波器，窗口大小为5
         left_arm_pub_ = nh.advertise<llm_msgs::hand_pose_req>("/left_arm_pose_req", 10);
         right_arm_pub_ = nh.advertise<llm_msgs::hand_pose_req>("/right_arm_pose_req", 10);
 
@@ -77,7 +77,7 @@ public:
         // joint_state_sub = nh.subscribe("/human_arm_state_left", 10, &ArmController::jointStateCallback, this);
 
         first();
-        ros::Rate r(200);
+        ros::Rate r(198);
         /////////////////////////
         while (ros::ok()) {
             command();
@@ -180,6 +180,9 @@ public:
         xx_left = filtered_position[0];
         yy_left = filtered_position[1];
         zz_left = filtered_position[2];
+        // xx_left = msg->position.x;
+        // yy_left = msg->position.y;
+        // zz_left = msg->position.z;
         qx_left = msg->orientation.x;
         qy_left = msg->orientation.y;
         qz_left = msg->orientation.z;
@@ -198,7 +201,7 @@ public:
         yy_right = filtered_position[1];
         zz_right = filtered_position[2];
         // xx_right = msg->position.x;
-        // yy_right =  msg->position.y;
+        // yy_right = msg->position.y;
         // zz_right = msg->position.z;
         qx_right = msg->orientation.x;
         qy_right = msg->orientation.y;
@@ -217,15 +220,16 @@ public:
 
         arm_param_right.name = "right";
         arm_param_right.base_link = "base_link";
-        arm_param_right.eef_link = "left_flange";
+        arm_param_right.eef_link = "right_flange";
         arm_param_right.joints_min ={-0.7853981 ,-1.7453292,-2.2689280,0        , -2.268928, -0.6454, -0.6454};
         arm_param_right.joints_max ={3.1415926  ,0         , 2.268928 ,1.779 ,  2.268928,  0.6454,  0.6454};
 
 
 
-        L_grasp_pose = {0.352496-0.035, 0.162388 + 0.015, 0.746278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
-        R_grasp_pose = {0.354662, -0.109894, 0.14731, 0.7415988, -0.01539735, 0.21900877, -0.63390008};
-
+        // L_grasp_pose = {0.352496-0.035, 0.162388 + 0.015, 0.746278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
+        // R_grasp_pose = {0.354662, -0.109894, 0.14731, 0.7415988, -0.01539735, 0.21900877, -0.63390008};
+        L_grasp_pose = { 0.505169,0.323111,0.249817,0.0872157,0.631405,-0.11521,0.761871 };
+        R_grasp_pose = { 0.50705,-0.317131,0.249316,0.702849,0.108244,0.695218,-0.104683};
         left_grasp_pose.hand_move_enable = 1;
         left_grasp_pose.hand_side = 0;
         left_grasp_pose.hand_reset = 1;
@@ -274,12 +278,12 @@ public:
     void command () 
     {
         double radius = 0.08; // 圆的半径
-        double angular_velocity = 0.15; // 角速度
+        double angular_velocity = 1.0; // 角速度
         double time = ros::Time::now().toSec(); // 当前时间
-        Eigen::Vector3d ddddd;
-        ddddd(0) = radius * cos(angular_velocity * time);
-        ddddd(2) = radius * sin(angular_velocity * time);
-        ddddd(1) = 0;
+        // Eigen::Vector3d ddddd;
+        double line = radius * cos(angular_velocity * time);
+        // ddddd(2) = radius * sin(angular_velocity * time);
+        // ddddd(1) = 0;
         //左侧转换到法兰坐标系
         Eigen::Vector3d delta_xyz_left(xx_left, yy_left, zz_left);
         auto nowTcp2b_l = Quat2T_matrix(L_grasp_pose);
@@ -289,33 +293,30 @@ public:
         Eigen::Vector3d delta_xyz_right(xx_right, yy_right, zz_right);
         auto nowTcp2b_r = Quat2T_matrix(R_grasp_pose);
         auto result_right = nowTcp2b_r.block<3,3>(0,0) * delta_xyz_right;
-        // auto result = nowTcp2b.block<3,3>(0,0) * delta_xyz;
-        // ddddd=nowTcp2b.block<3,3>(0,0) * delta_xyz;
 
-        // L_grasp_pose[0] = result(0);
-        // L_grasp_pose[1] = result(1);
-        // L_grasp_pose[2] = result(2);
         std::cout<<"==R==="<<delta_xyz_right.transpose()<<std::endl;
-        std::cout<<"===L=="<<delta_xyz_left.transpose()<<std::endl;
-
 
         left_grasp_pose.hand_move_enable = 1;
         left_grasp_pose.hand_side = 0;
         left_grasp_pose.hand_reset = 1;
+
+        // left_grasp_pose.pose_req.position.x = L_grasp_pose[0];
+        // left_grasp_pose.pose_req.position.y = L_grasp_pose[1];
+        // left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+line;
         left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+result_left(0);
         left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+result_left(1);
-        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+result_left(2);
+        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+result_left(2)+line;
         // left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+ddddd(0)+result_left(0);
         // left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+ddddd(1)+result_left(1);
         // left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+ddddd(2)+result_left(2);
-        left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
-        left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
-        left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
-        left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
-        // left_grasp_pose.pose_req.orientation.x = qx_left;
-        // left_grasp_pose.pose_req.orientation.y = qy_left;
-        // left_grasp_pose.pose_req.orientation.z = qz_left;
-        // left_grasp_pose.pose_req.orientation.w = qw_left;
+        // left_grasp_pose.pose_req.orientation.x = L_grasp_pose[3];
+        // left_grasp_pose.pose_req.orientation.y = L_grasp_pose[4];
+        // left_grasp_pose.pose_req.orientation.z = L_grasp_pose[5];
+        // left_grasp_pose.pose_req.orientation.w = L_grasp_pose[6];
+        left_grasp_pose.pose_req.orientation.x = qx_left;
+        left_grasp_pose.pose_req.orientation.y = qy_left;
+        left_grasp_pose.pose_req.orientation.z = qz_left;
+        left_grasp_pose.pose_req.orientation.w = qw_left;
 
         right_grasp_pose.hand_move_enable = 1;
         right_grasp_pose.hand_side = 1;
@@ -323,29 +324,22 @@ public:
         // right_grasp_pose.pose_req.position.x = R_grasp_pose[0]+ddddd(0);
         // right_grasp_pose.pose_req.position.y = R_grasp_pose[1]+ddddd(1);
         // right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+ddddd(2);
+
         right_grasp_pose.pose_req.position.x = R_grasp_pose[0]+result_right(0);
         right_grasp_pose.pose_req.position.y = R_grasp_pose[1]+result_right(1);
-        right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+result_right(2);
-        // right_grasp_pose.pose_req.orientation.x = qx_right;
-        // right_grasp_pose.pose_req.orientation.y = qy_right;
-        // right_grasp_pose.pose_req.orientation.z = qz_right;
-        // right_grasp_pose.pose_req.orientation.w = qw_right;
-        right_grasp_pose.pose_req.orientation.x = R_grasp_pose[3];
-        right_grasp_pose.pose_req.orientation.y = R_grasp_pose[4];
-        right_grasp_pose.pose_req.orientation.z = R_grasp_pose[5];
-        right_grasp_pose.pose_req.orientation.w = R_grasp_pose[6];
-            /*============================*/
-        // geometry_msgs::Point trajectory_point;
+        right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+result_right(2)+line;
+        // right_grasp_pose.pose_req.position.x = R_grasp_pose[0];
+        // right_grasp_pose.pose_req.position.y = R_grasp_pose[1];
+        // right_grasp_pose.pose_req.position.z = R_grasp_pose[2]+line;
+        right_grasp_pose.pose_req.orientation.x = qx_right;
+        right_grasp_pose.pose_req.orientation.y = qy_right;
+        right_grasp_pose.pose_req.orientation.z = qz_right;
+        right_grasp_pose.pose_req.orientation.w = qw_right;
+        // right_grasp_pose.pose_req.orientation.x = R_grasp_pose[3];
+        // right_grasp_pose.pose_req.orientation.y = R_grasp_pose[4];
+        // right_grasp_pose.pose_req.orientation.z = R_grasp_pose[5];
+        // right_grasp_pose.pose_req.orientation.w = R_grasp_pose[6];
 
-        // trajectory_point.x=L_grasp_pose[0];
-        // trajectory_point.y=L_grasp_pose[1];
-        // trajectory_point.z=L_grasp_pose[2];
-        // test_trajectory_pub_.publish(trajectory_point);
-        // Eigen::Vector3d a(R_grasp_pose[0],R_grasp_pose[1],R_grasp_pose[2]);
-        // Eigen::Vector3d b(L_grasp_pose[0], L_grasp_pose[1], L_grasp_pose[2]);
-        // double dis;
-        // dis = (a-b).norm();
-        // std::cout<<"distance: "<<dis<<std::endl;
     }
 
     void publishGraspPoses() 

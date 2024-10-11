@@ -11,7 +11,7 @@
 
 # since this file is sourced either use the provided _CATKIN_SETUP_DIR
 # or fall back to the destination set at configure time
-: ${_CATKIN_SETUP_DIR:=/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel}
+: ${_CATKIN_SETUP_DIR:=/home/ubuntu/WorkSpace/armWorkCS/devel}
 _SETUP_UTIL="$_CATKIN_SETUP_DIR/_setup_util.py"
 unset _CATKIN_SETUP_DIR
 

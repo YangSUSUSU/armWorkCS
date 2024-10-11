@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/test_planning/test_planning"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/test_planning/test_planning.pdb"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning.pdb"
   "CMakeFiles/test_planning.dir/src/test_arm.cpp.o"
+  "CMakeFiles/test_planning.dir/src/test_arm.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

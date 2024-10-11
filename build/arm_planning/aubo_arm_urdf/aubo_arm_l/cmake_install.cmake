@@ -1,8 +1,8 @@
-# Install script for directory: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_urdf/aubo_arm_l
+# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_l
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -37,34 +37,39 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_urdf/aubo_arm_l/catkin_generated/installspace/aubo_arm_l.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_l/catkin_generated/installspace/aubo_arm_l.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/cmake" TYPE FILE FILES
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_urdf/aubo_arm_l/catkin_generated/installspace/aubo_arm_lConfig.cmake"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/aubo_arm_urdf/aubo_arm_l/catkin_generated/installspace/aubo_arm_lConfig-version.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_l/catkin_generated/installspace/aubo_arm_lConfig.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_l/catkin_generated/installspace/aubo_arm_lConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_urdf/aubo_arm_l/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_l/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/config" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_urdf/aubo_arm_l/config/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/config" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_l/config/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/launch" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_urdf/aubo_arm_l/launch/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/launch" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_l/launch/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/meshes" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_urdf/aubo_arm_l/meshes/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/meshes" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_l/meshes/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/urdf" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/aubo_arm_urdf/aubo_arm_l/urdf/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_l/urdf" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_l/urdf/")
 endif()
 

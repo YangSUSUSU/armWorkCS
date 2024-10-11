@@ -1,8 +1,8 @@
-# Install script for directory: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs
+# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -37,68 +37,73 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/msg" TYPE FILE FILES
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/msg/robot_state.msg"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/srv" TYPE FILE FILES
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/get_status.srv"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_angle.srv"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_force.srv"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/srv/set_speed.srv"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
+    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-paths.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/include/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/roseus/ros/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/share/roseus/ros/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/common-lisp/ros/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/share/common-lisp/ros/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/share/gennodejs/ros/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/share/gennodejs/ros/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/python3/dist-packages/llm_msgs")
+  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/python3/dist-packages/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/python3/dist-packages/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/python3/dist-packages/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig.cmake"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig-version.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/arm_planning/llm_msgs/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/package.xml")
 endif()
 

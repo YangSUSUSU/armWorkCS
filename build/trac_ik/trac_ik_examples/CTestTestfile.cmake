@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trac_ik/trac_ik_examples
-# Build directory: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trac_ik/trac_ik_examples
+# Source directory: /home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_examples
+# Build directory: /home/ubuntu/WorkSpace/armWorkCS/build/trac_ik/trac_ik_examples
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

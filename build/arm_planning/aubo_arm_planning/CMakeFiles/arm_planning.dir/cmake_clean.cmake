@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/aubo_arm_planning/arm_planning"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/aubo_arm_planning/arm_planning.pdb"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning.pdb"
   "CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o"
+  "CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

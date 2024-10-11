@@ -15,8 +15,8 @@
 using namespace Eigen;
 using namespace std;
 
-#define simulation
-// #define real
+// #define simulation
+#define real
 #define LLM
 #define unveiling_ceremony
 // #define hug_emblem
@@ -483,7 +483,7 @@ void DualArm::Left_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_para
                 num_samples = 350;
             }else{
                 duration = 1; // 5 seconds
-                num_samples = 175;
+                num_samples = 300;
             }
             
             // Get the minimum jerk trajectory in Cartesian space
@@ -679,7 +679,7 @@ void DualArm::Right_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_par
                 num_samples = 350;
             }else{
                 duration = 1; // 5 seconds
-                num_samples = 175;
+                num_samples = 300;
             }
             
             // Get the minimum jerk trajectory in Cartesian space

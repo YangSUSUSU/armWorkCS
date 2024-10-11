@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/aubo_arm_planning/gripper"
-  "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/aubo_arm_planning/gripper.pdb"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/gripper"
+  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/gripper.pdb"
   "CMakeFiles/gripper.dir/src/gripper.cpp.o"
+  "CMakeFiles/gripper.dir/src/gripper.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

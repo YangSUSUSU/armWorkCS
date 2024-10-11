@@ -1,8 +1,8 @@
-# Install script for directory: /home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trac_ik/trac_ik_lib
+# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -37,23 +37,28 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trac_ik/trac_ik_lib/catkin_generated/installspace/trac_ik_lib.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/trac_ik/trac_ik_lib/catkin_generated/installspace/trac_ik_lib.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/trac_ik_lib/cmake" TYPE FILE FILES
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trac_ik/trac_ik_lib/catkin_generated/installspace/trac_ik_libConfig.cmake"
-    "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build/trac_ik/trac_ik_lib/catkin_generated/installspace/trac_ik_libConfig-version.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/trac_ik/trac_ik_lib/catkin_generated/installspace/trac_ik_libConfig.cmake"
+    "/home/ubuntu/WorkSpace/armWorkCS/build/trac_ik/trac_ik_lib/catkin_generated/installspace/trac_ik_libConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/trac_ik_lib" TYPE FILE FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trac_ik/trac_ik_lib/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/trac_ik_lib" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/src/trac_ik/trac_ik_lib/include/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/include/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -63,12 +68,12 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libtrac_ik.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/libtrac_ik.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrac_ik.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libtrac_ik.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libtrac_ik.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libtrac_ik.so"
-         OLD_RPATH "/opt/ros/noetic/lib:"
+         OLD_RPATH "/opt/ros/noetic/lib:/usr/local/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libtrac_ik.so")

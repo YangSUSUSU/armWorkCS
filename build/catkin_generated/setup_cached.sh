@@ -7,4 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export PWD='/home/nikooyang/aubo/aubo_ws2/aubo_ws2/build'
+export CMAKE_PREFIX_PATH="/home/ubuntu/WorkSpace/armWorkCS/devel:$CMAKE_PREFIX_PATH"
+export PWD='/home/ubuntu/WorkSpace/armWorkCS/build'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/ubuntu/WorkSpace/armWorkCS/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/ubuntu/WorkSpace/armWorkCS/src:$ROS_PACKAGE_PATH"
