@@ -40,7 +40,7 @@ private:
 class ForceFilterNode {
 public:
     ForceFilterNode(ros::NodeHandle& nh)
-        : filter_left_(3), filter_right_(3) {  // 为两个传感器设置滤波器窗口大小
+        : filter_left_(1), filter_right_(1) {  // 为两个传感器设置滤波器窗口大小
 
         #ifdef SIMULATION_MODE
                 sub_left_ = nh.subscribe("noisy_force_left", 10, &ForceFilterNode::leftForceCallback, this);

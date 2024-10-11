@@ -17,7 +17,7 @@
 #ifdef SIMULATION_MODE
     // 仿真模式下的力 mbk 参数
     #define FORCE_MASS 0.5        // 力控制中的质量 (kg)
-    #define FORCE_DAMPING 1.1     // 力控制中的阻尼 (Ns/m)
+    #define FORCE_DAMPING 0.1     // 力控制中的阻尼 (Ns/m)
     #define FORCE_STIFFNESS 50.0  // 力控制中的刚度 (N/m)
 
     // 仿真模式下的力矩 mbk 参数
@@ -244,10 +244,43 @@ private:
 
                 auto result_ori = admittanceController_torque(last_R, now_R, torque);
                 last_R = now_R;
+                double test_force[3]={0};
+                double test_result[3]={0};
+                test_force[0]=fx;
+                test_force[1]=fy;
+                test_force[2]=fz;
+                // std::cout<<test_force[ 0]<<","<<test_force[ 1]<<","<<test_force[ 2]<<std::endl;
+                double test_now[3];
+                double test_last[3];
+                test_now[0]=now_x;
+                test_now[1]=now_y;
+                test_now[2]=now_z;
+                test_last[0]=last_x;
+                test_last[1]=last_y;
+                test_last[2]=last_z;
+                if (arm_param_.name == "left") 
+                {
+                // pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
+                // pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
+                // pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
+                    new_admittanceController(test_force,test_result,test_now,test_last);
+                    pose_msg.position.x = 0.001 * test_result[0];  // 设置位置 x
+                    pose_msg.position.y = 0.001 * test_result[1];  // 设置位置 y
+                    pose_msg.position.z = 0.001 * test_result[2];  // 设置位置 z
+                } 
+                else 
+                {
+                    new_admittanceController(test_force,test_result,test_now,test_last);
+                    pose_msg.position.x = 0.001 * test_result[0];  // 设置位置 x
+                    pose_msg.position.y = 0.001 * test_result[1];  // 设置位置 y
+                    pose_msg.position.z = 0.001 * test_result[2];  // 设置位置 z
 
-                pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
-                pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
-                pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
+                }
+
+               
+                // pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
+                // pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
+                // pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
 
                 pose_msg.orientation.x = result_ori.x();  // 设置姿态四元数 x
                 pose_msg.orientation.y = result_ori.y();  // 设置姿态四元数 y
@@ -280,6 +313,7 @@ private:
 
                 auto result_ori = admittanceController_torque(last_R, now_R, torque);
                 last_R = now_R;
+
 
                 pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
                 pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
@@ -315,6 +349,31 @@ private:
         double dxe = last - now - (-dv) * T / 2;
         return (force - B * dxe) / M; // 返回 ddxe
     }
+    void new_admittanceController(double *TCP_force,double *result,double *now,double *last)
+    {
+        double dt = 0.005;
+        const double M = FORCE_MASS;  // 虚拟质量
+        const double B = FORCE_DAMPING; // 阻尼
+        for ( int i=0; i < 3; i++ )
+        {
+            // force_vel_offset[i]=(now[i]-last[i])/dt;
+            force_acc_offset[ i ] = ( TCP_force[ i ] - B * force_vel_offset[ i ]) / M;
+            force_vel_offset[ i ] = dt * ( force_acc_offset[ i ] + force_last_acc_offset[ i ] ) / 2.0 + force_vel_offset[ i ];
+            // std::cout<<force_acc_offset[i]<<std::endl;
+
+            // std::cout<<result[i]<<std::endl;
+
+            force_last_acc_offset[ i ] = force_acc_offset[ i ];
+            //最后输出
+            force_last_vel_offset[ i ] = force_vel_offset[ i ];
+
+            result[i]=force_vel_offset[ i ];
+            // result[i]=dt*force_acc_offset[ i ];
+
+
+        }
+        // std::cout<<result[0]<<","<<result[1]<<","<<result[2]<<std::endl;
+    }
 
     Eigen::Quaterniond admittanceController_torque(const Eigen::Matrix3d &last_RR, const Eigen::Matrix3d &now_RR, const Eigen::Vector3d &torque) {
         Eigen::Vector3d rotation_diff_A = rotationDifference(now_RR, last_RR);
@@ -343,7 +402,12 @@ private:
     ros::Subscriber joint_state_sub_right;
 
     ros::Publisher position_pub_;
-
+    //
+    double force_vel_offset[3]={ 0, 0, 0 };
+    double force_last_vel_offset[3]={ 0, 0, 0 };
+    double force_acc_offset[3]={ 0, 0, 0 };
+    double force_last_acc_offset[3]={ 0, 0, 0 };
+    //
     ArmParam arm_param_;
     geometry_msgs::Pose pose_msg;
     std::vector<double> joint_positions;

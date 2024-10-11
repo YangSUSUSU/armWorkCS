@@ -191,9 +191,15 @@ public:
         auto filtered_position = filter_right.filter(input_position);
 
         // 更新 xx, yy, zz 为滤波后的值
+                //  pose_msg.position.x, 
+        //  pose_msg.position.y, 
+        //  pose_msg.position.z, 
         xx_right = filtered_position[0];
         yy_right = filtered_position[1];
         zz_right = filtered_position[2];
+        // xx_right = msg->position.x;
+        // yy_right =  msg->position.y;
+        // zz_right = msg->position.z;
         qx_right = msg->orientation.x;
         qy_right = msg->orientation.y;
         qz_right = msg->orientation.z;
@@ -217,7 +223,7 @@ public:
 
 
 
-        L_grasp_pose = {0.352496-0.035, 0.162388 + 0.015, 0.276278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
+        L_grasp_pose = {0.352496-0.035, 0.162388 + 0.015, 0.746278 - 0.01, 0.56662673, 0.48369656, -0.04194205, 0.66574217};
         R_grasp_pose = {0.354662, -0.109894, 0.14731, 0.7415988, -0.01539735, 0.21900877, -0.63390008};
 
         left_grasp_pose.hand_move_enable = 1;
@@ -277,26 +283,28 @@ public:
         //左侧转换到法兰坐标系
         Eigen::Vector3d delta_xyz_left(xx_left, yy_left, zz_left);
         auto nowTcp2b_l = Quat2T_matrix(L_grasp_pose);
-        auto result_left = nowTcp2b_l * delta_xyz_left.homogeneous();
+        auto result_left = nowTcp2b_l.block<3,3>(0,0) * delta_xyz_left;
 
         //右侧转换到法兰坐标系
         Eigen::Vector3d delta_xyz_right(xx_right, yy_right, zz_right);
         auto nowTcp2b_r = Quat2T_matrix(R_grasp_pose);
-        auto result_right = nowTcp2b_r * delta_xyz_right.homogeneous();
+        auto result_right = nowTcp2b_r.block<3,3>(0,0) * delta_xyz_right;
         // auto result = nowTcp2b.block<3,3>(0,0) * delta_xyz;
         // ddddd=nowTcp2b.block<3,3>(0,0) * delta_xyz;
 
         // L_grasp_pose[0] = result(0);
         // L_grasp_pose[1] = result(1);
         // L_grasp_pose[2] = result(2);
-        // std::cout<<"====="<<result.transpose()<<std::endl;
+        std::cout<<"==R==="<<delta_xyz_right.transpose()<<std::endl;
+        std::cout<<"===L=="<<delta_xyz_left.transpose()<<std::endl;
+
 
         left_grasp_pose.hand_move_enable = 1;
         left_grasp_pose.hand_side = 0;
         left_grasp_pose.hand_reset = 1;
-        left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+ddddd(0);
-        left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+ddddd(1);
-        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+ddddd(2);
+        left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+result_left(0);
+        left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+result_left(1);
+        left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+result_left(2);
         // left_grasp_pose.pose_req.position.x = L_grasp_pose[0]+ddddd(0)+result_left(0);
         // left_grasp_pose.pose_req.position.y = L_grasp_pose[1]+ddddd(1)+result_left(1);
         // left_grasp_pose.pose_req.position.z = L_grasp_pose[2]+ddddd(2)+result_left(2);

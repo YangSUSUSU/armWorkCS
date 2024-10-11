@@ -22,8 +22,13 @@ public:
         // 左侧传感器数据
         left_force_.header.frame_id = "left_flange"; // 设置左传感器坐标系
         left_force_.header.stamp = ros::Time::now(); // 设置时间戳    
-        left_force_.wrench.force.x = 0.0 + 0.1 * sin(0.5 * time) + 0.0 * (rand() % 10 - 5);  // 模拟数据
-        left_force_.wrench.force.y = 0.0 + 20 * sin(0.2 * time + M_PI / 4) + 0.0 * (rand() % 10 - 5); 
+        left_force_.wrench.force.y = 0.0 + 0.1 * sin(0.5 * time) + 0.0 * (rand() % 10 - 5);  // 模拟数据
+        int signs = 0;
+        if(sin(0.2 * time + M_PI / 4)>0)
+        {signs = 1;}
+        else
+        {signs = -1;}
+        left_force_.wrench.force.x = 0.0 + 20 * signs + 0.0 * (rand() % 10 - 5); 
         left_force_.wrench.force.z = 0.0 + 0.1 * sin(0.5 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
         left_force_.wrench.torque.x = 0.0;
         left_force_.wrench.torque.y = 0.0;
@@ -34,7 +39,7 @@ public:
         right_force_.header.frame_id = "right_flange"; // 设置右传感器坐标系
         right_force_.header.stamp = ros::Time::now(); // 设置时间戳    
         right_force_.wrench.force.x = 0.0 + 0.1 * sin(0.6 * time) + 0.0 * (rand() % 10 - 5);  // 模拟数据
-        right_force_.wrench.force.y = 0.0 + 20 * sin(0.3 * time + M_PI / 4) + 0.0 * (rand() % 10 - 5); 
+        right_force_.wrench.force.y = 0.0 + 20 * signs + 0.0 * (rand() % 10 - 5); 
         right_force_.wrench.force.z = 0.0 + 0.1 * sin(0.6 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
         right_force_.wrench.torque.x = 0.0;
         right_force_.wrench.torque.y = 0.0;
