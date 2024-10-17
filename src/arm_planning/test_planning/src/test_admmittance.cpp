@@ -21,8 +21,8 @@
     #define FORCE_STIFFNESS 50.0  // 力控制中的刚度 (N/m)
 
     // 仿真模式下的力矩 mbk 参数
-    #define TORQUE_MASS 10.1       // 力矩控制中的质量 (kg·m²)
-    #define TORQUE_DAMPING 10.05   // 力矩控制中的阻尼 (Ns·m/rad)
+    #define TORQUE_MASS 0.1       // 力矩控制中的质量 (kg·m²)
+    #define TORQUE_DAMPING 0.05   // 力矩控制中的阻尼 (Ns·m/rad)
     #define TORQUE_STIFFNESS 20.0 // 力矩控制中的刚度 (N·m/rad)
 #else
     // 真机模式下的力 mbk 参数
@@ -31,8 +31,8 @@
     #define FORCE_STIFFNESS 100.0 // 力控制中的刚度 (N/m)
 
     // 真机模式下的力矩 mbk 参数
-    #define TORQUE_MASS 0.05       // 力矩控制中的质量 (kg·m²)
-    #define TORQUE_DAMPING 0.05    // 力矩控制中的阻尼 (Ns·m/rad)
+    #define TORQUE_MASS 0.075       // 力矩控制中的质量 (kg·m²)
+    #define TORQUE_DAMPING 0.075    // 力矩控制中的阻尼 (Ns·m/rad)
     #define TORQUE_STIFFNESS 40.0 // 力矩控制中的刚度 (N·m/rad)
 #endif
 
@@ -171,10 +171,10 @@ private:
 
         #ifdef SIMULATION_MODE
 
-            sensorFrameMatrix << 1, 0, 0,
-                                0, 1, 0,
-                                0, 0, 1;
-                Eigen::Vector3d force;
+        sensorFrameMatrix << 1, 0, 0,
+                            0, 1, 0,
+                            0, 0, 1;
+        Eigen::Vector3d force;
         force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
         force = sensorFrameMatrix * force;
 
@@ -195,15 +195,15 @@ private:
             {
                
             sensorFrameMatrix << 0, -1, 0,
-                                1, 0, 0,
-                                0, 0, 1;
+                                 1, 0, 0,
+                                 0, 0, 1;
             Eigen::Vector3d force;
             force << msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z;
             force = sensorFrameMatrix * force;
 
             first_force_x = -force(0) * 30;
             first_force_y = -force(1) * 30;
-            first_force_z = force(2) * 30;
+            first_force_z =  force(2) * 30;
 
             Eigen::Vector3d torque;
             torque << msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z;
@@ -253,8 +253,8 @@ private:
 
                 force(0) = force(0);
                 force(1) = force(1);
-                torque(0) = -torque(0);
-                torque(1) = -torque(1);
+                torque(0) = torque(0);
+                torque(1) = torque(1);
 
                 double fx = force(0) - first_force_x;
                 double fy = force(1) - first_force_y;
@@ -267,7 +267,13 @@ private:
                 double delta_z = admittanceController_force(last_z, now_z, fz);
                 last_z = now_z;
 
-                auto result_ori = admittanceController_torque(last_R, now_R, torque);
+                double temp_tor[3]={0};
+                temp_tor[0]=torque(0);
+                temp_tor[1]=torque(1);
+                temp_tor[2]=torque(2);
+                auto result_ori = new_admittanceController_torque(temp_tor);
+
+                // auto result_ori = admittanceController_torque(last_R, now_R, torque);
                 last_R = now_R;
                 double test_force[3]={0};
                 double test_result[3]={0};
@@ -288,14 +294,14 @@ private:
                 // pose_msg.position.x = 0.001 * delta_x;  // 设置位置 x
                 // pose_msg.position.y = 0.001 * delta_y;  // 设置位置 y
                 // pose_msg.position.z = 0.001 * delta_z;  // 设置位置 z
-                    new_admittanceController(test_force,test_result,test_now,test_last);
+                    new_admittanceController(test_force,test_result);
                     pose_msg.position.x = 0.001 * test_result[0];  // 设置位置 x
                     pose_msg.position.y = 0.001 * test_result[1];  // 设置位置 y
                     pose_msg.position.z = 0.001 * test_result[2];  // 设置位置 z
                 } 
                 else 
                 {
-                    new_admittanceController(test_force,test_result,test_now,test_last);
+                    new_admittanceController(test_force,test_result);
                     pose_msg.position.x = 0.001 * test_result[0];  // 设置位置 x
                     pose_msg.position.y = 0.001 * test_result[1];  // 设置位置 y
                     pose_msg.position.z = 0.001 * test_result[2];  // 设置位置 z
@@ -340,8 +346,14 @@ private:
                 double delta_z = admittanceController_force(last_z, now_z, fz);
                 last_z = now_z;
 
-                auto result_ori = admittanceController_torque(last_R, now_R, torque);
+                // auto result_ori = admittanceController_torque(last_R, now_R, torque);
                 last_R = now_R;
+                double temp_tor[3]={0};
+                temp_tor[0]=torque(0);
+                temp_tor[1]=torque(1);
+                temp_tor[2]=torque(2);
+                auto result_ori = new_admittanceController_torque(temp_tor);
+
 
                 double test_force[3]={0};
                 double test_result[3]={0};
@@ -358,7 +370,7 @@ private:
                 test_last[1]=last_y;
                 test_last[2]=last_z;
 
-                new_admittanceController(test_force,test_result,test_now,test_last);
+                new_admittanceController(test_force,test_result);
                 pose_msg.position.x = 0.001 * test_result[0];  // 设置位置 x
                 pose_msg.position.y = 0.001 * test_result[1];  // 设置位置 y
                 pose_msg.position.z = 0.001 * test_result[2];  // 设置位置 z
@@ -405,6 +417,11 @@ private:
 
                 auto result_ori = admittanceController_torque(last_R, now_R, torque);
                 last_R = now_R;
+                double temp_tor[3]={0};
+                temp_tor[0]=torque(0);
+                temp_tor[1]=torque(1);
+                temp_tor[2]=torque(2);
+                // auto result_ori = new_admittanceController_torque(temp_tor);
 
                 double test_force[3]={0};
                 double test_result[3]={0};
@@ -421,7 +438,7 @@ private:
                 test_last[1]=last_y;
                 test_last[2]=last_z;
 
-                new_admittanceController(test_force,test_result,test_now,test_last);
+                new_admittanceController(test_force,test_result);
                 pose_msg.position.x = 0.001 * test_result[0];  // 设置位置 x
                 pose_msg.position.y = 0.001 * test_result[1];  // 设置位置 y
                 pose_msg.position.z = 0.001 * test_result[2];  // 设置位置 z
@@ -462,7 +479,7 @@ private:
         double dxe = last - now - (-dv) * T / 2;
         return (force - B * dxe) / M; // 返回 ddxe
     }
-    void new_admittanceController(double *TCP_force,double *result,double *now,double *last)
+    void new_admittanceController(double *TCP_force,double *result)
     {
         double dt = 0.005;
         const double M = FORCE_MASS;  // 虚拟质量
@@ -487,6 +504,48 @@ private:
         }
         // std::cout<<result[0]<<","<<result[1]<<","<<result[2]<<std::endl;
     }
+    Eigen::Quaterniond  new_admittanceController_torque(double *TCP_torque)
+    {
+        double dt = 0.005;
+        const double M = TORQUE_MASS;       //虚拟质量
+        const double B = TORQUE_DAMPING;   //阻尼   
+        KDL::Vector delta_rot;
+        KDL::Vector current_rot;
+        KDL::Rotation template_rot;
+
+        for ( int i{ 0 }; i < 3; i++ )
+        {
+            torque_acc_offset[ i ] = ( TCP_torque[ i ] - B * torque_vel_offset[ i ] ) / M;
+            torque_vel_offset[ i ] = dt * ( torque_acc_offset[ i ] + torque_last_acc_offset[ i ] ) / 2 + torque_vel_offset[ i ];
+
+            delta_rot( i )   = 10*dt * ( torque_vel_offset[ i ] + torque_last_vel_offset[ i ] ) / 2;
+            current_rot( i ) = torque_pos_offset[ i ];
+
+            torque_last_acc_offset[ i ] = torque_acc_offset[ i ];
+            torque_last_vel_offset[ i ] = torque_vel_offset[ i ];
+        }
+
+        template_rot = KDL::Rotation::Rot( delta_rot, delta_rot.Norm( ) ) * KDL::Rotation::Rot( current_rot, current_rot.Norm( ) );
+
+        current_rot = template_rot.GetRot( );
+
+        for ( int i{ 0 }; i < 3; i++ )
+            torque_pos_offset[ i ] = current_rot[ i ];
+
+
+
+        Eigen::Matrix3d eigen_rotation;
+        // 将 KDL::Rotation 转换为 Eigen::Matrix3d
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                eigen_rotation(i, j) = template_rot(i, j);  // 通过索引访问元素
+            }
+        }
+        // return template_rot;
+        Eigen::Quaterniond quaternion(eigen_rotation); 
+        return quaternion;
+      
+    }
 
     Eigen::Quaterniond admittanceController_torque(const Eigen::Matrix3d &last_RR, const Eigen::Matrix3d &now_RR, const Eigen::Vector3d &torque) {
 
@@ -494,14 +553,14 @@ private:
         const double M = TORQUE_MASS;       //虚拟质量
         const double B = TORQUE_DAMPING;   //阻尼        
         double T=0.005;             //控制周期
-        Eigen::Vector3d rotation_diff = rotationDifference(last_RR,now_RR);
-
+        Eigen::Vector3d  rotation_diff = rotationDifference(last_RR,now_RR);
         Eigen::Vector3d  dv= rotation_diff/T;
         Eigen::Vector3d  dxe=rotation_diff_A-(-dv)*T/2;  //减去自身期望运动分量
         Eigen::Vector3d  temp_result = (torque-B*dxe)/M;
-            // 使用 AngleAxis 直接将旋转矢量转换为旋转矩阵
+        // 使用 AngleAxis 直接将旋转矢量转换为旋转矩阵
         Eigen::AngleAxisd angle_axis(temp_result.norm(), temp_result.normalized());
         Eigen::Matrix3d rotation_matrix = angle_axis.toRotationMatrix();
+        //这里直接计算了目标姿态，now_RR去掉就是基于当前的增量
         auto result = now_RR*rotation_matrix;
 
         // std::cout<<temp_result.transpose()<<std::endl;
@@ -531,6 +590,12 @@ private:
     double force_last_vel_offset[3]={ 0, 0, 0 };
     double force_acc_offset[3]={ 0, 0, 0 };
     double force_last_acc_offset[3]={ 0, 0, 0 };
+
+    double torque_vel_offset[3]={ 0, 0, 0 };
+    double torque_pos_offset[3]={ 0, 0, 0 };
+    double torque_last_vel_offset[3]={ 0, 0, 0 };
+    double torque_acc_offset[3]={ 0, 0, 0 };
+    double torque_last_acc_offset[3]={ 0, 0, 0 };
     //
     ArmParam arm_param_;
     geometry_msgs::Pose pose_msg;

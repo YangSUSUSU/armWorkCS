@@ -31,7 +31,7 @@ public:
         left_force_.wrench.force.x = 0.0 + 20 * signs + 0.0 * (rand() % 10 - 5); 
         left_force_.wrench.force.z = 0.0 + 0.1 * sin(0.5 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
         left_force_.wrench.torque.x = 0.0;
-        left_force_.wrench.torque.y = 0.0;
+        left_force_.wrench.torque.y = 10 * sin(0.25 * time) + 0.0 * (rand() % 10 - 5);
         left_force_.wrench.torque.z = 0.0;
         pub_left_.publish(left_force_);
 
@@ -42,7 +42,7 @@ public:
         right_force_.wrench.force.y = 0.0 + 20 * signs + 0.0 * (rand() % 10 - 5); 
         right_force_.wrench.force.z = 0.0 + 0.1 * sin(0.6 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
         right_force_.wrench.torque.x = 0.0;
-        right_force_.wrench.torque.y = 0.0;
+        right_force_.wrench.torque.y = 5 * sin(0.5 * time + M_PI / 2) + 0.0 * (rand() % 10 - 5);
         right_force_.wrench.torque.z = 0.0;
         pub_right_.publish(right_force_);
     }

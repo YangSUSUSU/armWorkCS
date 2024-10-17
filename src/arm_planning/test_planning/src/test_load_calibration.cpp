@@ -299,8 +299,8 @@ int main(int, char**){
 //     sixDForce1[0] = {force_data[0],force_data[1],force_data[2],torque_data[0],torque_data[1],torque_data[2]};
 //     sixDForce1[1] = {force_data1[0],force_data1[1],force_data1[2],torque_data1[0],torque_data1[1],torque_data1[2]};
 //     sixDForce1[2] = {force_data2[0],force_data2[1],force_data2[2],torque_data2[0],torque_data2[1],torque_data2[2]};
-//  std::vector<Pose> pose1;
-//    pose1.resize(3);
+//     std::vector<Pose> pose1;
+//     pose1.resize(3);
 //     pose1[0] = {euler_data[0]*M_PI/180,euler_data[1]*M_PI/180,euler_data[2]*M_PI/180};
 
 //     pose1[1] = {euler_data1[0]*M_PI/180,euler_data1[1]*M_PI/180,euler_data1[2]*M_PI/180};
