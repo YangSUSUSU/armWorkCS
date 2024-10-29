@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="head_planning">
+  <link
+    name="base_head_Link">
+    <inertial>
+      <origin
+        xyz="0.00119944355024207 -1.9363309396174E-05 0.0536366827339884"
+        rpy="0 0 0" />
+      <mass
+        value="0.579669697765438" />
+      <inertia
+        ixx="0.00015731852845112"
+        ixy="7.2585599612596E-08"
+        ixz="1.84186013272223E-06"
+        iyy="0.000298829578305001"
+        iyz="1.98754156956709E-07"
+        izz="0.000269139235588898" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/base_head_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/base_head_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="yaw_Link">
+    <inertial>
+      <origin
+        xyz="1.85661918877117E-08 0.000219748955451815 0.0126470493014508"
+        rpy="0 0 0" />
+      <mass
+        value="0.027880513627538" />
+      <inertia
+        ixx="1.29775174303798E-05"
+        ixy="2.03674256570775E-12"
+        ixz="7.90541923914779E-12"
+        iyy="5.67428577388218E-06"
+        iyz="2.32329050980403E-06"
+        izz="1.07868302886047E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/yaw_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/yaw_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="yaw"
+    type="continuous">
+    <origin
+      xyz="0 0 0.0915"
+      rpy="0 0 0" />
+    <parent
+      link="base_head_Link" />
+    <child
+      link="yaw_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="pitch_Link">
+    <inertial>
+      <origin
+        xyz="0.000463115834019976 0.00695227560623144 -3.14616969384618E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.494829959897674" />
+      <inertia
+        ixx="0.00010486250247632"
+        ixy="1.09327062770994E-07"
+        ixz="-7.03738464952933E-07"
+        iyy="0.000103190273090103"
+        iyz="-2.63533763750538E-07"
+        izz="0.000110335887207603" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/pitch_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/pitch_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="pitch"
+    type="continuous">
+    <origin
+      xyz="0 0 0.0305"
+      rpy="0 0 0" />
+    <parent
+      link="yaw_Link" />
+    <child
+      link="pitch_Link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="roll_Link">
+    <inertial>
+      <origin
+        xyz="0.0162438879356286 0.000145924325454622 0.0727795679074571"
+        rpy="0 0 0" />
+      <mass
+        value="0.830418529498614" />
+      <inertia
+        ixx="0.00150907980319285"
+        ixy="9.41079209270572E-07"
+        ixz="0.000365448633648559"
+        iyy="0.00159662556826264"
+        iyz="-8.18345318975647E-08"
+        izz="0.00127881363343763" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/roll_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/roll_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="roll"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="pitch_Link" />
+    <child
+      link="roll_Link" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <!-- <link
+    name="camera_Link">
+    <inertial>
+      <origin
+        xyz="0.0177274441322841 0.00834207379718077 -0.0385002194673418"
+        rpy="0 0 0" />
+      <mass
+        value="0.200371815611408" />
+      <inertia
+        ixx="0.000100711398603597"
+        ixy="-1.72736259732654E-08"
+        ixz="2.35671894641365E-08"
+        iyy="0.000156370159110572"
+        iyz="2.3556246198144E-05"
+        izz="0.000135846749490053" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/camera_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://head_planning/meshes/camera_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="camera"
+    type="continuous">
+    <origin
+      xyz="0.095345 0.017462 0.072563"
+      rpy="-2.1817 0 -1.5708" />
+    <parent
+      link="roll_Link" />
+    <child
+      link="camera_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint> -->
+</robot>

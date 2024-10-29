@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrajectory_planner.pdb"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrajectory_planner.so"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/libtrajectory_planner.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/libtrajectory_planner.so"
   "CMakeFiles/trajectory_planner.dir/src/interpolation.cpp.o"
   "CMakeFiles/trajectory_planner.dir/src/interpolation.cpp.o.d"
   "CMakeFiles/trajectory_planner.dir/src/sVelocityPlanner.cpp.o"

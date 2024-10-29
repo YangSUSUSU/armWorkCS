@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 # Utility rule file for sensor_msgs_generate_messages_nodejs.
 
@@ -74,10 +74,10 @@ arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_node
 .PHONY : arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build
 
 arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/clean:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/arm_kinematics_solver && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/arm_kinematics_solver && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
 .PHONY : arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/clean
 
 arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/arm_kinematics_solver /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build/arm_planning/arm_kinematics_solver /home/dell/cat-WS/armWorkCS/build/arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/depend
 

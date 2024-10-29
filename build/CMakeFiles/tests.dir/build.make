@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 # Utility rule file for tests.
 
@@ -78,6 +78,6 @@ CMakeFiles/tests.dir/clean:
 .PHONY : CMakeFiles/tests.dir/clean
 
 CMakeFiles/tests.dir/depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/tests.dir/depend
 

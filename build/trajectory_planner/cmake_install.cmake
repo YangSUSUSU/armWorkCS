@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/trajectory_planner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,17 +43,17 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/trajectory_planner/catkin_generated/installspace/trajectory_planner.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/trajectory_planner/catkin_generated/installspace/trajectory_planner.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/trajectory_planner/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/trajectory_planner/catkin_generated/installspace/trajectory_plannerConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/trajectory_planner/catkin_generated/installspace/trajectory_plannerConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/trajectory_planner/catkin_generated/installspace/trajectory_plannerConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/trajectory_planner/catkin_generated/installspace/trajectory_plannerConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/trajectory_planner" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/trajectory_planner/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/trajectory_planner" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/trajectory_planner/package.xml")
 endif()
 

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 # Include any dependencies generated for this target.
 include arm_planning/gripper_use/CMakeFiles/gripper_use.dir/depend.make
@@ -70,18 +70,18 @@ include arm_planning/gripper_use/CMakeFiles/gripper_use.dir/progress.make
 include arm_planning/gripper_use/CMakeFiles/gripper_use.dir/flags.make
 
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/flags.make
-arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp
+arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o: /home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o -MF CMakeFiles/gripper_use.dir/src/gripper.cpp.o.d -o CMakeFiles/gripper_use.dir/src/gripper.cpp.o -c /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dell/cat-WS/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o"
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o -MF CMakeFiles/gripper_use.dir/src/gripper.cpp.o.d -o CMakeFiles/gripper_use.dir/src/gripper.cpp.o -c /home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp
 
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gripper_use.dir/src/gripper.cpp.i"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp > CMakeFiles/gripper_use.dir/src/gripper.cpp.i
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp > CMakeFiles/gripper_use.dir/src/gripper.cpp.i
 
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gripper_use.dir/src/gripper.cpp.s"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp -o CMakeFiles/gripper_use.dir/src/gripper.cpp.s
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp -o CMakeFiles/gripper_use.dir/src/gripper.cpp.s
 
 # Object files for target gripper_use
 gripper_use_OBJECTS = \
@@ -90,37 +90,37 @@ gripper_use_OBJECTS = \
 # External object files for target gripper_use
 gripper_use_EXTERNAL_OBJECTS =
 
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libroscpp.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librosconsole.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librosconsole_log4cxx.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librosconsole_backend_interface.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libxmlrpcpp.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libroscpp_serialization.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librostime.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libcpp_common.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.1.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gripper_use.dir/link.txt --verbose=$(VERBOSE)
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libroscpp.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librosconsole.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librosconsole_log4cxx.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librosconsole_backend_interface.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libxmlrpcpp.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libroscpp_serialization.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/librostime.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /opt/ros/noetic/lib/libcpp_common.so
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.1.0
+/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dell/cat-WS/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use"
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gripper_use.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build: /home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use
+arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build: /home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use
 .PHONY : arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build
 
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/clean:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use && $(CMAKE_COMMAND) -P CMakeFiles/gripper_use.dir/cmake_clean.cmake
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use && $(CMAKE_COMMAND) -P CMakeFiles/gripper_use.dir/cmake_clean.cmake
 .PHONY : arm_planning/gripper_use/CMakeFiles/gripper_use.dir/clean
 
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use/CMakeFiles/gripper_use.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use/CMakeFiles/gripper_use.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : arm_planning/gripper_use/CMakeFiles/gripper_use.dir/depend
 

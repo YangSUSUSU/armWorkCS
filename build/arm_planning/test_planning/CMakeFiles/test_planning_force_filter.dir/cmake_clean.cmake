@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_force_filter"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_force_filter.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_force_filter"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_force_filter.pdb"
   "CMakeFiles/test_planning_force_filter.dir/src/test_force_filter.cpp.o"
   "CMakeFiles/test_planning_force_filter.dir/src/test_force_filter.cpp.o.d"
 )

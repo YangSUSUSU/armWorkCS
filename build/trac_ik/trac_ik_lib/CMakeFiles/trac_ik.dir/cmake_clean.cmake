@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrac_ik.pdb"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrac_ik.so"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/libtrac_ik.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/libtrac_ik.so"
   "CMakeFiles/trac_ik.dir/src/kdl_tl.cpp.o"
   "CMakeFiles/trac_ik.dir/src/kdl_tl.cpp.o.d"
   "CMakeFiles/trac_ik.dir/src/nlopt_ik.cpp.o"

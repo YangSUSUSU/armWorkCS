@@ -67,14 +67,14 @@ set(arm_kinematics_solver_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(arm_kinematics_solver_SOURCE_PREFIX /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver)
-  set(arm_kinematics_solver_DEVEL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/devel)
+  set(arm_kinematics_solver_SOURCE_PREFIX /home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver)
+  set(arm_kinematics_solver_DEVEL_PREFIX /home/dell/cat-WS/armWorkCS/devel)
   set(arm_kinematics_solver_INSTALL_PREFIX "")
   set(arm_kinematics_solver_PREFIX ${arm_kinematics_solver_DEVEL_PREFIX})
 else()
   set(arm_kinematics_solver_SOURCE_PREFIX "")
   set(arm_kinematics_solver_DEVEL_PREFIX "")
-  set(arm_kinematics_solver_INSTALL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/install)
+  set(arm_kinematics_solver_INSTALL_PREFIX /home/dell/cat-WS/armWorkCS/install)
   set(arm_kinematics_solver_PREFIX ${arm_kinematics_solver_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(arm_kinematics_solver_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/include " STREQUAL " ")
+if(NOT "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/include " STREQUAL " ")
   set(arm_kinematics_solver_INCLUDE_DIRS "")
-  set(_include_dirs "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/include")
+  set(_include_dirs "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/
         message(FATAL_ERROR "Project 'arm_kinematics_solver' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'arm_kinematics_solver' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'arm_kinematics_solver' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/${idir}'.  ${_report}")
     endif()
     _list_append_unique(arm_kinematics_solver_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ubuntu/WorkSpace/armWorkCS/devel/lib;/home/ubuntu/rosws/install_isolated/lib;/home/ubuntu/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/dell/cat-WS/armWorkCS/devel/lib;/home/dell/cat-WS/armWorkCS/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

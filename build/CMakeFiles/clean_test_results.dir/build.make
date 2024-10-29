@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 # Utility rule file for clean_test_results.
 
@@ -67,7 +67,7 @@ include CMakeFiles/clean_test_results.dir/compiler_depend.make
 include CMakeFiles/clean_test_results.dir/progress.make
 
 CMakeFiles/clean_test_results:
-	/usr/bin/python3 /opt/ros/noetic/share/catkin/cmake/test/remove_test_results.py /home/ubuntu/WorkSpace/armWorkCS/build/test_results
+	/usr/bin/python3 /opt/ros/noetic/share/catkin/cmake/test/remove_test_results.py /home/dell/cat-WS/armWorkCS/build/test_results
 
 clean_test_results: CMakeFiles/clean_test_results
 clean_test_results: CMakeFiles/clean_test_results.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/clean_test_results.dir/clean:
 .PHONY : CMakeFiles/clean_test_results.dir/clean
 
 CMakeFiles/clean_test_results.dir/depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles/clean_test_results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build/CMakeFiles/clean_test_results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/clean_test_results.dir/depend
 

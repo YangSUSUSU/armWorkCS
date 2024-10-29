@@ -9,14 +9,18 @@ find_package(catkin REQUIRED COMPONENTS
 )
 # 找到 Orocos KDL 库
 find_package(orocos_kdl REQUIRED)
-
+find_package(Eigen3 REQUIRED)
 catkin_package(
-    LIBRARIES ${PROJECT_NAME}  
+    INCLUDE_DIRS include
+    LIBRARIES ${PROJECT_NAME}   osqp OsqpEigen
     CATKIN_DEPENDS roscpp arm_kinematics_solver
     )
 
+link_directories(
+    ${catkin_LIB_DIRS} lib
+)
 include_directories(
-    # include
+    include
     ${catkin_INCLUDE_DIRS}
     ${orocos_kdl_INCLUDE_DIRS}
 )
@@ -31,7 +35,9 @@ add_executable(test_planning_force_filter src/test_force_filter.cpp)
 # 导纳控制器
 add_executable(test_planning_ad src/test_admmittance.cpp)
 
-target_link_libraries(test_planning ${catkin_LIBRARIES})
+target_link_libraries(test_planning ${catkin_LIBRARIES}
+                        osqp
+                        OsqpEigen)
 target_link_libraries(test_planning_ad ${catkin_LIBRARIES})
 target_link_libraries(test_planning_force_filter ${catkin_LIBRARIES})
 target_link_libraries(test_planning_force_generator ${catkin_LIBRARIES})
@@ -39,5 +45,3 @@ target_link_libraries(test_planning_force_calibration
                             ${catkin_LIBRARIES}
                             ${orocos_kdl_LIBRARIES}
                             )
-
-

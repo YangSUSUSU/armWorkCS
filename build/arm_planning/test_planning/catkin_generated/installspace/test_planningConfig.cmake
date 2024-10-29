@@ -67,14 +67,14 @@ set(test_planning_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(test_planning_SOURCE_PREFIX /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/test_planning)
-  set(test_planning_DEVEL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/devel)
+  set(test_planning_SOURCE_PREFIX /home/dell/cat-WS/armWorkCS/src/arm_planning/test_planning)
+  set(test_planning_DEVEL_PREFIX /home/dell/cat-WS/armWorkCS/devel)
   set(test_planning_INSTALL_PREFIX "")
   set(test_planning_PREFIX ${test_planning_DEVEL_PREFIX})
 else()
   set(test_planning_SOURCE_PREFIX "")
   set(test_planning_DEVEL_PREFIX "")
-  set(test_planning_INSTALL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/install)
+  set(test_planning_INSTALL_PREFIX /home/dell/cat-WS/armWorkCS/install)
   set(test_planning_PREFIX ${test_planning_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(test_planning_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT " " STREQUAL " ")
+if(NOT "include " STREQUAL " ")
   set(test_planning_INCLUDE_DIRS "")
-  set(_include_dirs "")
+  set(_include_dirs "include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -116,7 +116,7 @@ if(NOT " " STREQUAL " ")
   endforeach()
 endif()
 
-set(libraries "test_planning")
+set(libraries "test_planning;osqp;OsqpEigen")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ubuntu/WorkSpace/armWorkCS/install/lib;/home/ubuntu/rosws/install_isolated/lib;/home/ubuntu/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/dell/cat-WS/armWorkCS/install/lib;/home/dell/cat-WS/armWorkCS/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

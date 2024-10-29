@@ -1,8 +1,8 @@
-prefix=/home/ubuntu/WorkSpace/armWorkCS/devel
+prefix=/home/dell/cat-WS/armWorkCS/devel
 
 Name: trac_ik_lib
 Description: Description of trac_ik_lib
 Version: 1.6.6
-Cflags: -I/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/include -I/usr/include
+Cflags: -I/home/dell/cat-WS/armWorkCS/src/trac_ik/trac_ik_lib/include -I/usr/include -I/usr/local/include
 Libs: -L${prefix}/lib -ltrac_ik /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0 -lnlopt
 Requires: kdl_parser roscpp urdf

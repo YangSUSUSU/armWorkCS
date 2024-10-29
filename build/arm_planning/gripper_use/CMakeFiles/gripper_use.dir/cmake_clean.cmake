@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/gripper_use/gripper_use.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/gripper_use/gripper_use.pdb"
   "CMakeFiles/gripper_use.dir/src/gripper.cpp.o"
   "CMakeFiles/gripper_use.dir/src/gripper.cpp.o.d"
 )

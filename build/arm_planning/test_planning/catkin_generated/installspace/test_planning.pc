@@ -1,8 +1,8 @@
-prefix=/home/ubuntu/WorkSpace/armWorkCS/install
+prefix=/home/dell/cat-WS/armWorkCS/install
 
 Name: test_planning
 Description: Description of test_planning
 Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib -ltest_planning
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -ltest_planning -losqp -lOsqpEigen
 Requires: roscpp arm_kinematics_solver

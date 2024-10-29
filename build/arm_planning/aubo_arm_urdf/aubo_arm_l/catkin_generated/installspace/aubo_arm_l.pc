@@ -1,4 +1,4 @@
-prefix=/home/ubuntu/WorkSpace/armWorkCS/install
+prefix=/home/dell/cat-WS/armWorkCS/install
 
 Name: aubo_arm_l
 Description: Description of aubo_arm_l

@@ -38,6 +38,7 @@ private:
   double joint_limit_thres_;
   double max_abs_cart_linear_vel_;
   double max_abs_omega_;
+  Eigen::VectorXd g_last_QPSolution = Eigen::VectorXd(13);
 };
 
 }

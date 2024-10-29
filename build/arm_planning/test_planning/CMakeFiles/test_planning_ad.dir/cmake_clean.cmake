@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_ad"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_ad.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_ad"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_ad.pdb"
   "CMakeFiles/test_planning_ad.dir/src/test_admmittance.cpp.o"
   "CMakeFiles/test_planning_ad.dir/src/test_admmittance.cpp.o.d"
 )

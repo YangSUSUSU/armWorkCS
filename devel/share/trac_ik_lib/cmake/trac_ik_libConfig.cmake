@@ -67,14 +67,14 @@ set(trac_ik_lib_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(trac_ik_lib_SOURCE_PREFIX /home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib)
-  set(trac_ik_lib_DEVEL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/devel)
+  set(trac_ik_lib_SOURCE_PREFIX /home/dell/cat-WS/armWorkCS/src/trac_ik/trac_ik_lib)
+  set(trac_ik_lib_DEVEL_PREFIX /home/dell/cat-WS/armWorkCS/devel)
   set(trac_ik_lib_INSTALL_PREFIX "")
   set(trac_ik_lib_PREFIX ${trac_ik_lib_DEVEL_PREFIX})
 else()
   set(trac_ik_lib_SOURCE_PREFIX "")
   set(trac_ik_lib_DEVEL_PREFIX "")
-  set(trac_ik_lib_INSTALL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/install)
+  set(trac_ik_lib_INSTALL_PREFIX /home/dell/cat-WS/armWorkCS/install)
   set(trac_ik_lib_PREFIX ${trac_ik_lib_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(trac_ik_lib_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/include;/usr/include " STREQUAL " ")
+if(NOT "/home/dell/cat-WS/armWorkCS/src/trac_ik/trac_ik_lib/include;/usr/include;/usr/local/include " STREQUAL " ")
   set(trac_ik_lib_INCLUDE_DIRS "")
-  set(_include_dirs "/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/include;/usr/include")
+  set(_include_dirs "/home/dell/cat-WS/armWorkCS/src/trac_ik/trac_ik_lib/include;/usr/include;/usr/local/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/include;/usr/in
         message(FATAL_ERROR "Project 'trac_ik_lib' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'trac_ik_lib' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ubuntu/WorkSpace/armWorkCS/src/trac_ik/trac_ik_lib/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'trac_ik_lib' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/dell/cat-WS/armWorkCS/src/trac_ik/trac_ik_lib/${idir}'.  ${_report}")
     endif()
     _list_append_unique(trac_ik_lib_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ubuntu/WorkSpace/armWorkCS/devel/lib;/home/ubuntu/rosws/install_isolated/lib;/home/ubuntu/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/dell/cat-WS/armWorkCS/devel/lib;/home/dell/cat-WS/armWorkCS/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

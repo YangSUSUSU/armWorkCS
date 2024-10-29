@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -44,66 +44,66 @@ endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/msg" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/msg/hand_pose_req.msg"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/msg/pose_action_status.msg"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/msg/robot_state.msg"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/srv" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/srv/get_angle_act.srv"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/srv/get_status.srv"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/srv/set_angle.srv"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/srv/set_force.srv"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/srv/set_speed.srv"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-paths.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/include/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/devel/include/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/share/roseus/ros/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/devel/share/roseus/ros/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/share/common-lisp/ros/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/devel/share/common-lisp/ros/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/share/gennodejs/ros/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/devel/share/gennodejs/ros/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/python3/dist-packages/llm_msgs")
+  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/dell/cat-WS/armWorkCS/devel/lib/python3/dist-packages/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/python3/dist-packages/llm_msgs")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/devel/lib/python3/dist-packages/llm_msgs")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgs-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/llm_msgs/catkin_generated/installspace/llm_msgsConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/llm_msgs" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs/package.xml")
 endif()
 

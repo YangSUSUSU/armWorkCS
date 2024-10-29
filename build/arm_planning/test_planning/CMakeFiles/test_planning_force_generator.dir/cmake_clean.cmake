@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_force_generator"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_force_generator.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_force_generator"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_force_generator.pdb"
   "CMakeFiles/test_planning_force_generator.dir/src/test_force_generator.cpp.o"
   "CMakeFiles/test_planning_force_generator.dir/src/test_force_generator.cpp.o.d"
 )

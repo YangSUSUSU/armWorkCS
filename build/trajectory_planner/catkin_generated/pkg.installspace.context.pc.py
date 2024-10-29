@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "${prefix}/include".split(';') if "${prefix}/i
 PROJECT_CATKIN_DEPENDS = "eigen_conversions;roscpp".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "-ltrajectory_planner".split(';') if "-ltrajectory_planner" != "" else []
 PROJECT_NAME = "trajectory_planner"
-PROJECT_SPACE_DIR = "/home/ubuntu/WorkSpace/armWorkCS/install"
+PROJECT_SPACE_DIR = "/home/dell/cat-WS/armWorkCS/install"
 PROJECT_VERSION = "0.0.0"

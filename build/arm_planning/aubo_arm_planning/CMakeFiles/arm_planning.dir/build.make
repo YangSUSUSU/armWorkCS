@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 # Include any dependencies generated for this target.
 include arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/depend.make
@@ -70,18 +70,18 @@ include arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/progress.make
 include arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/flags.make
 
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/flags.make
-arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp
+arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o: /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o -MF CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o.d -o CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o -c /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dell/cat-WS/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o"
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o -MF CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o.d -o CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o -c /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp
 
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/arm_planning.dir/src/arm_planning.cpp.i"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp > CMakeFiles/arm_planning.dir/src/arm_planning.cpp.i
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp > CMakeFiles/arm_planning.dir/src/arm_planning.cpp.i
 
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/arm_planning.dir/src/arm_planning.cpp.s"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp -o CMakeFiles/arm_planning.dir/src/arm_planning.cpp.s
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/src/arm_planning.cpp -o CMakeFiles/arm_planning.dir/src/arm_planning.cpp.s
 
 # Object files for target arm_planning
 arm_planning_OBJECTS = \
@@ -90,68 +90,68 @@ arm_planning_OBJECTS = \
 # External object files for target arm_planning
 arm_planning_EXTERNAL_OBJECTS =
 
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/ubuntu/WorkSpace/armWorkCS/devel/lib/libarm_kinematics_solver.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf_conversions.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libkdl_conversions.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf2_ros.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libactionlib.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libmessage_filters.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf2.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrac_ik.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libnlopt.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libkdl_parser.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/liburdf.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_sensor.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_model_state.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_model.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_world.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libtinyxml.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libclass_loader.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libPocoFoundation.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libdl.a
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libroslib.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librospack.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libpython3.10.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole_bridge.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libeigen_conversions.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/local/lib/liborocos-kdl.so.1.5.1
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libroscpp.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole_log4cxx.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole_backend_interface.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libxmlrpcpp.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libroscpp_serialization.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librostime.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libcpp_common.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.1.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/ubuntu/WorkSpace/armWorkCS/devel/lib/libarm_qpik_solver.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/ubuntu/WorkSpace/armWorkCS/devel/lib/libtrajectory_planner.so
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
-/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning"
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/arm_planning.dir/link.txt --verbose=$(VERBOSE)
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/dell/cat-WS/armWorkCS/devel/lib/libarm_kinematics_solver.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf_conversions.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libkdl_conversions.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf2_ros.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libactionlib.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libmessage_filters.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libtf2.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/dell/cat-WS/armWorkCS/devel/lib/libtrac_ik.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/local/lib/libnlopt.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libkdl_parser.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/liburdf.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_sensor.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_model_state.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_model.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liburdfdom_world.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libtinyxml.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libclass_loader.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libPocoFoundation.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libdl.a
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libroslib.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librospack.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libpython3.10.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole_bridge.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libeigen_conversions.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/local/lib/liborocos-kdl.so.1.5.1
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libroscpp.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole_log4cxx.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librosconsole_backend_interface.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libxmlrpcpp.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libroscpp_serialization.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/librostime.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /opt/ros/noetic/lib/libcpp_common.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.1.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/dell/cat-WS/armWorkCS/devel/lib/libarm_qpik_solver.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /home/dell/cat-WS/armWorkCS/devel/lib/libtrajectory_planner.so
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
+/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dell/cat-WS/armWorkCS/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning"
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/arm_planning.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build: /home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning
+arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build: /home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning
 .PHONY : arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build
 
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/clean:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning && $(CMAKE_COMMAND) -P CMakeFiles/arm_planning.dir/cmake_clean.cmake
+	cd /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning && $(CMAKE_COMMAND) -P CMakeFiles/arm_planning.dir/cmake_clean.cmake
 .PHONY : arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/clean
 
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ubuntu/WorkSpace/armWorkCS/src /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning /home/ubuntu/WorkSpace/armWorkCS/build /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dell/cat-WS/armWorkCS/src /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning /home/dell/cat-WS/armWorkCS/build /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/depend
 

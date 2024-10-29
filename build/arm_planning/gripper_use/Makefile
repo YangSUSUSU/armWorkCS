@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -142,14 +142,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use//CMakeFiles/progress.marks
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles 0
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/dell/cat-WS/armWorkCS/build/CMakeFiles /home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use//CMakeFiles/progress.marks
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dell/cat-WS/armWorkCS/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/clean
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/clean
 .PHONY : clean
 
 # The main clean target
@@ -158,22 +158,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/preinstall
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/preinstall
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/rule:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/rule
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/gripper_use/CMakeFiles/gripper_use.dir/rule
 .PHONY : arm_planning/gripper_use/CMakeFiles/gripper_use.dir/rule
 
 # Convenience name for target.
@@ -182,7 +182,7 @@ gripper_use: arm_planning/gripper_use/CMakeFiles/gripper_use.dir/rule
 
 # fast build rule for target.
 gripper_use/fast:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build
 .PHONY : gripper_use/fast
 
 src/gripper.o: src/gripper.cpp.o
@@ -190,7 +190,7 @@ src/gripper.o: src/gripper.cpp.o
 
 # target to build an object file
 src/gripper.cpp.o:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o
 .PHONY : src/gripper.cpp.o
 
 src/gripper.i: src/gripper.cpp.i
@@ -198,7 +198,7 @@ src/gripper.i: src/gripper.cpp.i
 
 # target to preprocess a source file
 src/gripper.cpp.i:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.i
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.i
 .PHONY : src/gripper.cpp.i
 
 src/gripper.s: src/gripper.cpp.s
@@ -206,7 +206,7 @@ src/gripper.s: src/gripper.cpp.s
 
 # target to generate assembly for a file
 src/gripper.cpp.s:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.s
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/gripper_use/CMakeFiles/gripper_use.dir/build.make arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.s
 .PHONY : src/gripper.cpp.s
 
 # Help Target
@@ -237,6 +237,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

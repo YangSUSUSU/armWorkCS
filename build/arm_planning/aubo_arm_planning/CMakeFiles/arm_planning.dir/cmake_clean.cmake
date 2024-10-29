@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/aubo_arm_planning/arm_planning.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/arm_planning.pdb"
   "CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o"
   "CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o.d"
 )

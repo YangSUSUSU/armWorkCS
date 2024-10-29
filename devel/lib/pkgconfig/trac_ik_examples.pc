@@ -1,8 +1,8 @@
-prefix=/home/ubuntu/WorkSpace/armWorkCS/devel
+prefix=/home/dell/cat-WS/armWorkCS/devel
 
 Name: trac_ik_examples
 Description: Description of trac_ik_examples
 Version: 1.6.6
-Cflags: -I/usr/include -I/usr/local/include/eigen3
+Cflags: -I/usr/include -I/usr/include/eigen3 -I/usr/local/include
 Libs: -L${prefix}/lib /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0 -lorocos-kdl -lnlopt
 Requires: trac_ik_lib

@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -142,14 +142,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles /home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning//CMakeFiles/progress.marks
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles 0
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/dell/cat-WS/armWorkCS/build/CMakeFiles /home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning//CMakeFiles/progress.marks
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dell/cat-WS/armWorkCS/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/clean
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/clean
 .PHONY : clean
 
 # The main clean target
@@ -158,22 +158,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/preinstall
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/preinstall
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/rule:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/rule
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/rule
 .PHONY : arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/rule
 
 # Convenience name for target.
@@ -182,12 +182,12 @@ arm_qpik_solver: arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/r
 
 # fast build rule for target.
 arm_qpik_solver/fast:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build
 .PHONY : arm_qpik_solver/fast
 
 # Convenience name for target.
 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/rule:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/rule
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/rule
 .PHONY : arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/rule
 
 # Convenience name for target.
@@ -196,12 +196,26 @@ arm_planning: arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/rule
 
 # fast build rule for target.
 arm_planning/fast:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build
 .PHONY : arm_planning/fast
 
 # Convenience name for target.
+arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/rule:
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/rule
+.PHONY : arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/rule
+
+# Convenience name for target.
+ikfist_test: arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/rule
+.PHONY : ikfist_test
+
+# fast build rule for target.
+ikfist_test/fast:
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build
+.PHONY : ikfist_test/fast
+
+# Convenience name for target.
 arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/rule:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/rule
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/rule
 .PHONY : arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/rule
 
 # Convenience name for target.
@@ -210,7 +224,7 @@ gripper: arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/rule
 
 # fast build rule for target.
 gripper/fast:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build
 .PHONY : gripper/fast
 
 src/arm_planning.o: src/arm_planning.cpp.o
@@ -218,7 +232,7 @@ src/arm_planning.o: src/arm_planning.cpp.o
 
 # target to build an object file
 src/arm_planning.cpp.o:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.o
 .PHONY : src/arm_planning.cpp.o
 
 src/arm_planning.i: src/arm_planning.cpp.i
@@ -226,7 +240,7 @@ src/arm_planning.i: src/arm_planning.cpp.i
 
 # target to preprocess a source file
 src/arm_planning.cpp.i:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.i
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.i
 .PHONY : src/arm_planning.cpp.i
 
 src/arm_planning.s: src/arm_planning.cpp.s
@@ -234,7 +248,7 @@ src/arm_planning.s: src/arm_planning.cpp.s
 
 # target to generate assembly for a file
 src/arm_planning.cpp.s:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.s
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.s
 .PHONY : src/arm_planning.cpp.s
 
 src/arm_qpik_solver.o: src/arm_qpik_solver.cpp.o
@@ -242,7 +256,7 @@ src/arm_qpik_solver.o: src/arm_qpik_solver.cpp.o
 
 # target to build an object file
 src/arm_qpik_solver.cpp.o:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.o
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.o
 .PHONY : src/arm_qpik_solver.cpp.o
 
 src/arm_qpik_solver.i: src/arm_qpik_solver.cpp.i
@@ -250,7 +264,7 @@ src/arm_qpik_solver.i: src/arm_qpik_solver.cpp.i
 
 # target to preprocess a source file
 src/arm_qpik_solver.cpp.i:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.i
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.i
 .PHONY : src/arm_qpik_solver.cpp.i
 
 src/arm_qpik_solver.s: src/arm_qpik_solver.cpp.s
@@ -258,7 +272,7 @@ src/arm_qpik_solver.s: src/arm_qpik_solver.cpp.s
 
 # target to generate assembly for a file
 src/arm_qpik_solver.cpp.s:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.s
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.s
 .PHONY : src/arm_qpik_solver.cpp.s
 
 src/gripper.o: src/gripper.cpp.o
@@ -266,7 +280,7 @@ src/gripper.o: src/gripper.cpp.o
 
 # target to build an object file
 src/gripper.cpp.o:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/src/gripper.cpp.o
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/src/gripper.cpp.o
 .PHONY : src/gripper.cpp.o
 
 src/gripper.i: src/gripper.cpp.i
@@ -274,7 +288,7 @@ src/gripper.i: src/gripper.cpp.i
 
 # target to preprocess a source file
 src/gripper.cpp.i:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/src/gripper.cpp.i
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/src/gripper.cpp.i
 .PHONY : src/gripper.cpp.i
 
 src/gripper.s: src/gripper.cpp.s
@@ -282,8 +296,32 @@ src/gripper.s: src/gripper.cpp.s
 
 # target to generate assembly for a file
 src/gripper.cpp.s:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/src/gripper.cpp.s
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/gripper.dir/src/gripper.cpp.s
 .PHONY : src/gripper.cpp.s
+
+src/solver_Q1mXTC.o: src/solver_Q1mXTC.cpp.o
+.PHONY : src/solver_Q1mXTC.o
+
+# target to build an object file
+src/solver_Q1mXTC.cpp.o:
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/src/solver_Q1mXTC.cpp.o
+.PHONY : src/solver_Q1mXTC.cpp.o
+
+src/solver_Q1mXTC.i: src/solver_Q1mXTC.cpp.i
+.PHONY : src/solver_Q1mXTC.i
+
+# target to preprocess a source file
+src/solver_Q1mXTC.cpp.i:
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/src/solver_Q1mXTC.cpp.i
+.PHONY : src/solver_Q1mXTC.cpp.i
+
+src/solver_Q1mXTC.s: src/solver_Q1mXTC.cpp.s
+.PHONY : src/solver_Q1mXTC.s
+
+# target to generate assembly for a file
+src/solver_Q1mXTC.cpp.s:
+	cd /home/dell/cat-WS/armWorkCS/build && $(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/src/solver_Q1mXTC.cpp.s
+.PHONY : src/solver_Q1mXTC.cpp.s
 
 # Help Target
 help:
@@ -301,6 +339,7 @@ help:
 	@echo "... arm_planning"
 	@echo "... arm_qpik_solver"
 	@echo "... gripper"
+	@echo "... ikfist_test"
 	@echo "... src/arm_planning.o"
 	@echo "... src/arm_planning.i"
 	@echo "... src/arm_planning.s"
@@ -310,6 +349,9 @@ help:
 	@echo "... src/gripper.o"
 	@echo "... src/gripper.i"
 	@echo "... src/gripper.s"
+	@echo "... src/solver_Q1mXTC.o"
+	@echo "... src/solver_Q1mXTC.i"
+	@echo "... src/solver_Q1mXTC.s"
 .PHONY : help
 
 
@@ -321,6 +363,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/ubuntu/WorkSpace/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/dell/cat-WS/armWorkCS/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

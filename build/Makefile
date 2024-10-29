@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/WorkSpace/armWorkCS/src
+CMAKE_SOURCE_DIR = /home/dell/cat-WS/armWorkCS/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/WorkSpace/armWorkCS/build
+CMAKE_BINARY_DIR = /home/dell/cat-WS/armWorkCS/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -142,9 +142,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles /home/ubuntu/WorkSpace/armWorkCS/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dell/cat-WS/armWorkCS/build/CMakeFiles /home/dell/cat-WS/armWorkCS/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/WorkSpace/armWorkCS/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dell/cat-WS/armWorkCS/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -224,19 +224,6 @@ clean_test_results/fast:
 .PHONY : clean_test_results/fast
 
 #=============================================================================
-# Target rules for targets named GMock
-
-# Build rule for target.
-GMock: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 GMock
-.PHONY : GMock
-
-# fast build rule for target.
-GMock/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GMock.dir/build.make CMakeFiles/GMock.dir/build
-.PHONY : GMock/fast
-
-#=============================================================================
 # Target rules for targets named doxygen
 
 # Build rule for target.
@@ -248,6 +235,58 @@ doxygen: cmake_check_build_system
 doxygen/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/doxygen.dir/build.make CMakeFiles/doxygen.dir/build
 .PHONY : doxygen/fast
+
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f gtest/googlemock/CMakeFiles/gmock.dir/build.make gtest/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f gtest/googlemock/CMakeFiles/gmock_main.dir/build.make gtest/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f gtest/googletest/CMakeFiles/gtest.dir/build.make gtest/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f gtest/googletest/CMakeFiles/gtest_main.dir/build.make gtest/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
 
 #=============================================================================
 # Target rules for targets named _catkin_empty_exported_target
@@ -818,7 +857,7 @@ tf_generate_messages_cpp: cmake_check_build_system
 
 # fast build rule for target.
 tf_generate_messages_cpp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_cpp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_cpp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_cpp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_cpp.dir/build
 .PHONY : tf_generate_messages_cpp/fast
 
 #=============================================================================
@@ -831,7 +870,7 @@ tf_generate_messages_eus: cmake_check_build_system
 
 # fast build rule for target.
 tf_generate_messages_eus/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_eus.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_eus.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_eus.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_eus.dir/build
 .PHONY : tf_generate_messages_eus/fast
 
 #=============================================================================
@@ -844,7 +883,7 @@ tf_generate_messages_lisp: cmake_check_build_system
 
 # fast build rule for target.
 tf_generate_messages_lisp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_lisp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_lisp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_lisp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_lisp.dir/build
 .PHONY : tf_generate_messages_lisp/fast
 
 #=============================================================================
@@ -857,7 +896,7 @@ tf_generate_messages_nodejs: cmake_check_build_system
 
 # fast build rule for target.
 tf_generate_messages_nodejs/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_nodejs.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_nodejs.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_nodejs.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_nodejs.dir/build
 .PHONY : tf_generate_messages_nodejs/fast
 
 #=============================================================================
@@ -870,7 +909,7 @@ tf_generate_messages_py: cmake_check_build_system
 
 # fast build rule for target.
 tf_generate_messages_py/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_py.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf_generate_messages_py.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_py.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf_generate_messages_py.dir/build
 .PHONY : tf_generate_messages_py/fast
 
 #=============================================================================
@@ -883,7 +922,7 @@ sensor_msgs_generate_messages_cpp: cmake_check_build_system
 
 # fast build rule for target.
 sensor_msgs_generate_messages_cpp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
 .PHONY : sensor_msgs_generate_messages_cpp/fast
 
 #=============================================================================
@@ -896,7 +935,7 @@ sensor_msgs_generate_messages_eus: cmake_check_build_system
 
 # fast build rule for target.
 sensor_msgs_generate_messages_eus/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
 .PHONY : sensor_msgs_generate_messages_eus/fast
 
 #=============================================================================
@@ -909,7 +948,7 @@ sensor_msgs_generate_messages_lisp: cmake_check_build_system
 
 # fast build rule for target.
 sensor_msgs_generate_messages_lisp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
 .PHONY : sensor_msgs_generate_messages_lisp/fast
 
 #=============================================================================
@@ -922,7 +961,7 @@ sensor_msgs_generate_messages_nodejs: cmake_check_build_system
 
 # fast build rule for target.
 sensor_msgs_generate_messages_nodejs/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build
 .PHONY : sensor_msgs_generate_messages_nodejs/fast
 
 #=============================================================================
@@ -935,7 +974,7 @@ sensor_msgs_generate_messages_py: cmake_check_build_system
 
 # fast build rule for target.
 sensor_msgs_generate_messages_py/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
 .PHONY : sensor_msgs_generate_messages_py/fast
 
 #=============================================================================
@@ -948,7 +987,7 @@ actionlib_generate_messages_cpp: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_generate_messages_cpp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_cpp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_cpp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_cpp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_cpp.dir/build
 .PHONY : actionlib_generate_messages_cpp/fast
 
 #=============================================================================
@@ -961,7 +1000,7 @@ actionlib_generate_messages_eus: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_generate_messages_eus/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_eus.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_eus.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_eus.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_eus.dir/build
 .PHONY : actionlib_generate_messages_eus/fast
 
 #=============================================================================
@@ -974,7 +1013,7 @@ actionlib_generate_messages_lisp: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_generate_messages_lisp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_lisp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_lisp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_lisp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_lisp.dir/build
 .PHONY : actionlib_generate_messages_lisp/fast
 
 #=============================================================================
@@ -987,7 +1026,7 @@ actionlib_generate_messages_nodejs: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_generate_messages_nodejs/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_nodejs.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_nodejs.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_nodejs.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_nodejs.dir/build
 .PHONY : actionlib_generate_messages_nodejs/fast
 
 #=============================================================================
@@ -1000,7 +1039,7 @@ actionlib_generate_messages_py: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_generate_messages_py/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_py.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_generate_messages_py.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_py.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_generate_messages_py.dir/build
 .PHONY : actionlib_generate_messages_py/fast
 
 #=============================================================================
@@ -1013,7 +1052,7 @@ actionlib_msgs_generate_messages_cpp: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_msgs_generate_messages_cpp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/build
 .PHONY : actionlib_msgs_generate_messages_cpp/fast
 
 #=============================================================================
@@ -1026,7 +1065,7 @@ actionlib_msgs_generate_messages_eus: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_msgs_generate_messages_eus/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/build
 .PHONY : actionlib_msgs_generate_messages_eus/fast
 
 #=============================================================================
@@ -1039,7 +1078,7 @@ actionlib_msgs_generate_messages_lisp: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_msgs_generate_messages_lisp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/build
 .PHONY : actionlib_msgs_generate_messages_lisp/fast
 
 #=============================================================================
@@ -1052,7 +1091,7 @@ actionlib_msgs_generate_messages_nodejs: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_msgs_generate_messages_nodejs/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/build
 .PHONY : actionlib_msgs_generate_messages_nodejs/fast
 
 #=============================================================================
@@ -1065,7 +1104,7 @@ actionlib_msgs_generate_messages_py: cmake_check_build_system
 
 # fast build rule for target.
 actionlib_msgs_generate_messages_py/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_py.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/actionlib_msgs_generate_messages_py.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_py.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/actionlib_msgs_generate_messages_py.dir/build
 .PHONY : actionlib_msgs_generate_messages_py/fast
 
 #=============================================================================
@@ -1078,7 +1117,7 @@ tf2_msgs_generate_messages_cpp: cmake_check_build_system
 
 # fast build rule for target.
 tf2_msgs_generate_messages_cpp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build
 .PHONY : tf2_msgs_generate_messages_cpp/fast
 
 #=============================================================================
@@ -1091,7 +1130,7 @@ tf2_msgs_generate_messages_eus: cmake_check_build_system
 
 # fast build rule for target.
 tf2_msgs_generate_messages_eus/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build
 .PHONY : tf2_msgs_generate_messages_eus/fast
 
 #=============================================================================
@@ -1104,7 +1143,7 @@ tf2_msgs_generate_messages_lisp: cmake_check_build_system
 
 # fast build rule for target.
 tf2_msgs_generate_messages_lisp/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build
 .PHONY : tf2_msgs_generate_messages_lisp/fast
 
 #=============================================================================
@@ -1117,7 +1156,7 @@ tf2_msgs_generate_messages_nodejs: cmake_check_build_system
 
 # fast build rule for target.
 tf2_msgs_generate_messages_nodejs/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build
 .PHONY : tf2_msgs_generate_messages_nodejs/fast
 
 #=============================================================================
@@ -1130,8 +1169,21 @@ tf2_msgs_generate_messages_py: cmake_check_build_system
 
 # fast build rule for target.
 tf2_msgs_generate_messages_py/fast:
-	$(MAKE) $(MAKESILENT) -f arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_py.dir/build.make arm_planning/arm_kinematics_solver/CMakeFiles/tf2_msgs_generate_messages_py.dir/build
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_py.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/tf2_msgs_generate_messages_py.dir/build
 .PHONY : tf2_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named ik_test
+
+# Build rule for target.
+ik_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ik_test
+.PHONY : ik_test
+
+# fast build rule for target.
+ik_test/fast:
+	$(MAKE) $(MAKESILENT) -f arm_planning/arm_aubo_trac_ik/CMakeFiles/ik_test.dir/build.make arm_planning/arm_aubo_trac_ik/CMakeFiles/ik_test.dir/build
+.PHONY : ik_test/fast
 
 #=============================================================================
 # Target rules for targets named arm_kinematics_solver
@@ -1171,6 +1223,19 @@ arm_planning: cmake_check_build_system
 arm_planning/fast:
 	$(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/build
 .PHONY : arm_planning/fast
+
+#=============================================================================
+# Target rules for targets named ikfist_test
+
+# Build rule for target.
+ikfist_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ikfist_test
+.PHONY : ikfist_test
+
+# fast build rule for target.
+ikfist_test/fast:
+	$(MAKE) $(MAKESILENT) -f arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build.make arm_planning/aubo_arm_planning/CMakeFiles/ikfist_test.dir/build
+.PHONY : ikfist_test/fast
 
 #=============================================================================
 # Target rules for targets named gripper
@@ -1276,7 +1341,6 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... GMock"
 	@echo "... _catkin_empty_exported_target"
 	@echo "... _llm_msgs_generate_messages_check_deps_get_angle_act"
 	@echo "... _llm_msgs_generate_messages_check_deps_get_status"
@@ -1350,9 +1414,15 @@ help:
 	@echo "... arm_kinematics_solver"
 	@echo "... arm_planning"
 	@echo "... arm_qpik_solver"
+	@echo "... gmock"
+	@echo "... gmock_main"
 	@echo "... gripper"
 	@echo "... gripper_use"
+	@echo "... gtest"
+	@echo "... gtest_main"
+	@echo "... ik_test"
 	@echo "... ik_tests"
+	@echo "... ikfist_test"
 	@echo "... test_planning"
 	@echo "... test_planning_ad"
 	@echo "... test_planning_force_calibration"

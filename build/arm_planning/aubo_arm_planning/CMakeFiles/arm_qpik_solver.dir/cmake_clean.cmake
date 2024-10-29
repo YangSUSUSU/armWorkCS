@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libarm_qpik_solver.pdb"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libarm_qpik_solver.so"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/libarm_qpik_solver.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/libarm_qpik_solver.so"
   "CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.o"
   "CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solver.cpp.o.d"
 )

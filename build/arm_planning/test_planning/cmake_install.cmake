@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/test_planning
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/arm_planning/test_planning
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,17 +43,17 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/test_planning/catkin_generated/installspace/test_planning.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/test_planning/catkin_generated/installspace/test_planning.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_planning/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/test_planning/catkin_generated/installspace/test_planningConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/test_planning/catkin_generated/installspace/test_planningConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/test_planning/catkin_generated/installspace/test_planningConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/test_planning/catkin_generated/installspace/test_planningConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_planning" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/test_planning/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_planning" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/test_planning/package.xml")
 endif()
 

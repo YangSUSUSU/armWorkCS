@@ -3,7 +3,7 @@
 #include <geometry_msgs/WrenchStamped.h>
 #include <array>
 #include <vector>
-// #define SIMULATION_MODE
+#define SIMULATION_MODE
 class SmoothingFilter {
 public:
     SmoothingFilter(size_t windowSize) : windowSize(windowSize), index(0) {

@@ -11,7 +11,7 @@
 
 
 // 定义仿真模式
-// #define SIMULATION_MODE
+#define SIMULATION_MODE
 
 // 定义六个导纳控制的常量，通过条件编译区分仿真和真机模式
 #ifdef SIMULATION_MODE
@@ -135,7 +135,8 @@ public:
     }
 
 private:
-    void initializeArmParams() {
+    void initializeArmParams() 
+    {
         if (arm_param_.name == "left") {
             arm_param_.base_link = "base_link";
             arm_param_.eef_link = "left_flange";
@@ -158,7 +159,7 @@ private:
     //          msg->header.stamp.sec, 
     //          msg->header.stamp.nsec, 
     //          msg->header.frame_id.c_str());
-
+2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,
     // ROS_INFO("Force: [x: %.2f, y: %.2f, z: %.2f]", 
     //          msg->wrench.force.x, 
     //          msg->wrench.force.y, 
@@ -612,7 +613,8 @@ private:
     double last_x, last_y, last_z;
     bool first_force_received;
 };
-    int main(int argc, char** argv) { 
+    int main(int argc, char** argv) 
+    { 
         ros::init(argc, argv, "arm_controller"); ros::NodeHandle nh;
         ArmController left_arm_controller(nh, "left");
         ArmController right_arm_controller(nh, "right");

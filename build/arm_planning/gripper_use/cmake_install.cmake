@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,21 +43,21 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use/catkin_generated/installspace/gripper_use.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use/catkin_generated/installspace/gripper_use.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gripper_use/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use/catkin_generated/installspace/gripper_useConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/gripper_use/catkin_generated/installspace/gripper_useConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use/catkin_generated/installspace/gripper_useConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/gripper_use/catkin_generated/installspace/gripper_useConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gripper_use" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gripper_use" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gripper_use" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/launch")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gripper_use" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/launch")
 endif()
 

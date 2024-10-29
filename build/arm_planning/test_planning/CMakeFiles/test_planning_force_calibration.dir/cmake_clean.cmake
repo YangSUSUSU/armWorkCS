@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_force_calibration"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/test_planning/test_planning_force_calibration.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_force_calibration"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/test_planning/test_planning_force_calibration.pdb"
   "CMakeFiles/test_planning_force_calibration.dir/src/test_load_calibration.cpp.o"
   "CMakeFiles/test_planning_force_calibration.dir/src/test_load_calibration.cpp.o.d"
 )

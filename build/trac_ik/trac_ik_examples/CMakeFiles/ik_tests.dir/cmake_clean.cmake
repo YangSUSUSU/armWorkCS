@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/trac_ik_examples/ik_tests"
-  "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/trac_ik_examples/ik_tests.pdb"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/trac_ik_examples/ik_tests"
+  "/home/dell/cat-WS/armWorkCS/devel/lib/trac_ik_examples/ik_tests.pdb"
   "CMakeFiles/ik_tests.dir/src/ik_tests.cpp.o"
   "CMakeFiles/ik_tests.dir/src/ik_tests.cpp.o.d"
 )

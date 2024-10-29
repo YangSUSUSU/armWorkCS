@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,29 +43,29 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planning.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planning.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/aubo_arm_planningConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/aubo_arm_planning" TYPE PROGRAM FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/move_to_2.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/aubo_arm_planning" TYPE PROGRAM FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_planning/catkin_generated/installspace/move_to_2.py")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/config")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/config")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_planning/launch")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_planning" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/launch")
 endif()
 

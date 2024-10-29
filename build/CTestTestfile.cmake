@@ -1,15 +1,17 @@
 # CMake generated Testfile for 
-# Source directory: /home/ubuntu/WorkSpace/armWorkCS/src
-# Build directory: /home/ubuntu/WorkSpace/armWorkCS/build
+# Source directory: /home/dell/cat-WS/armWorkCS/src
+# Build directory: /home/dell/cat-WS/armWorkCS/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
+subdirs("gtest")
 subdirs("arm_planning/llm_msgs")
 subdirs("arm_planning/gripper_use")
 subdirs("trajectory_planner")
 subdirs("arm_planning/aubo_arm_urdf/aubo_arm_l")
 subdirs("arm_planning/aubo_arm_urdf/aubo_arm_r")
 subdirs("trac_ik/trac_ik_lib")
+subdirs("arm_planning/arm_aubo_trac_ik")
 subdirs("arm_planning/arm_kinematics_solver")
 subdirs("arm_planning/aubo_arm_planning")
 subdirs("arm_planning/test_planning")

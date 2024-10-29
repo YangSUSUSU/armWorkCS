@@ -354,7 +354,7 @@ int ArmQpIkSolver::qpSolution(ArmKinematicsSolver *kin_solver,const Eigen::Vecto
     int NumberOfConstraints = 13; //A矩阵的行数
 
     Eigen::VectorXd diagonalElement(13);
-    diagonalElement << MatrixXd::Ones(7,1)*10, MatrixXd::Ones(6,1)*30;
+    diagonalElement << MatrixXd::Ones(7,1)*30, MatrixXd::Ones(6,1)*10;
     Eigen::SparseMatrix<double> hessian;
     hessian.resize(13,13);
     diagonalElement(4)=30;
@@ -383,26 +383,33 @@ int ArmQpIkSolver::qpSolution(ArmKinematicsSolver *kin_solver,const Eigen::Vecto
       return 1;
     }
 
-    VectorXd QPSolution(12);
+    VectorXd QPSolution(13);
     // get the controller input
     QPSolution = qpsolver_.getSolution();
+    // if (abs(QPSolution.sum())<0.000000001)
+    // {
+    //   QPSolution=g_last_QPSolution;
+    // }
+    // else
+    // {
 
+    //   g_last_QPSolution=QPSolution;
+    // }
+    
     for (int i=0; i<7; i++)
     {
         q_result(i) = q_current(i) + QPSolution(i)*(1.0/frequency);
     }
-
+    std::cout <<"====QPSolution==="<<QPSolution.transpose()<<std::endl;
     // MatrixXd jacob_result;
     // std::vector<double> q_new(q_result.data(),q_result.data()+q_result.size());
     // if(!kin_solver->getJacobian(jacob_result, q_new, error_string))
     // {    return 1;  }
     // double K = jacob_result.norm()*jacob_result.inverse().norm();
-
     // if(K > 200)
     // {
     //     q_result(5)=q_current(5);
     // }
-
     // Eigen::JacobiSVD<Eigen::MatrixXd> svd_res(jacob_result);
 
     // double cond_res = svd_res.singularValues()(0) / svd_res.singularValues()(svd_res.singularValues().size()-1);
@@ -410,6 +417,8 @@ int ArmQpIkSolver::qpSolution(ArmKinematicsSolver *kin_solver,const Eigen::Vecto
     //   std::cout << "Quadratic Programming exits with error: cond of Jacobian matrix too large!!" << std::endl;
     //   return 1;
     // }
+
+
     qpsolver_.data()->clearHessianMatrix();
     qpsolver_.data()->clearLinearConstraintsMatrix();
     qpsolver_.clearSolver();

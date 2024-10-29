@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,33 +43,33 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/catkin_generated/installspace/aubo_arm_r.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/catkin_generated/installspace/aubo_arm_r.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/catkin_generated/installspace/aubo_arm_rConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/catkin_generated/installspace/aubo_arm_rConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/catkin_generated/installspace/aubo_arm_rConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/catkin_generated/installspace/aubo_arm_rConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/config" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/config/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/config" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/config/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/launch" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/launch/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/launch" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/launch/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/meshes" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/meshes/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/meshes" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/meshes/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/urdf" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/urdf/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/aubo_arm_r/urdf" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_urdf/aubo_arm_r/urdf/")
 endif()
 

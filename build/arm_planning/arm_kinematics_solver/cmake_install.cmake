@@ -1,8 +1,8 @@
-# Install script for directory: /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver
+# Install script for directory: /home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/WorkSpace/armWorkCS/install")
+  set(CMAKE_INSTALL_PREFIX "/home/dell/cat-WS/armWorkCS/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,18 +43,18 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/arm_kinematics_solver/catkin_generated/installspace/arm_kinematics_solver.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/build/arm_planning/arm_kinematics_solver/catkin_generated/installspace/arm_kinematics_solver.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/arm_kinematics_solver/cmake" TYPE FILE FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/arm_kinematics_solver/catkin_generated/installspace/arm_kinematics_solverConfig.cmake"
-    "/home/ubuntu/WorkSpace/armWorkCS/build/arm_planning/arm_kinematics_solver/catkin_generated/installspace/arm_kinematics_solverConfig-version.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/arm_kinematics_solver/catkin_generated/installspace/arm_kinematics_solverConfig.cmake"
+    "/home/dell/cat-WS/armWorkCS/build/arm_planning/arm_kinematics_solver/catkin_generated/installspace/arm_kinematics_solverConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/arm_kinematics_solver" TYPE FILE FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/arm_kinematics_solver" TYPE FILE FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -64,12 +64,12 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libarm_kinematics_solver.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/ubuntu/WorkSpace/armWorkCS/devel/lib/libarm_kinematics_solver.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/dell/cat-WS/armWorkCS/devel/lib/libarm_kinematics_solver.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libarm_kinematics_solver.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libarm_kinematics_solver.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libarm_kinematics_solver.so"
-         OLD_RPATH "/opt/ros/noetic/lib:/home/ubuntu/WorkSpace/armWorkCS/devel/lib:/usr/local/lib:"
+         OLD_RPATH "/opt/ros/noetic/lib:/home/dell/cat-WS/armWorkCS/devel/lib:/usr/local/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libarm_kinematics_solver.so")
@@ -81,14 +81,14 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/arm_kinematics_solver" TYPE DIRECTORY FILES "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/include/arm_kinematics_solver/" FILES_MATCHING REGEX "/[^/]*\\.h$" REGEX "/\\.svn$" EXCLUDE)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/arm_kinematics_solver" TYPE DIRECTORY FILES "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/include/arm_kinematics_solver/" FILES_MATCHING REGEX "/[^/]*\\.h$" REGEX "/\\.svn$" EXCLUDE)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/arm_kinematics_solver" TYPE DIRECTORY FILES
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/models"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/launch"
-    "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/arm_kinematics_solver/rviz"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/models"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/launch"
+    "/home/dell/cat-WS/armWorkCS/src/arm_planning/arm_kinematics_solver/rviz"
     )
 endif()
 

@@ -67,14 +67,14 @@ set(llm_msgs_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(llm_msgs_SOURCE_PREFIX /home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/llm_msgs)
-  set(llm_msgs_DEVEL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/devel)
+  set(llm_msgs_SOURCE_PREFIX /home/dell/cat-WS/armWorkCS/src/arm_planning/llm_msgs)
+  set(llm_msgs_DEVEL_PREFIX /home/dell/cat-WS/armWorkCS/devel)
   set(llm_msgs_INSTALL_PREFIX "")
   set(llm_msgs_PREFIX ${llm_msgs_DEVEL_PREFIX})
 else()
   set(llm_msgs_SOURCE_PREFIX "")
   set(llm_msgs_DEVEL_PREFIX "")
-  set(llm_msgs_INSTALL_PREFIX /home/ubuntu/WorkSpace/armWorkCS/install)
+  set(llm_msgs_INSTALL_PREFIX /home/dell/cat-WS/armWorkCS/install)
   set(llm_msgs_PREFIX ${llm_msgs_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ubuntu/WorkSpace/armWorkCS/install/lib;/home/ubuntu/rosws/install_isolated/lib;/home/ubuntu/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/dell/cat-WS/armWorkCS/install/lib;/home/dell/cat-WS/armWorkCS/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

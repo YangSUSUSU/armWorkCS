@@ -69,7 +69,9 @@ include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
+    
     )
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/aubo_arm_planning)
 
 ## Declare a C++ library
 
@@ -91,7 +93,8 @@ add_library(arm_qpik_solver
 add_executable(arm_planning
     src/arm_planning.cpp
     )
-
+add_executable(ikfist_test 
+    src/solver_Q1mXTC.cpp)
 add_executable(gripper
     src/gripper.cpp
     )

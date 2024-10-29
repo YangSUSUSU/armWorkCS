@@ -1,4 +1,4 @@
-prefix=/home/ubuntu/WorkSpace/armWorkCS/install
+prefix=/home/dell/cat-WS/armWorkCS/install
 
 Name: llm_msgs
 Description: Description of llm_msgs

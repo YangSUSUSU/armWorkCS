@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/ubuntu/WorkSpace/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp" "arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o" "gcc" "arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o.d"
+  "/home/dell/cat-WS/armWorkCS/src/arm_planning/gripper_use/src/gripper.cpp" "arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o" "gcc" "arm_planning/gripper_use/CMakeFiles/gripper_use.dir/src/gripper.cpp.o.d"
   )
 
 # Targets to which this target links.

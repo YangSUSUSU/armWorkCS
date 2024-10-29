@@ -1,4 +1,4 @@
-prefix=/home/ubuntu/WorkSpace/armWorkCS/install
+prefix=/home/dell/cat-WS/armWorkCS/install
 
 Name: trajectory_planner
 Description: Description of trajectory_planner

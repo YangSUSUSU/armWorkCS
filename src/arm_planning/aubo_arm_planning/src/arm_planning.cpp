@@ -15,8 +15,8 @@
 using namespace Eigen;
 using namespace std;
 
-// #define simulation
-#define real
+#define simulation
+// #define real
 #define LLM
 #define unveiling_ceremony
 // #define hug_emblem
@@ -258,9 +258,10 @@ void DualArm::RightJoints_pub(const vector<double> pos, const VectorXd vel, ros:
     joint_state.effort.resize(7);
     joint_state.header.stamp = ros::Time::now();
     joint_state.name = {"1","2","3","4","5","6","7"};
-    for (int i = 0; i < 7; i++) {
+
+    for (int i = 0; i < 7; i++) 
+    {
         joint_state.position[i] = pos[i];
-        // joint_state.velocity[i] = vel(i);
     }
     // while (pub.getNumSubscribers()<1)
     // {
@@ -417,6 +418,7 @@ void DualArm::Left_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_para
         sensor_msgs::JointState joint_state_msg;
         joint_state_msg.name.resize(7);
         joint_state_msg.position.resize(7);
+        joint_state_msg.velocity.resize(7);
         // 设置 JointState 消息中的关节名称和初始位置
         joint_state_msg.name[0] = "left_joint1";
         joint_state_msg.name[1] = "left_joint2";
@@ -518,11 +520,11 @@ void DualArm::Left_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_para
             #ifdef simulation
             for (int i = 0; i < 7; i++)
             {
-                joint_state_msg.position[i] = q_ik(i); 
+            joint_state_msg.position[i] = q_ik(i); 
 
             }
             joint_state_msg.header.stamp = ros::Time::now();
-            joint_state_pub.publish(joint_state_msg);
+            // joint_state_pub.publish(joint_state_msg);
             #endif
             loop_rate.sleep();
 
@@ -553,8 +555,10 @@ void DualArm::Right_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_par
             }
             else
             {
+
                 ROS_INFO("The right arm not move " );
                 exit(0);
+
             }
             
         }
@@ -670,7 +674,9 @@ void DualArm::Right_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_par
             cartesian_trajectory.insert(cartesian_trajectory.end(), trajectory1.begin(), trajectory1.end());
             cartesian_trajectory.insert(cartesian_trajectory.end(), trajectory2.begin(), trajectory2.end());
         }
-        else{
+        else
+        
+        {
             int num_samples;
             double duration;
             if(dot_product < 0.95)
@@ -718,10 +724,9 @@ void DualArm::Right_Cartesian_Plan(vector<double> &goal_pose , ArmParam &arm_par
 
             }
             joint_state_msg.header.stamp = ros::Time::now();
-            joint_state_pub.publish(joint_state_msg);
+            // joint_state_pub.publish(joint_state_msg);
             #endif
             loop_rate.sleep();
-
         }
 
 
@@ -1135,7 +1140,7 @@ void DualArm::LeftJoints_Plan(vector<double> &goal_joints)
 
         }
         joint_state_msg.header.stamp = ros::Time::now();
-        joint_state_pub.publish(joint_state_msg);
+        // joint_state_pub.publish(joint_state_msg);
         #endif
         t_cp += 1.0 / frequency;
 
@@ -1221,7 +1226,7 @@ void DualArm::RightJoints_Plan(vector<double> &goal_joints)
 
         }
         joint_state_msg.header.stamp = ros::Time::now();
-        joint_state_pub.publish(joint_state_msg);
+        // joint_state_pub.publish(joint_state_msg);
         #endif
         t_cp += 1.0 / frequency;
 
@@ -1352,10 +1357,11 @@ void DualArm::Wave_Arm(vector<double> &goal_joints)
         for (int i = 0; i < 7; i++)
         {
             joint_state_msg.position[i] = pub_ArmJoints[i]; 
+            // joint_state_msg.vel[i] = 0.15*sin(test_time*angular_velocity)
 
         }
         joint_state_msg.header.stamp = ros::Time::now();
-        joint_state_pub.publish(joint_state_msg);
+        // joint_state_pub.publish(joint_state_msg);
         #endif
         t_cp += 1.0 / frequency;
 
