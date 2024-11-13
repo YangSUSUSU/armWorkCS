@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
+set(CMAKE_CXX_STANDARD 11)
 project(test_planning)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     llm_msgs
+    sensor_msgs
     geometry_msgs
     arm_kinematics_solver
 )
@@ -15,7 +17,12 @@ catkin_package(
     LIBRARIES ${PROJECT_NAME}   osqp OsqpEigen
     CATKIN_DEPENDS roscpp arm_kinematics_solver
     )
+find_package(iDynTree REQUIRED)
+    # 查找 Pinocchio
+find_package(pinocchio REQUIRED)
 
+# 查找 urdfdom（如 Pinocchio 使用 URDF）
+find_package(urdfdom REQUIRED)
 link_directories(
     ${catkin_LIB_DIRS} lib
 )
@@ -23,7 +30,11 @@ include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     ${orocos_kdl_INCLUDE_DIRS}
+    ${PINOCCHIO_INCLUDE_DIRS} 
+    ${urdfdom_INCLUDE_DIRS}
 )
+add_executable(test_gazebo src/test_gazebo.cpp)
+
 add_executable(test_planning src/test_arm.cpp)
 
 add_executable(test_planning_force_calibration src/test_load_calibration.cpp)
@@ -45,3 +56,9 @@ target_link_libraries(test_planning_force_calibration
                             ${catkin_LIBRARIES}
                             ${orocos_kdl_LIBRARIES}
                             )
+
+target_link_libraries(test_gazebo
+    ${catkin_LIBRARIES}
+    iDynTree::idyntree-high-level iDynTree::idyntree-estimation
+    ${PINOCCHIO_LIBRARIES} ${urdfdom_LIBRARIES}
+)

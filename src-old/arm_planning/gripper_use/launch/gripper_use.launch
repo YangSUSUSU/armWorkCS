@@ -1,5 +1,0 @@
-<launch>
-
-    <!-- 启动 GripperClient 节点 -->
-    <node name="gripper_use" pkg="gripper_use" type="gripper_use" output="screen"/>
-</launch>

@@ -1,8 +1,0 @@
-
-<launch>
-  <node pkg="test_planning" type="test_planning_force_generator" name="test_planning_force_generator" output="screen" />
-  <node pkg="test_planning" type="test_planning_force_filter" name="test_planning_force_filter" output="screen" />
-  <node pkg="test_planning" type="test_planning_ad" name="test_planning_ad" output="screen" />
-
-  <node pkg="test_planning" type="test_planning" name="test_planning" output="screen" />
-</launch>

@@ -11,13 +11,15 @@
     <child link = "left_link0" />
     <!-- <origin xyz="0 0. 0." rpy="0 1.0472 1.5707963" /> -->
     <origin xyz="0 0.15911 0.42582" rpy="0 1.3083 1.5707963" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   
   <joint name="head_fixed_joint" type="fixed">
     <parent link= "base_link" />
     <child link = "base_head_link" />
     <origin xyz="-0.0066 0 0.5295" rpy="0 0 0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
 
   <!-- head -->
   <link
@@ -112,7 +114,8 @@
       link="yaw_Link" />
     <axis
       xyz="0 0 -1" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="pitch_Link">
     <inertial>
@@ -165,7 +168,8 @@
       link="pitch_Link" />
     <axis
       xyz="0 1 0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="roll_Link">
     <inertial>
@@ -218,7 +222,8 @@
       link="roll_Link" />
     <axis
       xyz="-1 0 0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="camera_link">
     <inertial>
@@ -271,7 +276,8 @@
       link="camera_link" />
     <axis
       xyz="1 0 0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <!-- left arm -->
   <link
     name="left_link0">
@@ -353,7 +359,8 @@
       xyz="0 0 1" />
     <limit lower="-3.14159265358979" upper="0.785398163397448" effort="40" start_stop="82" velocity="3.14159265358979" />
     <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="left_link2">
     <inertial>
@@ -401,7 +408,8 @@
       xyz="0 0 1" />
     <limit lower="0" upper="1.74532925199433" effort="40" start_stop="82" velocity="3.14159265358979" />
     <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="left_link3">
     <inertial>
@@ -449,7 +457,8 @@
       xyz="0 0 1" />
     <limit lower="-2.26892802759263" upper="2.26892802759263" effort="22" start_stop="42" velocity="4.18879020478639" />
     <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="left_link4">
     <inertial>
@@ -497,7 +506,8 @@
       xyz="0 0 1" />
     <limit lower="-2.26892802759263" upper="0" effort="22" start_stop="42" velocity="4.18879020478639" />
     <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="left_link5">
     <inertial>
@@ -545,7 +555,8 @@
       xyz="0 0 1" />
     <limit lower="-2.26892802759263" upper="2.26892802759263" effort="8" start_stop="15" velocity="3.14159265358979" />
     <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="left_link6">
     <inertial>
@@ -593,7 +604,8 @@
       xyz="0 0 1" />
     <limit lower="-1.30899693899575" upper="1.30899693899575" effort="8" start_stop="15" velocity="3.14159265358979" />
     <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="left_link7">
     <inertial>
@@ -641,19 +653,22 @@
       xyz="0 0 1" />
     <limit lower="-1.30899693899575" upper="1.30899693899575" effort="8" start_stop="15" velocity="3.14159265358979" />
     <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link name="left_flange"/>
   <joint name="left_flange" type="fixed">
     <origin rpy="1.5707963267948966192313216916398 0 0" xyz="0 -0.1115 0"/>
     <parent link="left_link7"/>
     <child link="left_flange"/>
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
 
   <!-- <joint name="right_fixed_joint" type="fixed">
     <parent link="world" />
     <child link = "right_link0" />
     <origin xyz="0 -0.2 1.0" rpy="0 1.0472 -1.5707963" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link0">
     <inertial>
@@ -734,7 +749,8 @@
       xyz="0 0 1" />
     <limit lower="-0.785398163397448" upper="3.14159265358979" effort="40" start_stop="82" velocity="3.14159265358979" />
     <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link2">
     <inertial>
@@ -782,7 +798,8 @@
       xyz="0 0 1" />
     <limit lower="-1.74532925199433" upper="0" effort="40" start_stop="82" velocity="3.14159265358979" />
     <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link3">
     <inertial>
@@ -830,7 +847,8 @@
       xyz="0 0 1" />
     <limit lower="-2.26892802759263" upper="2.26892802759263" effort="22" start_stop="42" velocity="4.18879020478639" />
     <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link4">
     <inertial>
@@ -878,7 +896,8 @@
       xyz="0 0 1" />
     <limit lower="0" upper="2.26892802759263" effort="22" start_stop="42" velocity="4.18879020478639" />
     <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link5">
     <inertial>
@@ -926,7 +945,8 @@
       xyz="0 0 1" />
     <limit lower="-2.26892802759263" upper="2.26892802759263" effort="8" start_stop="15" velocity="3.14159265358979" />
     <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link6">
     <inertial>
@@ -974,7 +994,8 @@
       xyz="0 0 1" />
     <limit lower="-1.30899693899575" upper="1.30899693899575" effort="8" start_stop="15" velocity="3.14159265358979" />
     <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link
     name="right_link7">
     <inertial>
@@ -1022,12 +1043,14 @@
       xyz="0 0 1" />
     <limit lower="-1.30899693899575" upper="1.30899693899575" effort="8" start_stop="15" velocity="3.14159265358979" />
     <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" />
-  </joint>
+   <dynamics damping="1.1" friction="1.5"/>
+</joint>
   <link name="right_flange"/>
   <joint name="right_flange" type="fixed">
     <origin rpy="1.5707963267948966192313216916398 0 0" xyz="0 -0.1115 0"/>
     <parent link="right_link7"/>
     <child link="right_flange"/>
-  </joint> -->
+   <dynamics damping="1.1" friction="1.5"/>
+</joint> -->
 
 </robot>

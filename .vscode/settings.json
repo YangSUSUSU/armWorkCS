@@ -86,7 +86,10 @@
         "semaphore": "cpp",
         "stop_token": "cpp",
         "valarray": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "*.txx": "cpp",
+        "regex": "cpp",
+        "specialfunctions": "cpp"
     },
     "ros.distro": "noetic"
 }

@@ -1,1 +1,0 @@
-/usr/bin/c++  -g -g -rdynamic CMakeFiles/ikfist_test.dir/src/solver_Q1mXTC.cpp.o -o /home/dell/cat-WS/armWorkCS/devel/lib/aubo_arm_planning/ikfist_test   -L/home/dell/cat-WS/armWorkCS/src/arm_planning/aubo_arm_planning/lib 

@@ -1,8 +1,0 @@
-prefix=/home/dell/cat-WS/armWorkCS/install
-
-Name: aubo_arm_planning
-Description: Description of aubo_arm_planning
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -laubo_arm_planning -lqpOASES -ltoppra -losqp -lOsqpEigen
-Requires: arm_kinematics_solver roscpp std_msgs

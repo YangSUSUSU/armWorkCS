@@ -46,7 +46,7 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         #ifdef SIM
             // joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
             // joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
-            joint_pub = nh.advertise<sensor_msgs::JointState>("/joint_1111states", 10);
+            joint_pub = nh.advertise<sensor_msgs::JointState>("/joint_states", 10);
 
 
         #else

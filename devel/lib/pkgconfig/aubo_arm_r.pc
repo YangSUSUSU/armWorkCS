@@ -1,8 +1,0 @@
-prefix=/home/dell/cat-WS/armWorkCS/devel
-
-Name: aubo_arm_r
-Description: Description of aubo_arm_r
-Version: 1.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/home/dell/cat-WS/armWorkCS/install
-
-Name: arm_aubo_trac_ik
-Description: Description of arm_aubo_trac_ik
-Version: 1.5.0
-Cflags: -I/usr/include -I/usr/include/eigen3
-Libs: -L${prefix}/lib /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0 -lorocos-kdl
-Requires: trac_ik_lib

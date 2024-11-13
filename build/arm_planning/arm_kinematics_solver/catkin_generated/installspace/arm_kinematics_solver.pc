@@ -1,8 +1,0 @@
-prefix=/home/dell/cat-WS/armWorkCS/install
-
-Name: arm_kinematics_solver
-Description: Description of arm_kinematics_solver
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -larm_kinematics_solver
-Requires: eigen_conversions kdl_conversions kdl_parser pluginlib roscpp rospy tf_conversions trac_ik_lib
