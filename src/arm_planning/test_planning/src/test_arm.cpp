@@ -4,8 +4,6 @@
 #include <ctime>  
 #include <osqp/osqp.h>
 #include <Eigen/Dense>
-#include <Eigen/Sparse>
-#include <OsqpEigen/OsqpEigen.h>
 
 
 #define SIM  
@@ -42,6 +40,30 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
 
         left_sub = nh.subscribe("desired_pose_left", 10, &ArmController::positionCallback_left, this);
         right_sub = nh.subscribe("desired_pose_right", 10, &ArmController::positionCallback_right, this);
+
+        // osqp initialization
+        Q_weight.setIdentity();
+        R_weight.setIdentity();
+        gradient_.resize(7);
+        hessian_.resize(7, 7);
+        LinearConstraintsMatrix_.resize(14, 7);
+        lowerBound_.resize(14);
+        upperBound_.resize(14);
+        for(int i = 0; i < 14; i++){
+            lowerBound_(i) = -OsqpEigen::INFTY;
+            upperBound_(i) = OsqpEigen::INFTY;
+        }
+
+        // easily to cause core dumped
+        solver_.settings()->setWarmStart(false);
+        solver_.data()->setNumberOfVariables(7);
+        solver_.data()->setNumberOfConstraints(14);
+        if(!solver_.data()->setHessianMatrix(hessian_)) ros::shutdown();
+        if(!solver_.data()->setGradient(gradient_)) ros::shutdown();
+        if(!solver_.data()->setLinearConstraintsMatrix(LinearConstraintsMatrix_)) ros::shutdown();
+        if(!solver_.data()->setLowerBound(lowerBound_)) ros::shutdown();
+        if(!solver_.data()->setUpperBound(upperBound_)) ros::shutdown();
+        if(!solver_.initSolver()) ros::shutdown();
         
         #ifdef SIM
             // joint_state_sub = nh.subscribe("/joint_states", 10, &ArmController::jointStateCallback, this);
@@ -106,6 +128,7 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         for (size_t i = 0; i < temp.size(); ++i) 
         {
             temp[i] = joint_positions_L[i]; // 或者任何其他值
+            q_cur(i) = temp[i];
         }
 
 
@@ -199,7 +222,11 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         }  
         Eigen::MatrixXd regularized_term = (jaco * jaco.transpose() + lambda * Eigen::MatrixXd::Identity(jaco.rows(), jaco.rows())).inverse();
         Eigen::MatrixXd J_pseudo_inverse = jaco.transpose() * regularized_term;
-        Eigen::VectorXd q_dot = J_pseudo_inverse * combined;
+        Eigen::VectorXd q_dot;
+        // q_dot = J_pseudo_inverse * combined;
+        // solve with QP
+        getQpSolution(jaco, combined, q_cur);
+        q_dot = dq_solution_;
         double maxQv = q_dot.maxCoeff();  // 获取q_dot中的最大值  
         double minQv = q_dot.minCoeff();  // 获取q_dot中的最小值  
         
@@ -265,6 +292,7 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         for (size_t i = 0; i < temp.size(); ++i) 
         {
             temp[i] = joint_positions_R[i];
+            q_cur(i) = temp[i];
         }
 
         std::string error_string_right;
@@ -328,7 +356,11 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         }  
         Eigen::MatrixXd regularized_term = (jaco * jaco.transpose() + lambda * Eigen::MatrixXd::Identity(jaco.rows(), jaco.rows())).inverse();
         Eigen::MatrixXd J_pseudo_inverse = jaco.transpose() * regularized_term;
-        Eigen::VectorXd q_dot = J_pseudo_inverse * combined;
+        Eigen::VectorXd q_dot;
+        // q_dot = J_pseudo_inverse * combined;
+        // solve with QP
+        getQpSolution(jaco, combined, q_cur);
+        q_dot = dq_solution_;
 
 
         bool hasNaN_output = false;  
@@ -423,10 +455,9 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         Eigen::VectorXd tempV = Eigen::VectorXd::Zero(7);
         for (size_t i = 0; i < temp.size(); ++i) 
         {
-
             temp[i] = joint_positions_L[i]; // 或者任何其他值
             tempV(i)= temp[i];
-
+            q_cur(i) = temp[i];
         }
 
         std::string error_string_left;
@@ -451,14 +482,8 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
 
         // 调用函数计算关节速度
         Eigen::VectorXd joint_velocity = computeNullSpaceOscillation(jaco, null_velocity_amplitude, time, frequency);
-
-        
-
-
         // std::cout<<"==jacobian=="<<jaco<<std::endl;
-        
         Eigen::VectorXd v_end(6); // 末端速度 (vx, vy, vz, wx, wy, wz)
-
 
         double radius = 0.28; // 圆的半径
         double angular_velocity = 2.0; // 角速度
@@ -479,7 +504,6 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         Eigen::Vector3d tempPos(v_end(0), v_end(1), v_end(2));
         Eigen::Vector3d tempOri(v_end(3), v_end(4), v_end(5));
 
-
         tempPos=InitPoseT_left.block<3,3>(0,0)*tempPos;
         tempOri=InitPoseT_left.block<3,3>(0,0)*tempOri;
         Eigen::VectorXd combined(6);  
@@ -494,7 +518,11 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         Eigen::MatrixXd J_pseudo_inverse = jaco.transpose() * regularized_term;
 
         // Eigen::MatrixXd J_pseudo_inverse = jaco.completeOrthogonalDecomposition().pseudoInverse();
-        Eigen::VectorXd q_dot = J_pseudo_inverse * combined;
+        Eigen::VectorXd q_dot;
+        // q_dot = J_pseudo_inverse * combined;
+        // solve with QP
+        getQpSolution(jaco, combined, q_cur);
+        q_dot = dq_solution_;
 
         Eigen::VectorXd left_min(7);
         left_min << -3.1415926, -0.2, -2.268928, -1.779, -2.268928, -0.6454, -0.6454;
@@ -503,15 +531,15 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
         left_max << 0.7853981, 1.7453292, 2.2689280, 0, 2.268928, 0.6454, 0.6454;
 
         
-        auto qpresult =  optimizeNullSpaceIncrement(jaco,
-                                            tempV, 
-                                            q_dot, 
-                                            left_min, 
-                                            left_max, 
-                                            q_dot_last, 
-                                            10, 
-                                            10, 
-                                            10);
+        // auto qpresult =  optimizeNullSpaceIncrement(jaco,
+        //                                     tempV, 
+        //                                     q_dot, 
+        //                                     left_min, 
+        //                                     left_max, 
+        //                                     q_dot_last, 
+        //                                     10, 
+        //                                     10, 
+        //                                     10);
         // for (unsigned int i = 0; i < 7; i++) 
         // {
         //     joint_positions_L[i] = joint_positions_L[i]+q_dot(i);
@@ -530,11 +558,11 @@ ArmController::ArmController(ros::NodeHandle& nh)   : filter_left(3), filter_rig
          joint_state_msg.header.stamp = ros::Time::now();
         for (int i = 0; i < 7; i++)
         {
-            joint_positions_L[i] = joint_positions_L[i]+q_dot(i)+qpresult(i);// 或者任何其他值
+            joint_positions_L[i] = joint_positions_L[i]+q_dot(i);// 或者任何其他值
             // joint_positions_L[i] = joint_positions_L[i]+joint_velocity[i]+q_dot(i);// 或者任何其他值
             joint_state_msg.position[i]=joint_positions_L[i];
         }
-        q_dot_last = q_dot + qpresult;
+        q_dot_last = q_dot;
         // joint_state_msg.header.stamp = ros::Time::now();
         
         joint_pub.publish(joint_state_msg);
@@ -859,6 +887,56 @@ Eigen::VectorXd ArmController::optimizeNullSpaceIncrement(
         joint_pub.publish(joint_state_msg);
 
     }
+
+void ArmController::getQpSolution(Eigen::MatrixXd jacobian, Eigen::VectorXd desired_velocity, Eigen::VectorXd q_cur){
+    // hessian matirx
+    Matrix7d hessian_matrix;
+    Vector7d gradient_vector;
+    // hessian & gradient
+    hessian_matrix = jacobian.transpose() * jacobian;
+    gradient_vector = - desired_velocity.transpose() * jacobian;
+    hessian_matrix += 0.001 * Q_weight;
+    hessian_ = hessian_matrix.sparseView();
+    gradient_ = gradient_vector.sparseView();
+    // constriant
+    Eigen::Matrix<double, 14, 7> constraint;
+    constraint.block(0, 0, 7, 7) = Eigen::Matrix<double, 7, 7>::Identity();
+    constraint.block(7, 0, 7, 7) = Eigen::Matrix<double, 7, 7>::Identity();
+    // constraint.setIdentity();
+    LinearConstraintsMatrix_ = constraint.sparseView();
+    for(int i = 0; i < 7; i++){
+        lowerBound_(i) = -0.1;
+        upperBound_(i) = 0.1;
+        Eigen::VectorXd left_min(7);
+        left_min << -3.1415926, -0.2, -2.268928, -1.779, -2.268928, -0.6454, -0.6454;
+
+        Eigen::VectorXd left_max(7);
+        left_max << 0.7853981, 1.7453292, 2.2689280, 0, 2.268928, 0.6454, 0.6454;
+
+        lowerBound_(i+7) = (left_min(i) - q_cur(i))/0.1;
+        upperBound_(i+7) = (left_max(i) - q_cur(i))/0.1;
+    }
+    
+    // update qp matrix
+    solver_.updateHessianMatrix(hessian_);
+    solver_.updateGradient(gradient_);
+    solver_.updateLinearConstraintsMatrix(LinearConstraintsMatrix_);
+    solver_.updateLowerBound(lowerBound_);
+    solver_.updateUpperBound(upperBound_);
+
+    if (!solver_.solve()){
+        ROS_ERROR("QP solve failure! Using pseudo-inverse instead!");
+        dq_solution_ = get_inv(jacobian) * desired_velocity;
+    }
+    else{
+        dq_solution_ = solver_.getSolution();
+    }
+
+    std::cout << "dq_solution_ :" << dq_solution_.transpose() << std::endl;
+    std::cout << "q_cur :" << q_cur.transpose() << std::endl;
+    // std::cout << "q_cur :" << q_cur.transpose() << std::endl;
+}
+
 int main(int argc, char* argv[]) {
     ros::init(argc, argv, "test_arm");
     ros::NodeHandle nh;

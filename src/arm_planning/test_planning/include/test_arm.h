@@ -10,10 +10,14 @@
 #include <Eigen/Dense>  
 #include <array>  
 #include <vector>  
+#include <Eigen/Sparse>
+#include <OsqpEigen/OsqpEigen.h>
 #include <arm_kinematics_solver/arm_kinematics_solver.h>  
   
 #define SIM  
-  
+typedef Eigen::Matrix<double, 7, 7> Matrix7d;
+typedef Eigen::Matrix<double, 7, 1> Vector7d;
+
 class SmoothingFilter {  
 public:  
     SmoothingFilter(size_t windowSize);  
@@ -108,6 +112,70 @@ private:
     std::vector<double> left_max={0.7853981, 1.7453292, 2.2689280, 0, 2.268928, 0.6454, 0.6454};
     std::vector<double> right_min={-0.7853981 ,-1.7453292,-2.2689280,0        , -2.268928, -0.6454, -0.6454};
     std::vector<double> right_max={3.1415926  ,0.2         , 2.268928 ,1.779 ,  2.268928,  0.6454,  0.6454}; 
+
+    /**
+    * @brief get the optimal solution from osqp
+    * @detail
+    *  get the optimal solution
+    */
+    void getQpSolution(Eigen::MatrixXd jacobian, Eigen::VectorXd desired_velocity, Eigen::VectorXd q_cur);
+
+    // OSQP
+    OsqpEigen::Solver solver_;
+    // QP MATRIX
+    // hessian
+    Eigen::SparseMatrix<double> hessian_;
+    // gradient
+    Eigen::VectorXd gradient_;
+    // constraint matrix
+    Eigen::SparseMatrix<double> LinearConstraintsMatrix_;
+    // constraint bound
+    Eigen::Matrix<double, 14, 1> lowerBound_;
+    Eigen::Matrix<double, 14, 1> upperBound_;
+
+    // solution of osqp
+    Eigen::VectorXd dq_solution_;
+    // weight matirx
+    Matrix7d Q_weight, R_weight;
+    // current joint position
+    Vector7d q_cur;
+
+    /**
+    * @brief Get pseudoinverse matrix
+    * @detail
+    *  Get pseudoinverse matrix of the input matrix
+    * @param[in] input_matrix        input matrix
+    * @param[out] get_inv(MatrixXd input_matrix)        the pseudoinverse matrix of input matrix
+    */
+    inline Eigen::MatrixXd get_inv(const Eigen::MatrixXd &input_matrix, const double threshold = 0.3)
+    {
+        // SVD Singular Value Decomposition
+
+        Eigen::JacobiSVD<Eigen::MatrixXd> svd(input_matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+        Eigen::MatrixXd U = svd.matrixU();
+        Eigen::MatrixXd V = svd.matrixV();
+        Eigen::MatrixXd S = U.inverse() * input_matrix * V.transpose().inverse();
+
+        // In avoiad of Singurity
+        for (int i = 0; i < S.rows(); i++)
+        {
+
+            if (S(i, i) < threshold)
+            {
+                S(i, i) = 1.0 / threshold;
+            }
+            else
+            {
+                S(i, i) = 1 / S(i, i);
+            }
+        }
+
+        // Return a inverse matrix
+        Eigen::MatrixXd inv;
+        inv = V * S.transpose() * U.transpose();
+        return inv;
+    }
 };  
   
 #endif // TEST_ARM_H

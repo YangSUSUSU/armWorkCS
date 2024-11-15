@@ -91,7 +91,9 @@
         "*.ipp": "cpp",
         "*.txx": "cpp",
         "regex": "cpp",
-        "specialfunctions": "cpp"
+        "specialfunctions": "cpp",
+        "*.tpp": "cpp",
+        "dense": "cpp"
     },
     "ros.distro": "noetic"
 }
