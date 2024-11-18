@@ -127,9 +127,9 @@ test_gazebo_EXTERNAL_OBJECTS =
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libidyntree-high-level.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libidyntree-estimation.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /opt/ros/noetic/lib/libpinocchio.so
-/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
-/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/libboost_serialization.so
-/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/libboost_system.so
+/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libboost_filesystem.so
+/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libboost_serialization.so
+/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libboost_system.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/liburdfdom_sensor.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/liburdfdom_model_state.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/liburdfdom_model.so

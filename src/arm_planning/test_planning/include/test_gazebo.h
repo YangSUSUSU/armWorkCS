@@ -10,18 +10,7 @@
 #include <string>
 #include <iostream>
 
-// Pinocchio
-#include <pinocchio/algorithm/crba.hpp>
-#include <pinocchio/parsers/urdf.hpp>
-#include <pinocchio/algorithm/joint-configuration.hpp>
-#include <pinocchio/algorithm/kinematics.hpp>
-#include <pinocchio/algorithm/rnea.hpp>
-#include <pinocchio/algorithm/compute-all-terms.hpp>
-#include <array>
-#include <vector>
-
-
-struct JointTrajectoryData 
+class RosInterface 
 {
     std::array<Eigen::VectorXd, 4> positions;  // 记录四次位置，每个位置包含7个关节的值
     std::array<Eigen::VectorXd, 4> velocities; // 存储对应的速度
