@@ -6,7 +6,7 @@
 #include <pinocchio/algorithm/frames.hpp>
 #include <pinocchio/spatial/se3.hpp>
 #include <iostream>
-#include "ini.h"  // 需要安装 inih 库
+// #include "ini.h"  // 需要安装 inih 库
 #include <yaml-cpp/yaml.h>
 ControlSystem::ControlSystem(const std::string& urdf_filename) {
     // ROS 订阅器和发布器初始化

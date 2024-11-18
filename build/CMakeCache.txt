@@ -447,6 +447,9 @@ UBUNTU:BOOL=TRUE
 //LSB Distrib - codename tag
 UBUNTU_FOCAL:BOOL=TRUE
 
+//The directory containing a CMake configuration file for YAML-CPP.
+YAML-CPP_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/yaml-cpp
+
 //Path to a library.
 _Python3_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libpython3.8.so
 
