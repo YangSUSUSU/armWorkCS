@@ -32,9 +32,9 @@ struct JointTrajectoryData
     {
         // 初始化为7个关节的向量
         for (int i = 0; i < 4; ++i) {
-            positions[i] = Eigen::VectorXd(7);
-            velocities[i] = Eigen::VectorXd(7);
-            accelerations[i] = Eigen::VectorXd(7);
+            positions[i] = Eigen::VectorXd::Zero(7);
+            velocities[i] = Eigen::VectorXd::Zero(7);
+            accelerations[i] = Eigen::VectorXd::Zero(7);
         }
     }
 
@@ -42,9 +42,10 @@ struct JointTrajectoryData
     {
         if (new_position.size() != 7) return;
 
-        positions[3] = positions[2];
-        positions[2] = positions[1];
-        positions[1] = positions[0];
+        // 更新历史位置
+        for (int i = 3; i > 0; --i) {
+            positions[i] = positions[i - 1];
+        }
         positions[0] = new_position;
 
         // 更新速度和加速度
@@ -54,33 +55,38 @@ struct JointTrajectoryData
 
     void updateVelocities() 
     {
+        // 移动历史速度
+        for (int i = 3; i > 0; --i) {
+            velocities[i] = velocities[i - 1];
+        }
+
+        // 计算最新速度
         for (size_t i = 0; i < 7; ++i) 
         {
-            velocities[0][i] = 0.9 * (positions[0][i] - positions[1][i]) / dt +
-                               0.051 * (positions[1][i] - positions[2][i]) / dt +
-                               0.049 * (positions[2][i] - positions[3][i]) / dt;
+            velocities[0][i] = (positions[0][i] - positions[1][i]) / dt;
         }
     }
 
     void updateAccelerations() 
     {
+        // 移动历史加速度
+        for (int i = 3; i > 0; --i) {
+            accelerations[i] = accelerations[i - 1];
+        }
+
+        // 计算最新加速度
         for (size_t i = 0; i < 7; ++i) 
         {
-            double velocity_diff1 = velocities[0][i] - velocities[1][i];
-            double velocity_diff2 = velocities[1][i] - velocities[2][i];
-            accelerations[0][i] = (velocity_diff1 / dt + velocity_diff2 / dt) / 2.0;
+            accelerations[0][i] = (velocities[0][i] - velocities[1][i]) / dt;
         }
     }
-
-    // 返回速度和加速度时使用Eigen::VectorXd
-    Eigen::VectorXd getVelocities() const 
-    {
-        return velocities[0];
-    }
-
-    Eigen::VectorXd getAccelerations() const 
+    Eigen::VectorXd getAccelerations()
     {
         return accelerations[0];
+    }
+     Eigen::VectorXd getVelocities()
+    {
+        return velocities[0];
     }
 };
 struct JointState {
@@ -115,7 +121,7 @@ public:
     ros::NodeHandle nh_;
     ros::Subscriber joint_state_sub_;
     std::map<std::string, ros::Publisher> torque_publishers_;
-
+    ros::Publisher jointErrorPub;
     pinocchio::Model model_;
     pinocchio::Data data_;
 

@@ -11,7 +11,7 @@
 ControlSystem::ControlSystem(const std::string& urdf_filename) {
     // ROS 订阅器和发布器初始化
     joint_state_sub_ = nh_.subscribe("/arm_controllers/joint_states", 10, &ControlSystem::jointStateCallback, this);
-
+    jointErrorPub= nh_.advertise<sensor_msgs::JointState>("joint_error", 10);
     // 初始化关节力矩发布器
     torque_publishers_["shoulder_pitch_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint1_effort_controller/command", 10);
     torque_publishers_["shoulder_roll_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint2_effort_controller/command", 10);
@@ -109,8 +109,8 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     Eigen::VectorXd v_full = Eigen::VectorXd::Zero(14);
     Eigen::VectorXd a_desired_full = Eigen::VectorXd::Zero(14);
 
-    q_full.head(7) = q;  // 前7个关节位置
-    v_full.head(7) = v;  // 前7个关节速度
+    q_full.head(7) = q_desired;  // 前7个关节位置
+    v_full.head(7) = v_desired;  // 前7个关节速度
     // a_desired_full.head(7) = a_desired;  // 前7个关节加速度
 
     // 滑模控制参数配置
@@ -121,6 +121,22 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // 计算误差和滑模面
     Eigen::VectorXd e = -(q.head(7) - q_desired);
     std::cout<<e.transpose()<<std::endl;
+    //test Error used;
+        sensor_msgs::JointState joint_state;
+        joint_state.name.resize(7); 
+        joint_state.position.resize(7);
+        joint_state.velocity.resize(7);
+        joint_state.effort.resize(7);
+        joint_state.header.stamp = ros::Time::now();
+        joint_state.name = {"1","2","3","4","5","6","7"};// 替换为你的关节名称
+        for (int i = 0; i < 7; ++i) 
+        { 
+            joint_state.position[i] = e(i);
+        }
+        // 发布消息
+        jointErrorPub.publish(joint_state);
+
+
 
     Eigen::VectorXd e_dot = -(v.head(7) - v_desired);
     Eigen::VectorXd s = (e_dot + lambda * e);
@@ -136,7 +152,7 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     Eigen::VectorXd G_full = pinocchio::computeGeneralizedGravity(model_, data_, q_full);  // 计算完整的重力向量
 
     // 控制律：加入滑模控制，提取前7个关节
-    Eigen::VectorXd tau = M_full.topLeftCorner(7,7) * (lambda * e_dot + eta * s.array().sign().matrix()) 
+    Eigen::VectorXd tau = M_full.topLeftCorner(7,7) * (a_desired + lambda * e_dot + eta * s.array().sign().matrix()) 
                         + C_full.topLeftCorner(7, 7) * v_full.head(7)
                         + G_full.head(7)+test_lambda*e + test_eta* e_dot; 
 
