@@ -20,7 +20,8 @@ catkin_package(
 find_package(iDynTree REQUIRED)
     # 查找 Pinocchio
 find_package(pinocchio REQUIRED)
-
+# find_package(inih REQUIRED)
+find_package(YAML-CPP REQUIRED)
 # 查找 urdfdom（如 Pinocchio 使用 URDF）
 find_package(urdfdom REQUIRED)
 link_directories(
@@ -59,6 +60,8 @@ target_link_libraries(test_planning_force_calibration
 
 target_link_libraries(test_gazebo
     ${catkin_LIBRARIES}
+    # inih
+    ${YAML_CPP_LIBRARIES}
     iDynTree::idyntree-high-level iDynTree::idyntree-estimation
     ${PINOCCHIO_LIBRARIES} ${urdfdom_LIBRARIES}
 )

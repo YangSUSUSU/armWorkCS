@@ -1,4 +1,6 @@
 {
+    “C_Cpp.autocomplete”: "default",
+    "C_Cpp.intelliSenseEngine": "default",
     "python.autoComplete.extraPaths": [
         "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/lib/python3/dist-packages",
         "/opt/ros/noetic/lib/python3/dist-packages"

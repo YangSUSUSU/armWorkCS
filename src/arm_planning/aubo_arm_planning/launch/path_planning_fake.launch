@@ -1,11 +1,11 @@
 
 <launch>
   <!-- <arg name="model" default="AUBO_Arm_Head"/> -->
-  <arg name="model" default="AUBO_HRM"/>
+  <arg name="model" default="humanoid"/>
 
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_kinematics_solver)/models/$(arg model).urdf'" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find test_planning)/models/$(arg model).urdf'" />
   
-  <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/> -->
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
   
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
   

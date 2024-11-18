@@ -1786,7 +1786,9 @@
       <robotNamespace>/arm_controllers</robotNamespace>
     </plugin>
   </gazebo>
-
+  <plugin name="collision_detector" filename="libcollision_plugin.so">
+  <collision_name>collision</collision_name>
+</plugin>
   <!-- 配置传动接口和关节 -->
   
   <transmission name="shoulder_pitch_transmission">
@@ -1860,7 +1862,7 @@
     <joint name="wrist_roll_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
      <dynamics damping="0.5" friction="0.5"/>
-</joint>
+  </joint>
     <actuator name="wrist_roll_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -1869,45 +1871,44 @@
 
   <gazebo reference="shoulder_pitch_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
 
   <gazebo reference="shoulder_roll_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
 
     <gazebo reference="shoulder_yaw_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
 
     <gazebo reference="elbow_pitch_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
 
   <gazebo reference="elbow_yaw_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
 
   <gazebo reference="wrist_pitch_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
 
   <gazebo reference="wrist_roll_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>11.5</mu1>
-  <mu2>11.5</mu2>
+    <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
   </gazebo>
   
 </robot>
-

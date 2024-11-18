@@ -2,39 +2,75 @@ arm_controllers:
 
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 4  # in Hz
+    publish_rate: 400  # in Hz
 
   joint1_effort_controller:
     type: effort_controllers/JointEffortController
     joint: shoulder_pitch_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
 
   joint2_effort_controller:
     type: effort_controllers/JointEffortController
     joint: shoulder_roll_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
 
   joint3_effort_controller:
     type: effort_controllers/JointEffortController
     joint: shoulder_yaw_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
 
   joint4_effort_controller:
     type: effort_controllers/JointEffortController
     joint: elbow_pitch_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
 
   joint5_effort_controller:
     type: effort_controllers/JointEffortController
     joint: elbow_yaw_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
 
   joint6_effort_controller:
     type: effort_controllers/JointEffortController
     joint: wrist_pitch_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
 
   joint7_effort_controller:
     type: effort_controllers/JointEffortController
     joint: wrist_roll_l_joint
-    pid: {p:  2.0, i: 0.01, d: 0.05}
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+
+joint1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: shoulder_pitch_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
+
+joint2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: shoulder_roll_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
+
+joint3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: shoulder_yaw_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
+
+joint4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: elbow_pitch_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
+
+joint5_position_controller:
+  type: position_controllers/JointPositionController
+  joint: elbow_yaw_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
+
+joint6_position_controller:
+  type: position_controllers/JointPositionController
+  joint: wrist_pitch_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
+
+joint7_position_controller:
+  type: position_controllers/JointPositionController
+  joint: wrist_roll_l_joint
+  pid: {p: 10.0, i: 0.0, d: 0.1}
