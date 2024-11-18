@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
         if not args.local:
             # environment at generation time
-            CMAKE_PREFIX_PATH = r'/opt/openrobots;/usr/local;/home/ubuntu/cmake-install;/opt/ros/noetic;/opt/openrobots;/usr/local;/home/ubuntu/cmake-install'.split(';')
+            CMAKE_PREFIX_PATH = r'/usr/local;/opt/openrobots;/usr/local;/home/ubuntu/cmake-install;/opt/ros/noetic;/opt/openrobots;/usr/local;/home/ubuntu/cmake-install'.split(';')
         else:
             # don't consider any other prefix path than this one
             CMAKE_PREFIX_PATH = []

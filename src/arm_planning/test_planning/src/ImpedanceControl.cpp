@@ -1,6 +1,6 @@
 #include <ImpedanceControl.h>
 
-ImpedanceControl::ImpedanceControl(double M, double B, double K, int state_dim, bool sensor_used)
+ImpedanceControl::ImpedanceControl(double M, double B, double K, size_t state_dim, bool sensor_used)
                                    : state_dim_(state_dim), sensor_used_(sensor_used){
     M_ = Eigen::MatrixXd::Identity(state_dim_, state_dim_) * M;
     B_ = Eigen::MatrixXd::Identity(state_dim_, state_dim_) * B;
@@ -9,7 +9,7 @@ ImpedanceControl::ImpedanceControl(double M, double B, double K, int state_dim, 
     std::cout << "ImpedanceControl object created successfully!" << std::endl;
 }
 
-ImpedanceControl::ImpedanceControl(Eigen::MatrixXd& M, Eigen::MatrixXd& B, Eigen::MatrixXd& K, int state_dim, bool sensor_used)
+ImpedanceControl::ImpedanceControl(const Eigen::MatrixXd& M, const Eigen::MatrixXd& B, const Eigen::MatrixXd& K, size_t state_dim, bool sensor_used)
 : state_dim_(state_dim), sensor_used_(sensor_used), M_(M), B_(B), K_(K){
     if (M.rows() != state_dim_ || M.cols() != state_dim_) {
         throw std::invalid_argument("Matrix M must be a square matrix of size state_dim_");
@@ -41,8 +41,8 @@ bool ImpedanceControl::updateState(const ImpedanceControlState& state) {
         }
     }
 
-    q_tilde_ = state.q_d - state.q_c;
-    q_tilde_v_ = state.q_d_v - state.q_c_v;
+    q_deflection_ = state.q_d - state.q_c;
+    q_deflection_v_ = state.q_d_v - state.q_c_v;
     q_des_a_ = state.q_d_a;
 
     return true;
@@ -53,11 +53,11 @@ Eigen::VectorXd ImpedanceControl::getControlForceCartesian(const Eigen::MatrixXd
     Eigen::MatrixXd J_e_inv = get_inv(J_e);
     Eigen::MatrixXd M_inv = M_.inverse();
     if(sensor_used_){
-        return (M_q * J_e_inv * M_inv) * (M_ * q_des_a_ + B_ * q_tilde_v_ + K_ * q_tilde_ - M_ * J_e_dot * q_dot) 
+        return (M_q * J_e_inv * M_inv) * (M_ * q_des_a_ + B_ * q_deflection_v_ + K_ * q_deflection_ - M_ * J_e_dot * q_dot) 
         + (J_e.transpose() - M_q * J_e_inv * M_inv) * f_ + Gravity + Coriolis * q_dot;
     }
     else{
-        return (M_q * J_e_inv * M_inv) * (M_ * q_des_a_ + B_ * q_tilde_v_ + K_ * q_tilde_ - M_ * J_e_dot * q_dot)
+        return (M_q * J_e_inv * M_inv) * (M_ * q_des_a_ + B_ * q_deflection_v_ + K_ * q_deflection_ - M_ * J_e_dot * q_dot)
                  + Gravity + Coriolis * q_dot;
     }
 }
@@ -66,10 +66,10 @@ Eigen::VectorXd ImpedanceControl::getControlForceJoint(const Eigen::MatrixXd& M_
                                         , const Eigen::VectorXd& Gravity, const Eigen::VectorXd& q_dot) const{
     Eigen::MatrixXd M_inv = M_.inverse();
     if(sensor_used_){
-        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_tilde_v_ + K_ * q_tilde_)+
+        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_)+
           (Eigen::MatrixXd::Identity(state_dim_, state_dim_) - M_q * M_inv) * f_;
     }
     else{
-        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_tilde_v_ + K_ * q_tilde_);
+        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_);
     }
 }

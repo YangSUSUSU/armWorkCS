@@ -127,7 +127,8 @@ test_gazebo_EXTERNAL_OBJECTS =
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/lib/x86_64-linux-gnu/libyaml-cpp.so.0.6.2
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libidyntree-high-level.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libidyntree-estimation.so
-/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /opt/ros/noetic/lib/libpinocchio.so
+/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libpinocchio_default.so
+/home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libpinocchio_parsers.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libboost_filesystem.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libboost_serialization.so
 /home/ubuntu/work/armWorkCS/devel/lib/test_planning/test_gazebo: /usr/local/lib/libboost_system.so

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 set(CMAKE_CXX_STANDARD 11)
 project(test_planning)
+# find_package(Boost 1.77.0 REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp

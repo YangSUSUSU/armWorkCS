@@ -67,7 +67,8 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
     } else {
         std::cerr << "Controller section not found!" << std::endl;
     }
-    
+
+    // impedance_ = std::make_unique<ImpedanceControl>(njoints, );
 }
 
 ControlSystem::~ControlSystem() {}

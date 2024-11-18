@@ -2,7 +2,7 @@
  * @file ImpedanceControl.h
  * @brief head file of Impedance Controller
  * @version 1.0.0
- * @date 11.18 2043
+ * @date 11.18 2024
  */
 #pragma once
 
@@ -32,14 +32,14 @@ public:
      * @param [in] B: Damping
      * @param [in] K: Stiff
      */
-    explicit ImpedanceControl(double M, double B, double K, int state_dim, bool sensor_used);
+    explicit ImpedanceControl(double M, double B, double K, size_t state_dim, bool sensor_used);
     /**
      * @brief : Assign matrix with M, B, and K matrices.
      * @param [in] M: Mass Matrix
      * @param [in] B: Damping Matrix
      * @param [in] K: Stiff Matrix
      */
-    explicit ImpedanceControl(Eigen::MatrixXd& M, Eigen::MatrixXd& B, Eigen::MatrixXd& K, int state_dim, bool sensor_used);
+    explicit ImpedanceControl(const Eigen::MatrixXd& M, const Eigen::MatrixXd& B, const Eigen::MatrixXd& K, size_t state_dim, bool sensor_used);
 
     /** destructor */
     virtual ~ImpedanceControl() = default; 
@@ -66,12 +66,13 @@ public:
      * @param [in] J_e: End-effector Jacobian matrix (mapping from joint velocities to Cartesian velocities)
      * @param [in] J_e_dot: Derivative of the Jacobian matrix (Jacobian velocity)
      * @param [in] q_dot: Joint velocity
+     * @ref : https://www.bilibili.com/video/BV17T4y1K7yK?spm_id_from=333.788.videopod.episodes&p=4
      * @return Joint control torque
      */
     Eigen::VectorXd getControlForceCartesian(const Eigen::MatrixXd& M_q, const Eigen::MatrixXd& Coriolis, const Eigen::VectorXd& Gravity , 
                                              const Eigen::MatrixXd& J_e, const Eigen::MatrixXd& J_e_dot, const Eigen::VectorXd& q_dot) const;
     /**
-     * Get control force (Joint space)
+     * @brief Get control force (Joint space)
      *
      * @param [in] M_q: Generalized mass matrix (orthogonal)
      * @param [in] Coriolis: Coriolis and centrifugal terms.
@@ -92,44 +93,30 @@ private:
     Eigen::MatrixXd get_inv(const Eigen::MatrixXd &input_matrix, const double threshold = 0.3) const
     {
         // SVD Singular Value Decomposition
-
         Eigen::JacobiSVD<Eigen::MatrixXd> svd(input_matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
-        Eigen::MatrixXd U = svd.matrixU();
-        Eigen::MatrixXd V = svd.matrixV();
-        Eigen::MatrixXd S = U.inverse() * input_matrix * V.transpose().inverse();
-
-        // In avoiad of Singurity
-        for (int i = 0; i < S.rows(); i++)
-        {
-
-            if (S(i, i) < threshold)
-            {
-                S(i, i) = 1.0 / threshold;
-            }
-            else
-            {
-                S(i, i) = 1 / S(i, i);
+        Eigen::MatrixXd S_inv = svd.singularValues().asDiagonal().inverse();
+    
+        for (int i = 0; i < S_inv.rows(); ++i) {
+            if (S_inv(i, i) < threshold) {
+                S_inv(i, i) = 1.0 / threshold;
             }
         }
-
-        // Return a inverse matrix
-        Eigen::MatrixXd inv;
-        inv = V * S.transpose() * U.transpose();
-        return inv;
+        
+        return svd.matrixV() * S_inv * svd.matrixU().transpose();
     }
     // Impedance parameter, Mass, Damping and Stiffness
     Eigen::MatrixXd M_, B_, K_;
     // configuration deflection
-    Eigen::VectorXd q_tilde_;
+    Eigen::VectorXd q_deflection_;
     // velocity deflection
-    Eigen::VectorXd q_tilde_v_;
+    Eigen::VectorXd q_deflection_v_;
     // Desired acceleration
     Eigen::VectorXd q_des_a_;
     // detected force
     Eigen::VectorXd f_;
     // state Dim
-    const int state_dim_;
+    const size_t state_dim_;
     // if the external force can be used or not
     const bool sensor_used_;
 };
