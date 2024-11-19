@@ -77,6 +77,7 @@ public:
      * @param [in] M_q: Generalized mass matrix (orthogonal)
      * @param [in] Coriolis: Coriolis and centrifugal terms.
      * @param [in] Gravity: Gravitational terms.
+     * @param [in] q_dot: Joint velocity
      * @ref : https://www.bilibili.com/video/BV17T4y1K7yK?spm_id_from=333.788.videopod.episodes&p=3
      * @return  joint control torque
      */
@@ -105,6 +106,9 @@ private:
         
         return svd.matrixV() * S_inv * svd.matrixU().transpose();
     }
+
+    // show the Impedence control settings.
+    void showMsg() const;
     // Impedance parameter, Mass, Damping and Stiffness
     Eigen::MatrixXd M_, B_, K_;
     // configuration deflection

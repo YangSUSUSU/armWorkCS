@@ -4,6 +4,6 @@ controller:
 
 impedance:
   Mass: 1.0
-  Damping: 1.0
-  Stiff: 0.0
-  sensor_used: true
+  Damping: 0.5
+  Stiff: 1.0
+  sensor_used: false

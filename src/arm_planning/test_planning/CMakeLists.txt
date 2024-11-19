@@ -35,7 +35,7 @@ include_directories(
     ${PINOCCHIO_INCLUDE_DIRS} 
     ${urdfdom_INCLUDE_DIRS}
 )
-add_executable(test_gazebo src/test_gazebo.cpp)
+add_executable(test_gazebo src/test_gazebo.cpp src/ImpedanceControl.cpp)
 
 add_executable(test_planning src/test_arm.cpp)
 

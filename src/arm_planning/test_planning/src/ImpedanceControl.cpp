@@ -6,7 +6,7 @@ ImpedanceControl::ImpedanceControl(double M, double B, double K, size_t state_di
     B_ = Eigen::MatrixXd::Identity(state_dim_, state_dim_) * B;
     K_ = Eigen::MatrixXd::Identity(state_dim_, state_dim_) * K;
 
-    std::cout << "ImpedanceControl object created successfully!" << std::endl;
+    showMsg();
 }
 
 ImpedanceControl::ImpedanceControl(const Eigen::MatrixXd& M, const Eigen::MatrixXd& B, const Eigen::MatrixXd& K, size_t state_dim, bool sensor_used)
@@ -21,8 +21,36 @@ ImpedanceControl::ImpedanceControl(const Eigen::MatrixXd& M, const Eigen::Matrix
         throw std::invalid_argument("Matrix K must be a square matrix of size state_dim_");
     }
 
-    std::cout << "ImpedanceControl object created successfully!" << std::endl;
+    showMsg();
  }
+
+void ImpedanceControl::showMsg() const{
+    std::cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << std::endl;
+
+    std::cout << "ImpedanceControl object created successfully!" << std::endl;
+
+    // Print the diagonal elements of the matrices
+    std::cout << "M (Mass Matrix) Diagonal Elements: ";
+    for (int i = 0; i < M_.rows(); ++i) {
+        std::cout << M_(i, i) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "B (Damping Matrix) Diagonal Elements: ";
+    for (int i = 0; i < B_.rows(); ++i) {
+        std::cout << B_(i, i) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "K (Stiffness Matrix) Diagonal Elements: ";
+    for (int i = 0; i < K_.rows(); ++i) {
+        std::cout << K_(i, i) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Sensor used: " << (sensor_used_ ? "Yes" : "No") << std::endl;
+    std::cout << "State Dimension: " << state_dim_ << std::endl;
+}
 
 bool ImpedanceControl::updateState(const ImpedanceControlState& state) {
 
@@ -64,12 +92,14 @@ Eigen::VectorXd ImpedanceControl::getControlForceCartesian(const Eigen::MatrixXd
 
 Eigen::VectorXd ImpedanceControl::getControlForceJoint(const Eigen::MatrixXd& M_q, const Eigen::MatrixXd& Coriolis
                                         , const Eigen::VectorXd& Gravity, const Eigen::VectorXd& q_dot) const{
+        
     Eigen::MatrixXd M_inv = M_.inverse();
+    // M_ = M_q;
     if(sensor_used_){
         return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_)+
           (Eigen::MatrixXd::Identity(state_dim_, state_dim_) - M_q * M_inv) * f_;
     }
     else{
-        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_);
+        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_) ;
     }
 }

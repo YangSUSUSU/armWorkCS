@@ -25,12 +25,13 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
     joint_state.resize(7);
     // 加载动力学模型
     pinocchio::urdf::buildModel(urdf_filename, model_);
-// 获取关节数量
+    // 获取关节数量
     int njoints = model_.njoints;
     
     // 存储关节名称和ID的容器
     std::vector<std::string> joint_names(njoints);
     std::vector<int> joint_ids(njoints);
+    // std::cout << "model_.njoints :" << model_.njoints;
     
     // 遍历所有关节，获取名称和ID
     for (int i = 0; i < njoints; ++i) {
@@ -52,7 +53,7 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
 
     
     // 获取double类型的值 
-    YAML::Node config = YAML::LoadFile("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/config/controller.yaml");
+    YAML::Node config = YAML::LoadFile("/home/ubuntu/work/armWorkCS/src/arm_planning/test_planning/config/controller.yaml");
     // std::cout << "Reading YAML file from: " << filepath << std::endl;
     // YAML::Node config = YAML::LoadFile(filepath);
 
@@ -68,7 +69,20 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
         std::cerr << "Controller section not found!" << std::endl;
     }
 
-    // impedance_ = std::make_unique<ImpedanceControl>(njoints, );
+    // get the impedance param
+    if (config["impedance"]) {
+        // 获取 lambda_gain 和 eta_gain
+        double M_ = config["impedance"]["Mass"].as<double>();
+        double B_ = config["impedance"]["Damping"].as<double>();
+        double K_ = config["impedance"]["Stiff"].as<double>();
+        bool sensor_ = config["impedance"]["sensor_used"].as<bool>();
+        
+        // std::cout << "M: " << M_ << "B: " << B_ <<  std::endl;
+        impedance_ = std::make_unique<ImpedanceControl>(M_, B_, K_, 7, sensor_);
+        // std::cout << "Eta Gain: " << eta_gain << std::endl;
+    } else {
+        std::cerr << "Controller section not found!" << std::endl;
+    }
 }
 
 ControlSystem::~ControlSystem() {}
@@ -121,7 +135,7 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
 
     // 计算误差和滑模面
     Eigen::VectorXd e = -(q.head(7) - q_desired);
-    std::cout<<e.transpose()<<std::endl;
+    // std::cout<<e.transpose()<<std::endl;
     //test Error used;
         sensor_msgs::JointState joint_state;
         joint_state.name.resize(7); 
@@ -157,8 +171,12 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
                         + C_full.topLeftCorner(7, 7) * v_full.head(7)
                         + G_full.head(7)+test_lambda*e + test_eta* e_dot; 
 
+    ImpedanceControlState state_;
+    // state_->q_d = q_desired;
+    // state_->q_v = v_desired;
 
-        // 控制律：加入滑模控制，提取前7个关节
+
+    // 控制律：加入滑模控制，提取前7个关节
     // Eigen::VectorXd tau = 3*(C_full.topLeftCorner(7, 7) * v_full.head(7)
     //                     + G_full.head(7))+test_lambda*e + test_eta* e_dot ;
     // Eigen::VectorXd tau =  test_lambda*e + test_eta* e_dot;                      
@@ -177,13 +195,13 @@ void ControlSystem::getMCGForFirst7Joints(const Eigen::VectorXd& q, const Eigen:
     Eigen::MatrixXd C = data_.C.topLeftCorner(7, 7);
     Eigen::VectorXd G = pinocchio::computeGeneralizedGravity(model_, data_, q).head(7);
 
-    std::cout << "Mass matrix (M):\n" << M << "\nCoriolis matrix (C):\n" << C << "\nGravity vector (G):\n" << G.transpose() << std::endl;
+    // std::cout << "Mass matrix (M):\n" << M << "\nCoriolis matrix (C):\n" << C << "\nGravity vector (G):\n" << G.transpose() << std::endl;
 }
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "joint_control_node");
 
-    ControlSystem control_system("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/model/humanoid.urdf");
+    ControlSystem control_system("/home/ubuntu/work/armWorkCS/src/arm_planning/test_planning/model/humanoid.urdf");
 
     Eigen::VectorXd q = Eigen::VectorXd::Zero(14);
     Eigen::VectorXd v = Eigen::VectorXd::Zero(14);
