@@ -48,16 +48,14 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
         std::cout << "Joint " << joint_idx << ": " << joint_names[i] << std::endl;
     }
     
-
     data_ = pinocchio::Data(model_);
 
-    
     // 获取double类型的值 
     YAML::Node config = YAML::LoadFile("/home/ubuntu/work/armWorkCS/src/arm_planning/test_planning/config/controller.yaml");
     // std::cout << "Reading YAML file from: " << filepath << std::endl;
     // YAML::Node config = YAML::LoadFile(filepath);
 
-    // 检查 contr   oller 是否存在
+    // 检查 controller 是否存在
     if (config["controller"]) {
         // 获取 lambda_gain 和 eta_gain
         test_lambda = config["controller"]["lambda_gain"].as<double>();
@@ -71,17 +69,33 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
 
     // get the impedance param
     if (config["impedance"]) {
-        // 获取 lambda_gain 和 eta_gain
-        double M_ = config["impedance"]["Mass"].as<double>();
-        double B_ = config["impedance"]["Damping"].as<double>();
-        double K_ = config["impedance"]["Stiff"].as<double>();
+        YAML::Node mass_node = config["impedance"]["Mass"];
+        Eigen::MatrixXd M_(7, 7);
+        M_.setZero();  
+        for (size_t i = 0; i < mass_node.size(); ++i) {
+            M_(i, i) = mass_node[i].as<double>();
+        }
+        Eigen::MatrixXd B_(7, 7);
+        mass_node = config["impedance"]["Damping"];
+        B_.setZero();  
+        for (size_t i = 0; i < mass_node.size(); ++i) {
+            B_(i, i) = mass_node[i].as<double>();
+        }
+        mass_node = config["impedance"]["Stiff"];
+        Eigen::MatrixXd K_(7, 7);
+        K_.setZero();  
+        for (size_t i = 0; i < mass_node.size(); ++i) {
+            K_(i, i) = mass_node[i].as<double>();
+        }
+
         bool sensor_ = config["impedance"]["sensor_used"].as<bool>();
+        control_mode = config["impedance"]["control_mode"].as<int>();
         
         // std::cout << "M: " << M_ << "B: " << B_ <<  std::endl;
         impedance_ = std::make_unique<ImpedanceControl>(M_, B_, K_, 7, sensor_);
         // std::cout << "Eta Gain: " << eta_gain << std::endl;
     } else {
-        std::cerr << "Controller section not found!" << std::endl;
+        std::cerr << "Impedance section not found!" << std::endl;
     }
 }
 
@@ -126,7 +140,7 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
 
     q_full.head(7) = q_desired;  // 前7个关节位置
     v_full.head(7) = v_desired;  // 前7个关节速度
-    // a_desired_full.head(7) = a_desired;  // 前7个关节加速度
+    a_desired_full.head(7) = a_desired;  // 前7个关节加速度
 
     // 滑模控制参数配置
     Eigen::MatrixXd lambda = Eigen::MatrixXd::Identity(7, 7) * test_lambda; // 滑模增益
@@ -137,28 +151,27 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     Eigen::VectorXd e = -(q.head(7) - q_desired);
     // std::cout<<e.transpose()<<std::endl;
     //test Error used;
-        sensor_msgs::JointState joint_state;
-        joint_state.name.resize(7); 
-        joint_state.position.resize(7);
-        joint_state.velocity.resize(7);
-        joint_state.effort.resize(7);
-        joint_state.header.stamp = ros::Time::now();
-        joint_state.name = {"1","2","3","4","5","6","7"};// 替换为你的关节名称
-        for (int i = 0; i < 7; ++i) 
-        { 
-            joint_state.position[i] = e(i);
-        }
-        // 发布消息
-        jointErrorPub.publish(joint_state);
-
-
+    sensor_msgs::JointState joint_state;
+    joint_state.name.resize(7); 
+    joint_state.position.resize(7);
+    joint_state.velocity.resize(7);
+    joint_state.effort.resize(7);
+    joint_state.header.stamp = ros::Time::now();
+    joint_state.name = {"1","2","3","4","5","6","7"};// 替换为你的关节名称
+    for (int i = 0; i < 7; ++i) 
+    { 
+        joint_state.position[i] = e(i);
+    }
+    // 发布消息
+    jointErrorPub.publish(joint_state);
 
     Eigen::VectorXd e_dot = -(v.head(7) - v_desired);
     Eigen::VectorXd s = (e_dot + lambda * e);
 
     // 滑模面导数项
     Eigen::VectorXd s_dot = a_desired - lambda * e_dot;
-    pinocchio::crba(model_, data_, q_full);  // 使用14维的q_full
+    pinocchio::rnea(model_, data_, q_full, v_full, a_desired_full);  // 使用14维的q_full
+    pinocchio::crba(model_, data_, q_full);
     Eigen::MatrixXd M_full = data_.M;  // 计算完整的质量矩阵
 
     pinocchio::computeCoriolisMatrix(model_, data_, q_full, v_full);  // 使用14维的q_full和v_full
@@ -170,11 +183,23 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     Eigen::VectorXd tau = M_full.topLeftCorner(7,7) * (a_desired + lambda * e_dot + eta * s.array().sign().matrix()) 
                         + C_full.topLeftCorner(7, 7) * v_full.head(7)
                         + G_full.head(7)+test_lambda*e + test_eta* e_dot; 
+    // std::cout << "tau1" << tau.transpose() << std::endl;
 
     ImpedanceControlState state_;
-    // state_->q_d = q_desired;
-    // state_->q_v = v_desired;
+    state_.q_d = q_desired;
+    state_.q_c = q.head(7);
+    state_.q_d_v = v_desired;
+    state_.q_c_v = v.head(7);
+    state_.q_d_a = a_desired;
+    // external force
+    impedance_->updateState(state_);
+    Eigen::VectorXd tau2 = impedance_->getControlForceJoint(M_full.topLeftCorner(7,7), C_full.topLeftCorner(7, 7), G_full.head(7), v_full.head(7));
+    // std::cout << "tau2" << tau2.transpose() << std::endl;
 
+    Eigen::VectorXd tau3 = M_full.topLeftCorner(7,7) * (a_desired) 
+                        + C_full.topLeftCorner(7, 7) * v_full.head(7)
+                        + G_full.head(7); 
+    // std::cout << "tau3" << tau3.transpose() << std::endl;
 
     // 控制律：加入滑模控制，提取前7个关节
     // Eigen::VectorXd tau = 3*(C_full.topLeftCorner(7, 7) * v_full.head(7)
@@ -182,7 +207,10 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // Eigen::VectorXd tau =  test_lambda*e + test_eta* e_dot;                      
     // Eigen::VectorXd tau =Eigen::VectorXd::Zero(7);
     // tau(2)=10;
-    // std::cout<<tau.transpose()<<std::endl;
+    std::cout<<"control_mode: "<< control_mode <<std::endl;
+    if(control_mode == 1){
+        return tau2;
+    }
     return tau;
 }
 
@@ -216,8 +244,8 @@ int main(int argc, char** argv) {
         double time = ros::Time::now().toSec();
 
         Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(7);
-        Eigen::VectorXd now_q(7);
-        Eigen::VectorXd now_qd(7);
+        Eigen::VectorXd now_q(14);
+        Eigen::VectorXd now_qd(14);
 
         Eigen::VectorXd max(7);
         Eigen::VectorXd min(7);
@@ -227,10 +255,11 @@ int main(int argc, char** argv) {
         Eigen::VectorXd mid;
         mid = (max+min)/2;
         
-        for (int i = 0; i < 7; ++i) 
+        for (int i = 0; i < 14; ++i) 
         {   
-            // desired_position(3) = -0.5; // 设置每个关节的期望位置为 0.5 * sin(time)
-            desired_position(i)= mid(i)+0.5*sin(0.5*time);
+            desired_position(3) = -0.5; // 设置每个关节的期望位置为 0.5 * sin(time)
+            if(i < 7)
+               desired_position(i)= mid(i)+0.2*sin(0.1*time);
 
             now_q(i)=control_system.joint_state[i].position;
             now_qd(i)=control_system.joint_state[i].velocity;

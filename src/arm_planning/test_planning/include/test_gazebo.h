@@ -135,7 +135,7 @@ public:
 
     std::unique_ptr<ImpedanceControl> impedance_;
 private:
-
+    int control_mode;
 };
 
 #endif // TEST_GAZEBO_H

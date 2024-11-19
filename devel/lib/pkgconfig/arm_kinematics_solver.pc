@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/work/armWorkCS/devel
+
+Name: arm_kinematics_solver
+Description: Description of arm_kinematics_solver
+Version: 0.0.0
+Cflags: -I/home/ubuntu/work/armWorkCS/src/arm_planning/arm_kinematics_solver/include
+Libs: -L${prefix}/lib -larm_kinematics_solver
+Requires: eigen_conversions kdl_conversions kdl_parser pluginlib roscpp rospy tf_conversions trac_ik_lib

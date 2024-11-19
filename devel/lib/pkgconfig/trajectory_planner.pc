@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/work/armWorkCS/devel
+
+Name: trajectory_planner
+Description: Description of trajectory_planner
+Version: 0.0.0
+Cflags: -I/home/ubuntu/work/armWorkCS/src/trajectory_planner/include
+Libs: -L${prefix}/lib -ltrajectory_planner
+Requires: eigen_conversions roscpp

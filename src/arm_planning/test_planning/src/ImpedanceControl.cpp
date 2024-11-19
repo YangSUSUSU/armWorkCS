@@ -48,8 +48,10 @@ void ImpedanceControl::showMsg() const{
     }
     std::cout << std::endl;
 
-    std::cout << "Sensor used: " << (sensor_used_ ? "Yes" : "No") << std::endl;
+    std::cout << "Sensor used: " << (sensor_used_ ? "Yes" : "No, that means the mass matrix will represent the actual mass matrix. ") << std::endl;
     std::cout << "State Dimension: " << state_dim_ << std::endl;
+
+    std::cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << std::endl;
 }
 
 bool ImpedanceControl::updateState(const ImpedanceControlState& state) {
@@ -82,7 +84,7 @@ Eigen::VectorXd ImpedanceControl::getControlForceCartesian(const Eigen::MatrixXd
     Eigen::MatrixXd M_inv = M_.inverse();
     if(sensor_used_){
         return (M_q * J_e_inv * M_inv) * (M_ * q_des_a_ + B_ * q_deflection_v_ + K_ * q_deflection_ - M_ * J_e_dot * q_dot) 
-        + (J_e.transpose() - M_q * J_e_inv * M_inv) * f_ + Gravity + Coriolis * q_dot;
+            + (J_e.transpose() - M_q * J_e_inv * M_inv) * f_ + Gravity + Coriolis * q_dot;
     }
     else{
         return (M_q * J_e_inv * M_inv) * (M_ * q_des_a_ + B_ * q_deflection_v_ + K_ * q_deflection_ - M_ * J_e_dot * q_dot)
@@ -93,13 +95,12 @@ Eigen::VectorXd ImpedanceControl::getControlForceCartesian(const Eigen::MatrixXd
 Eigen::VectorXd ImpedanceControl::getControlForceJoint(const Eigen::MatrixXd& M_q, const Eigen::MatrixXd& Coriolis
                                         , const Eigen::VectorXd& Gravity, const Eigen::VectorXd& q_dot) const{
         
-    Eigen::MatrixXd M_inv = M_.inverse();
-    // M_ = M_q;
     if(sensor_used_){
+        Eigen::MatrixXd M_inv = M_.inverse();
         return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_)+
           (Eigen::MatrixXd::Identity(state_dim_, state_dim_) - M_q * M_inv) * f_;
     }
     else{
-        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + M_q * M_inv * (B_ * q_deflection_v_ + K_ * q_deflection_) ;
+        return M_q * q_des_a_ + Coriolis * q_dot + Gravity + (B_ * q_deflection_v_ + K_ * q_deflection_) ;
     }
 }
