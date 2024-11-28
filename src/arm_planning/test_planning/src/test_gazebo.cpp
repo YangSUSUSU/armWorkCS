@@ -216,6 +216,7 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // state_.q_c_v = v.head(7);
     // state_.q_d_a = a_desired;
     // cartesian space
+        Eigen::Vector3d desired_position;
     state_.x_c = data_.oMf[22].translation();
     state_.r_c = data_.oMf[22].rotation();
     state_.x_c_v = (jacobian_ * v_full).head(3);
@@ -224,15 +225,15 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     state_.r_d_v = Eigen::Vector3d::Zero(3);
     state_.x_d_a = Eigen::Vector3d::Zero(3);
     state_.r_d_a = Eigen::Vector3d::Zero(3);
-    // desired_position << 0.42 ,0.374884 ,-0;
-    // state_.x_d = desired_position;
-    // state_.r_d = data_.oMf[22].rotation();
+    desired_position << 0.42 ,0.374884 ,-0;
+    state_.x_d = desired_position;
+    state_.r_d = data_.oMf[22].rotation();
     // draw circle
-    Eigen::Vector3d desired_position;
-    double omega = 0.1;
+    double omega = 1;
+    double radius = 0.3;
     double time = ros::Time::now().toSec();
-    desired_position << 0.42 + 0.1 * sin(omega * time), 0.37 * 0.1 * cos(omega * time), 0;
-    state_.x_d_v << omega * 0.1 * cos(omega * time), -0.37 * 0.1 * cos(omega * time), 0;
+    desired_position << 0.42 + radius * sin(omega * time), 0.37 + radius * cos(omega * time), 0;
+    state_.x_d_v << omega * radius * cos(omega * time),  -radius * omega * sin(omega * time), 0;
 
     state_.x_d = desired_position;
     state_.r_d = data_.oMf[22].rotation();

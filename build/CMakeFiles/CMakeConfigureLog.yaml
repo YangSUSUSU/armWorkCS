@@ -712,3 +712,43 @@ events:
         201402
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "/usr/local/lib/cmake/pinocchio/cxx-standard.cmake:62 (try_run)"
+      - "/usr/local/lib/cmake/pinocchio/pinocchioConfig.cmake:193 (CHECK_MINIMAL_CXX_STANDARD)"
+      - "arm_planning/test_planning/CMakeLists.txt:23 (find_package)"
+    directories:
+      source: "/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp"
+      binary: "/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+    buildResult:
+      variable: "_cxx_standard_build_status"
+      cached: true
+      stdout: |
+        Change Dir: '/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /home/ubuntu/cmake-install/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_d1cae/fast
+        make[1]: 进入目录“/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp”
+        /usr/bin/make  -f CMakeFiles/cmTC_d1cae.dir/build.make CMakeFiles/cmTC_d1cae.dir/build
+        make[2]: 进入目录“/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp”
+        Building CXX object CMakeFiles/cmTC_d1cae.dir/tmp-cxx-standard.cpp.o
+        /usr/bin/c++    -o CMakeFiles/cmTC_d1cae.dir/tmp-cxx-standard.cpp.o -c /home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/cmake/tmp-cxx-standard.cpp
+        Linking CXX executable cmTC_d1cae
+        /home/ubuntu/cmake-install/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d1cae.dir/link.txt --verbose=1
+        /usr/bin/c++ -rdynamic "CMakeFiles/cmTC_d1cae.dir/tmp-cxx-standard.cpp.o" -o cmTC_d1cae
+        make[2]: 离开目录“/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp”
+        make[1]: 离开目录“/home/ubuntu/work/armWorkCS/build/arm_planning/test_planning/CMakeFiles/CMakeTmp”
+        
+      exitCode: 0
+    runResult:
+      variable: "_cxx_standard_run_status"
+      cached: true
+      stdout: |
+        201402
+      exitCode: 0
+...

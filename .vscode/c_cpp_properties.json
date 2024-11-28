@@ -9,7 +9,8 @@
                 "/home/nikooyang/aubo/aubo_ws2/aubo_ws2/devel/include/**",
                 "/opt/ros/noetic/include/**",
                 "/usr/include/**",
-                "${workspaceFolder}/src/arm_planning/test_planning/include"
+                "${workspaceFolder}/src/arm_planning/test_planning/include",
+                "/usr/include/eigen3"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
