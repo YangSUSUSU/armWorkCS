@@ -510,7 +510,6 @@ arm_planning/test_planning/CMakeFiles/test_planning_ad.dir/src/test_admmittance.
  /usr/include/strings.h
  /usr/include/time.h
  /usr/include/tinyxml.h
- /usr/include/tinyxml2.h
  /usr/include/unistd.h
  /usr/include/urdf_exception/exception.h
  /usr/include/urdf_model/color.h
@@ -1562,4 +1561,5 @@ arm_planning/test_planning/CMakeFiles/test_planning_ad.dir/src/test_admmittance.
  /usr/local/include/kdl/utilities/utility.h
  /usr/local/include/nlopt.h
  /usr/local/include/nlopt.hpp
+ /usr/local/include/tinyxml2.h
 

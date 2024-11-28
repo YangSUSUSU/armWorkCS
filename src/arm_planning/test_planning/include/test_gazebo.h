@@ -136,6 +136,10 @@ public:
     std::unique_ptr<ImpedanceControl> impedance_;
 private:
     int control_mode;
+
+    // cartesian desired
+    Eigen::Matrix3d cartesian_desired_rotation;
+    Eigen::Vector3d cartesian_desired_position;
 };
 
 #endif // TEST_GAZEBO_H

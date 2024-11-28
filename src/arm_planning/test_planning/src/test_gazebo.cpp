@@ -5,6 +5,7 @@
 #include <pinocchio/algorithm/joint-configuration.hpp>
 #include <pinocchio/algorithm/frames.hpp>
 #include <pinocchio/spatial/se3.hpp>
+// #include <algorithm> // 需要包含此头文件
 #include <iostream>
 // #include "ini.h"  // 需要安装 inih 库
 #include <yaml-cpp/yaml.h>
@@ -70,19 +71,19 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
     // get the impedance param
     if (config["impedance"]) {
         YAML::Node mass_node = config["impedance"]["Mass"];
-        Eigen::MatrixXd M_(7, 7);
+        Eigen::MatrixXd M_(mass_node.size(), mass_node.size());
         M_.setZero();  
         for (size_t i = 0; i < mass_node.size(); ++i) {
             M_(i, i) = mass_node[i].as<double>();
         }
-        Eigen::MatrixXd B_(7, 7);
+        Eigen::MatrixXd B_(mass_node.size(), mass_node.size());
         mass_node = config["impedance"]["Damping"];
         B_.setZero();  
         for (size_t i = 0; i < mass_node.size(); ++i) {
             B_(i, i) = mass_node[i].as<double>();
         }
         mass_node = config["impedance"]["Stiff"];
-        Eigen::MatrixXd K_(7, 7);
+        Eigen::MatrixXd K_(mass_node.size(), mass_node.size());
         K_.setZero();  
         for (size_t i = 0; i < mass_node.size(); ++i) {
             K_(i, i) = mass_node[i].as<double>();
@@ -92,7 +93,8 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
         control_mode = config["impedance"]["control_mode"].as<int>();
         
         // std::cout << "M: " << M_ << "B: " << B_ <<  std::endl;
-        impedance_ = std::make_unique<ImpedanceControl>(M_, B_, K_, 7, sensor_);
+        // impedance_ = std::make_unique<ImpedanceControl>(M_, B_, K_, 7, sensor_, ImpedanceControl::kJointSpace);
+        impedance_ = std::make_unique<ImpedanceControl>(M_, B_, K_, 7, sensor_, ImpedanceControl::kCartesianSpace);
         // std::cout << "Eta Gain: " << eta_gain << std::endl;
     } else {
         std::cerr << "Impedance section not found!" << std::endl;
@@ -170,14 +172,35 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
 
     // 滑模面导数项
     Eigen::VectorXd s_dot = a_desired - lambda * e_dot;
-    pinocchio::rnea(model_, data_, q_full, v_full, a_desired_full);  // 使用14维的q_full
-    pinocchio::crba(model_, data_, q_full);
-    Eigen::MatrixXd M_full = data_.M;  // 计算完整的质量矩阵
+    pinocchio::rnea(model_, data_, q, v, a_desired_full);  // 使用14维的q_full
+    pinocchio::forwardKinematics(model_, data_, q, v);
+    Eigen::MatrixXd jacobian_;
+    jacobian_.resize(6, model_.nv); 
+    // pinocchio::computeJointJacobian(model_, data_, q_full, 7, jacobian_);
 
-    pinocchio::computeCoriolisMatrix(model_, data_, q_full, v_full);  // 使用14维的q_full和v_full
+    pinocchio::computeJointJacobians(model_, data_, q);
+    // auto a = data_.J;
+    jacobian_ = pinocchio::getFrameJacobian(model_, data_, 22, pinocchio::LOCAL_WORLD_ALIGNED);
+    // std::cout << "jacobian_: " << jacobian_.leftCols(7) << std::endl;
+    pinocchio::computeJointJacobiansTimeVariation(model_, data_, q, v);
+    Eigen::MatrixXd dJ_;
+    dJ_.resize(6, model_.nv); 
+    pinocchio::getFrameJacobianTimeVariation(model_, data_, 22, pinocchio::LOCAL_WORLD_ALIGNED, dJ_);
+    // std::cout << "dJ_: " << dJ_.leftCols(7) << std::endl;
+    // current position
+    // Eigen::Vector3d position = data_.oMf[7].translation();
+    // Eigen::Matirx3d rotation = data_.oMf[7].rotation();
+    auto a = data_.oMf[22];
+    std::cout << "a" << a << std::endl;
+
+    pinocchio::crba(model_, data_, q);
+    Eigen::MatrixXd M_full = data_.M;  // 计算完整的质量矩阵
+    // std::cout << "data_.M :" << data_.M << std::endl;
+
+    pinocchio::computeCoriolisMatrix(model_, data_, q, v);  // 使用14维的q_full和v_full
     Eigen::MatrixXd C_full = data_.C;  // 计算完整的科里奥利矩阵
 
-    Eigen::VectorXd G_full = pinocchio::computeGeneralizedGravity(model_, data_, q_full);  // 计算完整的重力向量
+    Eigen::VectorXd G_full = pinocchio::computeGeneralizedGravity(model_, data_, q);  // 计算完整的重力向量
 
     // 控制律：加入滑模控制，提取前7个关节
     Eigen::VectorXd tau = M_full.topLeftCorner(7,7) * (a_desired + lambda * e_dot + eta * s.array().sign().matrix()) 
@@ -185,21 +208,47 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
                         + G_full.head(7)+test_lambda*e + test_eta* e_dot; 
     // std::cout << "tau1" << tau.transpose() << std::endl;
 
-    ImpedanceControlState state_;
-    state_.q_d = q_desired;
-    state_.q_c = q.head(7);
-    state_.q_d_v = v_desired;
-    state_.q_c_v = v.head(7);
-    state_.q_d_a = a_desired;
+    ImpedanceControl::ImpedanceControlState state_;
+    // joint space
+    // state_.q_d = q_desired;
+    // state_.q_c = q.head(7);
+    // state_.q_d_v = v_desired;
+    // state_.q_c_v = v.head(7);
+    // state_.q_d_a = a_desired;
+    // cartesian space
+    state_.x_c = data_.oMf[22].translation();
+    state_.r_c = data_.oMf[22].rotation();
+    state_.x_c_v = (jacobian_ * v_full).head(3);
+    state_.r_c_v = (jacobian_ * v_full).tail(3);
+    state_.x_d_v = Eigen::Vector3d::Zero(3);
+    state_.r_d_v = Eigen::Vector3d::Zero(3);
+    state_.x_d_a = Eigen::Vector3d::Zero(3);
+    state_.r_d_a = Eigen::Vector3d::Zero(3);
+    // desired_position << 0.42 ,0.374884 ,-0;
+    // state_.x_d = desired_position;
+    // state_.r_d = data_.oMf[22].rotation();
+    // draw circle
+    Eigen::Vector3d desired_position;
+    double omega = 0.1;
+    double time = ros::Time::now().toSec();
+    desired_position << 0.42 + 0.1 * sin(omega * time), 0.37 * 0.1 * cos(omega * time), 0;
+    state_.x_d_v << omega * 0.1 * cos(omega * time), -0.37 * 0.1 * cos(omega * time), 0;
+
+    state_.x_d = desired_position;
+    state_.r_d = data_.oMf[22].rotation();
     // external force
     impedance_->updateState(state_);
-    Eigen::VectorXd tau2 = impedance_->getControlForceJoint(M_full.topLeftCorner(7,7), C_full.topLeftCorner(7, 7), G_full.head(7), v_full.head(7));
-    // std::cout << "tau2" << tau2.transpose() << std::endl;
+    Eigen::VectorXd tau2;
+    // Eigen::VectorXd tau2 = impedance_->getControlForceJoint(M_full.topLeftCorner(7,7), C_full.topLeftCorner(7, 7), G_full.head(7), v_full.head(7));
+    tau2 = impedance_->getControlForceCartesian(M_full.topLeftCorner(7,7), C_full.topLeftCorner(7, 7), G_full.head(7), jacobian_.leftCols(7),
+                                                                dJ_.leftCols(7), v.head(7));
+
+    std::cout << "tau2" << tau2.transpose() << std::endl;
 
     Eigen::VectorXd tau3 = M_full.topLeftCorner(7,7) * (a_desired) 
                         + C_full.topLeftCorner(7, 7) * v_full.head(7)
                         + G_full.head(7); 
-    // std::cout << "tau3" << tau3.transpose() << std::endl;
+    std::cout << "tau3" << tau3.transpose() << std::endl;
 
     // 控制律：加入滑模控制，提取前7个关节
     // Eigen::VectorXd tau = 3*(C_full.topLeftCorner(7, 7) * v_full.head(7)
@@ -207,10 +256,23 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // Eigen::VectorXd tau =  test_lambda*e + test_eta* e_dot;                      
     // Eigen::VectorXd tau =Eigen::VectorXd::Zero(7);
     // tau(2)=10;
-    std::cout<<"control_mode: "<< control_mode <<std::endl;
+    // std::cout<<"control_mode: "<< control_mode <<std::endl;
     if(control_mode == 1){
+        for(int i = 0; i < 7; i++){
+            if(tau2(i) > 5){
+                tau2(i) = 5;
+            }
+            else if(tau2(i) < -5){
+                tau2(i) = -5;
+            }
+        }
+
         return tau2;
     }
+    if(control_mode == 2){
+        return tau;
+    }
+
     return tau;
 }
 
@@ -237,6 +299,8 @@ int main(int argc, char** argv) {
     Eigen::VectorXd q_desired = Eigen::VectorXd::Zero(7);
     Eigen::VectorXd v_desired = Eigen::VectorXd::Zero(7);
 
+    //  cartesian desired
+
     ros::Rate loop_rate(400);
 
     while (ros::ok()) 
@@ -258,8 +322,8 @@ int main(int argc, char** argv) {
         for (int i = 0; i < 14; ++i) 
         {   
             desired_position(3) = -0.5; // 设置每个关节的期望位置为 0.5 * sin(time)
-            if(i < 7)
-               desired_position(i)= mid(i)+0.2*sin(0.1*time);
+            // if(i < 7)
+            //    desired_position(i)= mid(i)+0.2*sin(0.1*time);
 
             now_q(i)=control_system.joint_state[i].position;
             now_qd(i)=control_system.joint_state[i].velocity;

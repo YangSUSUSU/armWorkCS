@@ -537,7 +537,6 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
   /usr/include/strings.h \
   /usr/include/time.h \
   /usr/include/tinyxml.h \
-  /usr/include/tinyxml2.h \
   /usr/include/unistd.h \
   /usr/include/urdf_exception/exception.h \
   /usr/include/urdf_model/color.h \
@@ -1589,7 +1588,8 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
   /usr/local/include/kdl/utilities/traits.h \
   /usr/local/include/kdl/utilities/utility.h \
   /usr/local/include/nlopt.h \
-  /usr/local/include/nlopt.hpp
+  /usr/local/include/nlopt.hpp \
+  /usr/local/include/tinyxml2.h
 
 
 /usr/local/include/kdl/utilities/traits.h:
@@ -1843,6 +1843,8 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 /usr/local/include/boost/ratio/ratio.hpp:
 
 /usr/local/include/boost/ratio/detail/overflow_helpers.hpp:
+
+/usr/local/include/tinyxml2.h:
 
 /usr/local/include/boost/ratio/detail/mpl/sign.hpp:
 
@@ -2181,6 +2183,8 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 /usr/local/include/kdl/chainiksolvervel_pinv.hpp:
 
 /usr/local/include/boost/predef/compiler/compaq.h:
+
+/usr/include/x86_64-linux-gnu/bits/mathcalls.h:
 
 /usr/include/x86_64-linux-gnu/bits/confname.h:
 
@@ -3082,6 +3086,8 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 
 /opt/ros/noetic/include/ros/timer_options.h:
 
+/usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h:
+
 /usr/local/include/boost/smart_ptr/detail/sp_nullptr_t.hpp:
 
 /usr/local/include/boost/mpl/aux_/config/dtp.hpp:
@@ -3255,6 +3261,10 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 /home/ubuntu/work/armWorkCS/src/arm_planning/aubo_arm_planning/include/OsqpEigen/Solver.hpp:
 
 /usr/include/c++/9/sstream:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/usr/local/include/boost/numeric/conversion/detail/udt_builtin_mixture.hpp:
 
 /usr/include/c++/9/bits/atomic_lockfree_defines.h:
 
@@ -3602,12 +3612,6 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 
 /usr/include/c++/9/cerrno:
 
-/usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h:
-
-/usr/include/tinyxml2.h:
-
-/usr/local/include/boost/date_time/time_formatting_streams.hpp:
-
 /usr/include/c++/9/bits/locale_facets_nonio.h:
 
 /usr/include/c++/9/new:
@@ -3653,12 +3657,6 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 /usr/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector.h:
 
 /usr/local/include/boost/date_time/gregorian/gregorian_types.hpp:
-
-/usr/local/include/boost/numeric/conversion/detail/udt_builtin_mixture.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/endian.h:
-
-/usr/include/x86_64-linux-gnu/bits/mathcalls.h:
 
 /usr/local/include/boost/predef/compiler/edg.h:
 
@@ -4338,6 +4336,8 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 
 /usr/local/include/boost/date_time/time_defs.hpp:
 
+/usr/local/include/boost/date_time/time_formatting_streams.hpp:
+
 /usr/local/include/boost/date_time/time_resolution_traits.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
@@ -4483,10 +4483,6 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 /usr/local/include/boost/type_traits/is_floating_point.hpp:
 
 /usr/local/include/boost/math/tools/is_standalone.hpp:
-
-/usr/local/include/boost/predef/compiler/comeau.h:
-
-/usr/local/include/boost/math/tools/mp.hpp:
 
 /usr/local/include/boost/mpl/aux_/numeric_cast_utils.hpp:
 
@@ -4747,3 +4743,7 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_qpik_solver.dir/src/arm_qpik_solve
 /usr/local/include/boost/iterator/distance.hpp:
 
 /usr/local/include/boost/predef/compiler/borland.h:
+
+/usr/local/include/boost/math/tools/mp.hpp:
+
+/usr/local/include/boost/predef/compiler/comeau.h:

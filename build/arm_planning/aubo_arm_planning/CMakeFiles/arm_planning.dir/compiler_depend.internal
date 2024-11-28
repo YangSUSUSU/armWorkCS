@@ -554,7 +554,6 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.
  /usr/include/strings.h
  /usr/include/time.h
  /usr/include/tinyxml.h
- /usr/include/tinyxml2.h
  /usr/include/unistd.h
  /usr/include/urdf_exception/exception.h
  /usr/include/urdf_model/color.h
@@ -1606,4 +1605,5 @@ arm_planning/aubo_arm_planning/CMakeFiles/arm_planning.dir/src/arm_planning.cpp.
  /usr/local/include/kdl/utilities/utility.h
  /usr/local/include/nlopt.h
  /usr/local/include/nlopt.hpp
+ /usr/local/include/tinyxml2.h
 

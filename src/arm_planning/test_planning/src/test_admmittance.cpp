@@ -159,7 +159,7 @@ private:
     //          msg->header.stamp.sec, 
     //          msg->header.stamp.nsec, 
     //          msg->header.frame_id.c_str());
-2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,
+// 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,
     // ROS_INFO("Force: [x: %.2f, y: %.2f, z: %.2f]", 
     //          msg->wrench.force.x, 
     //          msg->wrench.force.y, 
@@ -532,8 +532,6 @@ private:
 
         for ( int i{ 0 }; i < 3; i++ )
             torque_pos_offset[ i ] = current_rot[ i ];
-
-
 
         Eigen::Matrix3d eigen_rotation;
         // 将 KDL::Rotation 转换为 Eigen::Matrix3d
