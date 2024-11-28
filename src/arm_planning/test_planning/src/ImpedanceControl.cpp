@@ -140,7 +140,7 @@ Eigen::VectorXd ImpedanceControl::getControlForceCartesian(const Eigen::MatrixXd
         Eigen::MatrixXd M_new = J_e_inv.transpose() * M_q * J_e_inv ;
         return (J_e.transpose()) * ( B_ * q_deflection_v_ 
                 + K_ * q_deflection_ - M_new * J_e_dot * q_dot) + Gravity + Coriolis * q_dot;
-        return (J_e.transpose()) * ( B_ * J_e * q_dot 
+        return (J_e.transpose()) * ( -B_ * J_e * q_dot 
                 + K_ * q_deflection_) + Gravity + Coriolis * q_dot;
     }
 }

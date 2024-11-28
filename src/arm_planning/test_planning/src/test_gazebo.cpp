@@ -225,15 +225,16 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     state_.r_d_v = Eigen::Vector3d::Zero(3);
     state_.x_d_a = Eigen::Vector3d::Zero(3);
     state_.r_d_a = Eigen::Vector3d::Zero(3);
-    desired_position << 0.42 ,0.374884 ,-0;
+    desired_position << 0.45 ,0.374884 ,0.1;
     state_.x_d = desired_position;
     state_.r_d = data_.oMf[22].rotation();
     // draw circle
-    double omega = 1;
+    double omega = 0.6;
     double radius = 0.3;
     double time = ros::Time::now().toSec();
-    desired_position << 0.42 + radius * sin(omega * time), 0.37 + radius * cos(omega * time), 0;
-    state_.x_d_v << omega * radius * cos(omega * time),  -radius * omega * sin(omega * time), 0;
+    desired_position << 0.4, 0.1 + radius * sin(omega * time), radius * cos(omega * time);
+    std::cout << "sin(omega * time) : " << sin(omega * time) << std::endl;
+    state_.x_d_v << 0,  omega * radius * cos(omega * time), -radius * omega * sin(omega * time);
 
     state_.x_d = desired_position;
     state_.r_d = data_.oMf[22].rotation();
@@ -244,12 +245,12 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     tau2 = impedance_->getControlForceCartesian(M_full.topLeftCorner(7,7), C_full.topLeftCorner(7, 7), G_full.head(7), jacobian_.leftCols(7),
                                                                 dJ_.leftCols(7), v.head(7));
 
-    std::cout << "tau2" << tau2.transpose() << std::endl;
+    // std::cout << "tau2" << tau2.transpose() << std::endl;
 
     Eigen::VectorXd tau3 = M_full.topLeftCorner(7,7) * (a_desired) 
                         + C_full.topLeftCorner(7, 7) * v_full.head(7)
                         + G_full.head(7); 
-    std::cout << "tau3" << tau3.transpose() << std::endl;
+    // std::cout << "tau3" << tau3.transpose() << std::endl;
 
     // 控制律：加入滑模控制，提取前7个关节
     // Eigen::VectorXd tau = 3*(C_full.topLeftCorner(7, 7) * v_full.head(7)
