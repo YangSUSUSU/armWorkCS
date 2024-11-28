@@ -1,3 +1,10 @@
 controller:
-  lambda_gain: 11.5
-  eta_gain: 0.15
+  lambda_gain: 15
+  eta_gain: 0.152
+  k: 0.5
+  c: 0.55
+
+impedance_controller:
+   impedance_M: 1
+   impedance_B: 1
+   impedance_K: 1

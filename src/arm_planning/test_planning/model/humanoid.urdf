@@ -82,7 +82,7 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://test_planning/meshes/pelvis.STL"/>
-      </geometry>
+      </geometry> -->
     </visual>
     <!-- <collision>
       <origin
@@ -93,12 +93,12 @@
           filename="package://test_planning/meshes/pelvis.STL" />
       </geometry>
     </collision> -->
-    <collision>
+    <!-- <collision>
       <origin rpy="1.57 0 0" xyz="-0.02 0.0 -0.11"/>
       <geometry>
         <cylinder length="0.11" radius="0.085"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <link name="waist_link">
     <inertial>
@@ -137,8 +137,12 @@
     <parent link="pelvis"/>
     <child link="waist_link"/>
     <axis xyz="0 0 1"/>
+    <limit effort="90" lower="-2.96" upper="2.96" velocity="15"/>
+   <dynamics damping="2" friction="2"/>
    <dynamics damping="0.5" friction="0.5"/>
 </joint>
+<!-- 1. 腰部平移关节 -->
+<!--  -->
   <link name="head_base_link">
     <inertial>
       <origin rpy="0 0 0" xyz="0.000633 -0.000020 0.043830"/>
@@ -1093,7 +1097,7 @@
     <child link="shoulder_roll_r_link"/>
     <axis xyz="1 0 0"/>
     <limit effort="36" lower="-3.4" upper="0.2618" velocity="7.8"/>
-   <dynamics damping="0.5" friction="0.5"/>
+   <dynamics damping="10" friction="10"/>
 </joint>
   <link name="arm_yaw_r_link">
     <inertial>
@@ -1796,7 +1800,7 @@
     <joint name="shoulder_pitch_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
      <dynamics damping="0.5" friction="0.5"/>
-</joint>
+    </joint>
     <actuator name="shoulder_pitch_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -1807,7 +1811,7 @@
     <joint name="shoulder_roll_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
      <dynamics damping="0.5" friction="0.5"/>
-</joint>
+    </joint>
     <actuator name="shoulder_roll_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -1818,7 +1822,7 @@
     <joint name="shoulder_yaw_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
      <dynamics damping="0.5" friction="0.5"/>
-</joint>
+    </joint>
     <actuator name="shoulder_yaw_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -1829,7 +1833,7 @@
     <joint name="elbow_pitch_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
      <dynamics damping="0.5" friction="0.5"/>
-</joint>
+    </joint>
     <actuator name="elbow_pitch_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -1840,7 +1844,7 @@
     <joint name="elbow_yaw_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
      <dynamics damping="0.5" friction="0.5"/>
-</joint>
+    </joint>
     <actuator name="elbow_yaw_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -1869,6 +1873,13 @@
   </transmission>
 
 
+
+
+
+
+
+
+
   <gazebo reference="shoulder_pitch_l_link">
   <material>Gazebo/Grey</material>
     <mu1>0.5</mu1>
@@ -1895,7 +1906,7 @@
 
   <gazebo reference="elbow_yaw_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>0.5</mu1>
+  <mu1>0.5</mu1>
   <mu2>0.5</mu2>
   </gazebo>
 
@@ -1907,7 +1918,7 @@
 
   <gazebo reference="wrist_roll_l_link">
   <material>Gazebo/Grey</material>
-    <mu1>0.5</mu1>
+  <mu1>0.5</mu1>
   <mu2>0.5</mu2>
   </gazebo>
   
