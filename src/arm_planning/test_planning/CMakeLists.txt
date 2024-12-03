@@ -60,8 +60,8 @@ target_link_libraries(test_planning_force_calibration
 
 target_link_libraries(test_gazebo
     ${catkin_LIBRARIES}
-    # inih
     ${YAML_CPP_LIBRARIES}
-    iDynTree::idyntree-high-level iDynTree::idyntree-estimation
     ${PINOCCHIO_LIBRARIES} ${urdfdom_LIBRARIES}
+    osqp
+    OsqpEigen
 )

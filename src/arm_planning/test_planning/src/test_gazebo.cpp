@@ -12,11 +12,14 @@
 #include <cmath>
 #include "ini.h"  // 需要安装 inih 库
 #include <yaml-cpp/yaml.h>
-ControlSystem::ControlSystem(const std::string& urdf_filename) {
-    // ROS 订阅器和发布器初始化
+
+
+
+ControlSystem::ControlSystem(const std::string& urdf_filename) 
+{
     joint_state_sub_ = nh_.subscribe("/arm_controllers/joint_states", 10, &ControlSystem::jointStateCallback, this);
     jointErrorPub= nh_.advertise<sensor_msgs::JointState>("joint_error", 10);
-    // 初始化关节力矩发布器
+    torque_publishers_["waist_yaw_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint0_effort_controller/command", 10);
     torque_publishers_["shoulder_pitch_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint1_effort_controller/command", 10);
     torque_publishers_["shoulder_roll_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint2_effort_controller/command", 10);
     torque_publishers_["shoulder_yaw_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint3_effort_controller/command", 10);
@@ -25,68 +28,142 @@ ControlSystem::ControlSystem(const std::string& urdf_filename) {
     torque_publishers_["wrist_pitch_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint6_effort_controller/command", 10);
     torque_publishers_["wrist_roll_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint7_effort_controller/command", 10);
     joint_pub = nh_.advertise<sensor_msgs::JointState>("/joint_states", 10);
-    desired_histories.resize(7);
-    joint_state.resize(7);
-    // 加载动力学模型
+    desired_histories.resize(8);
+    joint_state.resize(8);
+    impedance_joint_M = Eigen::VectorXd::Zero(8);
+    impedance_joint_B = Eigen::VectorXd::Zero(8);
+    impedance_joint_K = Eigen::VectorXd::Zero(8);
+    impedance_Cartesian_M =  Eigen::MatrixXd::Identity(6, 6);
+    impedance_Cartesian_B =  Eigen::MatrixXd::Identity(6, 6);
+    impedance_Cartesian_K =  Eigen::MatrixXd::Identity(6, 6);
+    last_tau = Eigen::VectorXd::Zero(8);
     pinocchio::urdf::buildModel(urdf_filename, model_);
-// 获取关节数量
     int njoints = model_.njoints;
-    
-    // 存储关节名称和ID的容器
     std::vector<std::string> joint_names(njoints);
     std::vector<int> joint_ids(njoints);
-    
-    // 遍历所有关节，获取名称和ID
-    for (int i = 0; i < njoints; ++i) {
-        // 获取关节的索引（在Pinocchio中，关节索引通常从1开始，但数组索引从0开始）
+
+    for (int i = 0; i < njoints; ++i) 
+    {
         pinocchio::JointIndex joint_idx = i + 1;
-        
-        // 获取关节名称
         joint_names[i] = model_.names[joint_idx];
-        
-        // 关节ID实际上就是它的索引（从1开始）
         joint_ids[i] = joint_idx;
-        
-        // 输出关节名称和ID
         std::cout << "Joint " << joint_idx << ": " << joint_names[i] << std::endl;
     }
-    
-
     data_ = pinocchio::Data(model_);
 
-    
-    // 获取double类型的值 
     YAML::Node config = YAML::LoadFile("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/config/controller.yaml");
-    // std::cout << "Reading YAML file from: " << filepath << std::endl;
-    // YAML::Node config = YAML::LoadFile(filepath);
 
-    // 检查 contr   oller 是否存在
-    if (config["controller"]) {
-        // 获取 lambda_gain 和 eta_gain
+    if (config["controller"]) 
+    {
         test_lambda = config["controller"]["lambda_gain"].as<double>();
         test_eta = config["controller"]["eta_gain"].as<double>();
         test_k = config["controller"]["k"].as<double>();
         test_c = config["controller"]["c"].as<double>();
-        
-        std::cout << "Lambda Gain: " << test_lambda << std::endl;
-        // std::cout << "Eta Gain: " << eta_gain << std::endl;
-    } else {
+
+    } 
+    else 
+    {
         std::cerr << "Controller section not found!" << std::endl;
     }
 
         // 检查 contr   oller 是否存在
-    if (config["impedance_controller"]) 
+    if (config["impedance_M"]) 
     {
         // 获取 lambda_gain 和 eta_gain
-        // impedance_M = config["impedance_controller"]["impedance_M"].as<double>();
-        // impedance_B = config["impedance_controller"]["impedance_B"].as<double>();
-        // impedance_K = config["impedance_controller"]["impedance_K"].as<double>();
+        impedance_joint_M(0) = config["impedance_M"]["j1"].as<double>();
+        impedance_joint_M(1) = config["impedance_M"]["j2"].as<double>();
+        impedance_joint_M(2) = config["impedance_M"]["j3"].as<double>();
+        impedance_joint_M(3) = config["impedance_M"]["j4"].as<double>();
+        impedance_joint_M(4) = config["impedance_M"]["j5"].as<double>();
+        impedance_joint_M(5) = config["impedance_M"]["j6"].as<double>();
+        impedance_joint_M(6) = config["impedance_M"]["j7"].as<double>();
 
     } else 
     {
         std::cerr << "impedance_controller section not found!" << std::endl;
     }
     
+    if (config["impedance_B"]) 
+    {
+        // 获取 lambda_gain 和 eta_gain
+        impedance_joint_B(0) = config["impedance_B"]["j1"].as<double>();
+        impedance_joint_B(1) = config["impedance_B"]["j2"].as<double>();
+        impedance_joint_B(2) = config["impedance_B"]["j3"].as<double>();
+        impedance_joint_B(3) = config["impedance_B"]["j4"].as<double>();
+        impedance_joint_B(4) = config["impedance_B"]["j5"].as<double>();
+        impedance_joint_B(5) = config["impedance_B"]["j6"].as<double>();
+        impedance_joint_B(6) = config["impedance_B"]["j7"].as<double>();
+
+    } else 
+    {
+        std::cerr << "impedance_controller section not found!" << std::endl;
+    }
+
+    if (config["impedance_K"]) 
+    {
+        // 获取 lambda_gain 和 eta_gain
+        impedance_joint_K(0) = config["impedance_K"]["j1"].as<double>();
+        impedance_joint_K(1) = config["impedance_K"]["j2"].as<double>();
+        impedance_joint_K(2) = config["impedance_K"]["j3"].as<double>();
+        impedance_joint_K(3) = config["impedance_K"]["j4"].as<double>();
+        impedance_joint_K(4) = config["impedance_K"]["j5"].as<double>();
+        impedance_joint_K(5) = config["impedance_K"]["j6"].as<double>();
+        impedance_joint_K(6) = config["impedance_K"]["j7"].as<double>();
+
+    } else 
+    {
+        std::cerr << "impedance_controller section not found!" << std::endl;
+    }
+
+
+
+
+
+
+    if (config["impedance_Cartesian_M"]) 
+    {
+        // 获取 lambda_gain 和 eta_gain
+        impedance_Cartesian_M(0,0) = config["impedance_Cartesian_M"]["x"].as<double>();
+        impedance_Cartesian_M(1,1) = config["impedance_Cartesian_M"]["y"].as<double>();
+        impedance_Cartesian_M(2,2) = config["impedance_Cartesian_M"]["z"].as<double>();
+        impedance_Cartesian_M(3,3) = config["impedance_Cartesian_M"]["rx"].as<double>();
+        impedance_Cartesian_M(4,4) = config["impedance_Cartesian_M"]["ry"].as<double>();
+        impedance_Cartesian_M(5,5) = config["impedance_Cartesian_M"]["rz"].as<double>();
+
+    } else 
+    {
+        std::cerr << "impedance_controller section not found!" << std::endl;
+    }
+    
+    if (config["impedance_Cartesian_B"]) 
+    {
+        // 获取 lambda_gain 和 eta_gain
+        impedance_Cartesian_B(0,0) = config["impedance_Cartesian_B"]["x"].as<double>();
+        impedance_Cartesian_B(1,1) = config["impedance_Cartesian_B"]["y"].as<double>();
+        impedance_Cartesian_B(2,2) = config["impedance_Cartesian_B"]["x"].as<double>();
+        impedance_Cartesian_B(3,3) = config["impedance_Cartesian_B"]["rx"].as<double>();
+        impedance_Cartesian_B(4,4) = config["impedance_Cartesian_B"]["ry"].as<double>();
+        impedance_Cartesian_B(5,5) = config["impedance_Cartesian_B"]["rz"].as<double>();
+
+    } else 
+    {
+        std::cerr << "impedance_controller section not found!" << std::endl;
+    }
+
+    if (config["impedance_Cartesian_K"]) 
+    {
+        // 获取 lambda_gain 和 eta_gain
+        impedance_Cartesian_K(0,0) = config["impedance_Cartesian_K"]["x"].as<double>();
+        impedance_Cartesian_K(1,1) = config["impedance_Cartesian_K"]["y"].as<double>();
+        impedance_Cartesian_K(2,2) = config["impedance_Cartesian_K"]["z"].as<double>();
+        impedance_Cartesian_K(3,3) = config["impedance_Cartesian_K"]["rx"].as<double>();
+        impedance_Cartesian_K(4,4) = config["impedance_Cartesian_K"]["ry"].as<double>();
+        impedance_Cartesian_K(5,5) = config["impedance_Cartesian_K"]["rz"].as<double>();
+
+    } else 
+    {
+        std::cerr << "impedance_controller section not found!" << std::endl;
+    }
 }
 
 ControlSystem::~ControlSystem() {}
@@ -96,7 +173,7 @@ void ControlSystem::jointStateCallback(const sensor_msgs::JointState::ConstPtr& 
    
     // 更新关节历史状态
     std::vector<std::string> joint_names = {
-        "shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
+        "waist_yaw_joint","shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
         "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint"};
 
     for (size_t i = 0; i < joint_names.size(); ++i) {
@@ -120,53 +197,59 @@ void ControlSystem::setJointTorque(const std::string& joint_name, double effort)
         ROS_WARN("Torque publisher for joint %s not found.", joint_name.c_str());
     }
 }
+Eigen::VectorXd ControlSystem::cartesianImpedance(Eigen::VectorXd& carErr,Eigen::MatrixXd& joacb,Eigen::VectorXd& dynCompensated,Eigen::VectorXd& qd)
+{
+    return  dynCompensated + joacb.transpose() * (impedance_Cartesian_K * carErr - impedance_Cartesian_B*joacb*qd);
+}
 
 Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorXd& q, const Eigen::VectorXd& v,
                                                             const Eigen::VectorXd& q_desired, const Eigen::VectorXd& v_desired,
                                                             const Eigen::VectorXd& a_desired) 
 {
 
+    // std::cout<<"====debug  1====="<<std::endl;
+    Eigen::VectorXd q_full = Eigen::VectorXd::Zero(15); 
+    Eigen::VectorXd v_full = Eigen::VectorXd::Zero(15);
+    Eigen::VectorXd a_desired_full = Eigen::VectorXd::Zero(15);
 
-    Eigen::VectorXd q_full = Eigen::VectorXd::Zero(14); 
-    Eigen::VectorXd v_full = Eigen::VectorXd::Zero(14);
-    Eigen::VectorXd a_desired_full = Eigen::VectorXd::Zero(14);
-
+    // std::cout<<"====debug  2====="<<std::endl;
 
 
     sensor_msgs::JointState joint_state_msg;
-    joint_state_msg.name.resize(7);
-    joint_state_msg.position.resize(7);
-    joint_state_msg.velocity.resize(7);
+    joint_state_msg.name.resize(8);
+    joint_state_msg.position.resize(8);
+    joint_state_msg.velocity.resize(8);
     joint_state_msg.name = 
     {
-        "shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
+       "waist_yaw_joint", "shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
         "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint"
     };
     joint_state_msg.header.stamp = ros::Time::now();
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 8; i++)
     {
         joint_state_msg.position[i]=q(i);
     }
     joint_pub.publish(joint_state_msg);
+    // std::cout<<"====debug  3====="<<std::endl;
 
-    q_full.head(7) = q;  // 前7个关节位置
-    v_full.head(7) = v;  // 前7个关节速度
-    a_desired_full.head(7) = a_desired;  // 前7个关节加速度
+    q_full.head(8) = q;  // 前7个关节位置
+    v_full.head(8) = v;  // 前7个关节速度
+    // a_desired_full.head(7) = a_desired;  // 前7个关节加速度
 
-    Eigen::MatrixXd lambda = Eigen::MatrixXd::Identity(7, 7) * test_lambda; 
+    Eigen::MatrixXd lambda = Eigen::MatrixXd::Identity(8, 8) * test_lambda; 
     double eta = test_eta;  // 趋近率增益
     double k = 0.0015;   // 滑模控制增益
 
-    Eigen::VectorXd e = -(q.head(7) - q_desired);
+    Eigen::VectorXd e = -(q.head(8) - q_desired);
     //=====================================================
         sensor_msgs::JointState joint_state;
-        joint_state.name.resize(7); 
-        joint_state.position.resize(7);
-        joint_state.velocity.resize(7);
-        joint_state.effort.resize(7);
+        joint_state.name.resize(8); 
+        joint_state.position.resize(8);
+        joint_state.velocity.resize(8);
+        joint_state.effort.resize(8);
         joint_state.header.stamp = ros::Time::now();
-        joint_state.name = {"1","2","3","4","5","6","7"};// 替换为你的关节名称
-        for (int i = 0; i < 7; ++i) 
+        joint_state.name = {"0","1","2","3","4","5","6","7"};// 替换为你的关节名称
+        for (int i = 0; i < 8; ++i) 
         { 
             joint_state.position[i] = e(i);
         }
@@ -174,92 +257,242 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     //=====================================================
 
 
+    // std::cout<<"====debug  4====="<<std::endl;
 
-    Eigen::VectorXd e_dot = -(v.head(7) - v_desired);
+    Eigen::VectorXd e_dot = -(v.head(8) - v_desired);
     Eigen::VectorXd s = (e_dot + lambda * e);
+    // std::cout<<"====debug  4.1====="<<std::endl;
 
     // 滑模面导数项
     Eigen::VectorXd s_dot = a_desired + lambda * e_dot;
-    pinocchio::rnea(model_, data_, q_full,v_full,a_desired_full);  // 使用14维的q_full
+    // std::cout<<"====debug  4.2====="<<std::endl;
+
+    auto dynTor = pinocchio::rnea(model_, data_, q_full,v_full,a_desired_full);  // 使用14维的q_full
+    // std::cout<<"====debug  4.3====="<<std::endl;
+
     pinocchio::crba(model_,data_,q_full);
+    // std::cout<<"====debug  4.4====="<<std::endl;
+
     pinocchio::computeCoriolisMatrix(model_, data_, q_full, v_full);  // 使用14维的q_full和v_full
+    // std::cout<<"====debug  4.5====="<<std::endl;
+
     Eigen::MatrixXd C_full = data_.C;  // 计算完整的科里奥利矩阵
+    // std::cout<<"====debug  4.6====="<<std::endl;
+
     Eigen::VectorXd G_full = pinocchio::computeGeneralizedGravity(model_, data_, q_full);  // 计算完整的重力向量
+    // std::cout<<"====debug  4.7====="<<std::endl;
+
     Eigen::MatrixXd M_full = data_.M;  // 计算完整的质量矩阵
-    Eigen::VectorXd tanhS = Eigen::VectorXd::Zero(7);
+    // std::cout<<"====debug  4.8====="<<std::endl;
+
+    Eigen::VectorXd tanhS = Eigen::VectorXd::Zero(8);
     for (int i = 0; i < s.size(); ++i) {
         tanhS(i) = std::tanh(s(i)/test_eta); // 逐元素计算 tanh
     }
     s(1)=2*s(1);
     tanhS(1) = 2*tanhS(1);
     Eigen::VectorXd tau = 
-                        // M_full.topLeftCorner(7,7) * a_desired
-                         C_full.topLeftCorner(7, 7) * v_desired
+                        M_full.topLeftCorner(8,8) * a_desired+
+                         C_full.topLeftCorner(8, 8) * v_desired
                         // + G_full.head(7)+ test_k * s + test_c *tanhS; 
-                        + test_lambda*e + test_eta* e_dot
-                        + G_full.head(7); 
+                        + 15*e + 0.5* e_dot
+                        + G_full.head(8); 
+    // test_lambda = config["controller"]["lambda_gain"].as<double>();
+    // test_eta = config["controller"]["eta_gain"].as<double>();
+    // std::cout<<"====debug  5====="<<std::endl;
 
-    
     // 计算所有框架的雅可比矩阵
     pinocchio::forwardKinematics(model_,data_,q_full);
     pinocchio::computeJointJacobians(model_, data_, q_full);
     pinocchio::updateFramePlacements(model_, data_);
+    // std::cout<<"====debug  5.1====="<<std::endl;
 
     // 获取框架 ID
     pinocchio::FrameIndex frame_id = model_.getFrameId("left_flange");
-    std::cout << "frame_id: " <<frame_id << std::endl;
+    // std::cout << "frame_id: " <<frame_id << std::endl;
 
     Eigen::MatrixXd jacobian = pinocchio::getFrameJacobian(model_, data_, frame_id, pinocchio::LOCAL_WORLD_ALIGNED);
     Eigen::MatrixXd jaco_left;
-    jaco_left = jacobian.block<6,7>(0,0);
-    Eigen::CompleteOrthogonalDecomposition<Eigen::MatrixXd> cod(jaco_left);
+    jaco_left = jacobian.block<6,8>(0,0);
+    Eigen::CompleteOrthogonalDecomposition<Eigen::MatrixXd> cod(jaco_left.transpose());
+    const Eigen::MatrixXd temp_jacoLeftT = jaco_left.transpose();
     Eigen::MatrixXd jaco_pseudo_inv = cod.pseudoInverse();
-    Eigen::MatrixXd null_space_projection = Eigen::MatrixXd::Identity(7, 7) - jaco_pseudo_inv * jaco_left;
-    Eigen::VectorXd null = Eigen::VectorXd::Zero(7);
-    if (sim< 2500)
-    {
+    // Eigen::MatrixXd jaco_pseudo_inv = pseudoInverse(temp_jacoLeftT);
+    Eigen::MatrixXd null_space_projection = Eigen::MatrixXd::Identity(8, 8) - jaco_left.transpose()*jaco_pseudo_inv;
+    Eigen::VectorXd null = Eigen::VectorXd::Zero(8);
+    // std::cout<<"====debug  5.2====="<<std::endl;
 
-    }
     pinocchio::forwardKinematics(model_, data_, q_full);
     pinocchio::updateFramePlacements(model_, data_);
     Eigen::Vector3d pos = data_.oMf[22].translation();
     Eigen::Quaterniond quaternion(data_.oMf[22].rotation());
-    std::cout << "Position: " << data_.oMf[22].translation().transpose() << std::endl;
-    std::cout << "Rotation (Quaternion): " << quaternion.coeffs().transpose() << std::endl;
+    // std::cout << "Position: " << data_.oMf[22].translation().transpose() << std::endl;
+    // std::cout << "Rotation (Quaternion): " << quaternion.coeffs().transpose() << std::endl;
     double time =ros::Time::now().toSec(); // 当前时间;
-    for (int  i = 0; i < 7; i++)
+    // std::cout<<"====debug  5.3====="<<std::endl;
+
+    // Eigen::Quaterniond quaternion;
+    // quaternion.x()=0.0937198;
+    // quaternion.y()=-0.0698212;
+    // quaternion.z()=0.687292;
+    // quaternion.w()=0.716918;
+
+    Eigen::Quaterniond rot_now; 
+    rot_now = quaternion;
+    Eigen::Matrix3d r_now = rot_now.toRotationMatrix();  
+        // // Eigen::AngleAxisd angle_axis(r_now);
+        // // Eigen::Vector3d temp_voir;
+        // // temp_voir = angle_axis.angle() * angle_axis.axis();
+        // Eigen::Matrix3d 
+    Eigen::Vector3d temp_Rsin;
+
+    temp_Rsin(0)=0;
+    temp_Rsin(1)=0;
+    temp_Rsin(2)=0;
+    temp_Rsin = r_now*temp_Rsin;
+    // std::cout<<"====debug  5.4====="<<std::endl;
+
+    Eigen::VectorXd max(8);
+    Eigen::VectorXd min(8);
+    max<<0.5,2.96,3.4,2.96,0,2.96,1.04,1.48;
+    min<<-0.5,-2.96,-0.26,-2.96,-2.96,-2.96,-1.04,-1.66;
+
+    Eigen::VectorXd mid = Eigen::VectorXd::Zero(8);
+    mid(0)= 0 ;
+    mid = (max+min)/2;
+    for (int i = 1; i < 8; i++)
     {
-        /* code */
-        null(i)= 300*sin(8*time);
+        mid(i)=mid(i)+1.2*sin(time);
     }
-        // 0.3427  0.55786 0.688766
-    null= null_space_projection*null;
-    std::cout<<(tau+null).transpose()<<std::endl;
-    return tau;
-}
+    // std::cout<<"====debug  5.5====="<<std::endl;
 
-void ControlSystem::getMCGForFirst7Joints(const Eigen::VectorXd& q, const Eigen::VectorXd& v) 
+    Eigen::VectorXd carErr = Eigen::VectorXd::Zero(6); 
+    carErr(0)=0.341688-pos(0);
+    carErr(1)=0.399841-pos(1)+0.1*sin(time);
+    carErr(2)=0.057347-pos(2)+0.1*cos(time);
+    carErr(3)=temp_Rsin(0);
+    carErr(4)=temp_Rsin(1);
+    carErr(5)=temp_Rsin(2);
+    // std::cout<<"====debug  5.6====="<<std::endl;
+    const Eigen::MatrixXd ocJac = jaco_left;
+    // std::cout<<"====debug  5.61====="<<std::endl;
+    Eigen::CompleteOrthogonalDecomposition<Eigen::MatrixXd> cod_a(ocJac);
+    // std::cout<<"====debug  5.62====="<<std::endl;
+    Eigen::MatrixXd jaco_pseudo_T_inv = cod_a.pseudoInverse();
+    const Eigen::VectorXd qmain = jaco_pseudo_T_inv * carErr;
+    // std::cout<<"====debug  5.7====="<<std::endl;
+    auto result = optimizeNullSpaceVelocity(ocJac, qmain,1.0,1.0);
+    std::cout<<result.transpose()<<std::endl;
+
+    if (sim>2500)
+    {
+      null = test_lambda*(result-q)-0.1*v;
+      Eigen::VectorXd temp = dynTor.head(8);
+      Eigen::VectorXd tempv = v;
+      tau = cartesianImpedance(carErr,jaco_left,temp,tempv);
+      null= null_space_projection*null;
+      tau=5*null+tau;
+    }
+    sim++;
+    last_tau = tau;
+    // std::cout<<tau.transpose()<<std::endl;
+    return 0.5*tau+last_tau*0.5;
+}
+Eigen::VectorXd ControlSystem::optimizeNullSpaceVelocity(  const Eigen::MatrixXd& J,    // 雅可比矩阵
+                                            const Eigen::VectorXd& q_main,              // 主任务关节角速度增量
+                                            double alpha,                               // 雅可比条件数最小化的权重
+                                            double beta)                                // 关节角速度增量和最小化的权重
+
 {
-    // 惯性矩阵 M
-    pinocchio::crba(model_, data_, q);
-    Eigen::MatrixXd M = data_.M.topLeftCorner(7, 7);
-    pinocchio::computeCoriolisMatrix(model_, data_, q, v);
-    Eigen::MatrixXd C = data_.C.topLeftCorner(7, 7);
-    Eigen::VectorXd G = pinocchio::computeGeneralizedGravity(model_, data_, q).head(7);
+    int n = J.rows();                       
+    int m = n;                               
+    Eigen::MatrixXd H = -500 * J.transpose() * J + 1000 * Eigen::MatrixXd::Identity(8, 8);
+    Eigen::VectorXd c = 100 * q_main;
+    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(14,8);
+    A.block<6,8>(0,0) = J;
+    Eigen::MatrixXd b = Eigen::MatrixXd::Identity(8,8);
+    A.block<8,8>(6,0) = b;
+    Eigen::VectorXd max = Eigen::VectorXd::Zero(8);
+    Eigen::VectorXd min = Eigen::VectorXd::Zero(8);
 
-    std::cout << "Mass matrix (M):\n" << M << "\nCoriolis matrix (C):\n" << C << "\nGravity vector (G):\n" << G.transpose() << std::endl;
+    Eigen::VectorXd up = Eigen::VectorXd::Zero(14);
+    Eigen::VectorXd lp = Eigen::VectorXd::Zero(14);
+    max<<1.5,2.96,3.4,2.96,0,2.96,1.04,1.48;
+    min<<-1.5,-2.96,-0.26,-2.96,-2.96,-2.96,-1.04,-1.66;
+    up.segment(6, 8) = max;
+    lp.segment(6, 8) = min;
+    OsqpEigen::Solver solver;
+    solver.settings()->setWarmStart(true);
+    solver.settings()->setVerbosity(true);
+    // solver.settings()->setAbsoluteTolerance(1e-6);
+    // solver.settings()->setRelativeTolerance(1e-6);
+    solver.data()->setNumberOfVariables(8);
+    solver.data()->setNumberOfConstraints(14);
+    Eigen::SparseMatrix<double> H_sparse = H.sparseView();
+    if (!solver.data()->setHessianMatrix(H_sparse)) {
+        std::cerr << "Error setting Hessian matrix" << std::endl;
+        return Eigen::VectorXd::Zero(n);
+    }
+
+    if (!solver.data()->setGradient(c)) {
+        std::cerr << "Error setting gradient vector" << std::endl;
+        return Eigen::VectorXd::Zero(n);
+    }
+    Eigen::SparseMatrix<double> A_sparse = A.sparseView();
+    if (!solver.data()->setLinearConstraintsMatrix(A_sparse)) {
+        std::cerr << "Error setting constraint matrix" << std::endl;
+        return Eigen::VectorXd::Zero(n);
+    }
+
+    if (!solver.data()->setLowerBound(lp)) {
+        std::cerr << "Error setting lower bounds" << std::endl;
+        return Eigen::VectorXd::Zero(n);
+    }
+
+    if (!solver.data()->setUpperBound(up)) {
+        std::cerr << "Error setting upper bounds" << std::endl;
+        return Eigen::VectorXd::Zero(n);
+    }
+
+    if (!solver.initSolver()) {
+        std::cerr << "Solver initialization failed" << std::endl;
+        return Eigen::VectorXd::Zero(n);
+    }
+
+    auto result = solver.solve();
+    // if (result != OsqpEigen::ErrorExitFlag::NoError) {
+    //     std::cerr << "Solver failed to find a solution. Error: " << result << std::endl;
+    //     return Eigen::VectorXd::Zero(n);
+    // }
+
+    // 获取优化后的零空间角速度增量
+    return solver.getSolution();
 }
 
+ Eigen::MatrixXd ControlSystem:: pseudoInverse(const Eigen::MatrixXd &input)
+{
+  double lambda_ = 0.5;
+
+  Eigen::JacobiSVD<Eigen::MatrixXd> svd(input, Eigen::ComputeFullU | Eigen::ComputeFullV);
+  Eigen::JacobiSVD<Eigen::MatrixXd>::SingularValuesType sing_vals_ = svd.singularValues();
+  Eigen::MatrixXd S_ = input; // copying the dimensions of M_, its content is not needed.
+  S_.setZero();
+
+  for (int i = 0; i < sing_vals_.size(); i++)
+    S_(i, i) = (sing_vals_(i)) / (sing_vals_(i) * sing_vals_(i) + lambda_ * lambda_);
+
+  return svd.matrixV() * S_.transpose() * svd.matrixU().transpose();
+}
 int main(int argc, char** argv) {
     ros::init(argc, argv, "joint_control_node");
 
     ControlSystem control_system("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/model/humanoid.urdf");
 
-    Eigen::VectorXd q = Eigen::VectorXd::Zero(14);
-    Eigen::VectorXd v = Eigen::VectorXd::Zero(14);
-    Eigen::VectorXd a_desired = Eigen::VectorXd::Zero(7);
-    Eigen::VectorXd q_desired = Eigen::VectorXd::Zero(7);
-    Eigen::VectorXd v_desired = Eigen::VectorXd::Zero(7);
+    Eigen::VectorXd q = Eigen::VectorXd::Zero(15);
+    Eigen::VectorXd v = Eigen::VectorXd::Zero(15);
+    Eigen::VectorXd a_desired = Eigen::VectorXd::Zero(8);
+    Eigen::VectorXd q_desired = Eigen::VectorXd::Zero(8);
+    Eigen::VectorXd v_desired = Eigen::VectorXd::Zero(8);
 
     ros::Rate loop_rate(400);
 
@@ -267,9 +500,9 @@ int main(int argc, char** argv) {
     {
         double time = ros::Time::now().toSec();
 
-        Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(7);
-        Eigen::VectorXd now_q(7);
-        Eigen::VectorXd now_qd(7);
+        Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(8);
+        Eigen::VectorXd now_q(8);
+        Eigen::VectorXd now_qd(8);
 
         Eigen::VectorXd max(7);
         Eigen::VectorXd min(7);
@@ -279,10 +512,10 @@ int main(int argc, char** argv) {
         Eigen::VectorXd mid;
         mid = (max+min)/2;
         
-        for (int i = 0; i < 7; ++i) 
+        for (int i = 0; i < 8; ++i) 
         {   
-            // desired_position(3) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
-            desired_position(i)= mid(i)+0.5*sin(1.5*time);
+            desired_position(4) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
+            // desired_position(i)= mid(i)+0.5*sin(1.5*time);
 
             now_q(i)=control_system.joint_state[i].position;
             now_qd(i)=control_system.joint_state[i].velocity;
@@ -299,17 +532,17 @@ int main(int argc, char** argv) {
         // control_system.getMCGForFirst7Joints(q, v);
         Eigen::VectorXd tau = control_system.computeTorqueWithSlidingMode(now_q, now_qd, desired_position, desired_velocity, desired_acceleration);
         tau=tau;
-        control_system.setJointTorque("shoulder_pitch_l_joint", tau(0));
-        control_system.setJointTorque("shoulder_roll_l_joint", tau(1));
-        control_system.setJointTorque("shoulder_yaw_l_joint", tau(2));
-        control_system.setJointTorque("elbow_pitch_l_joint", tau(3));
-        control_system.setJointTorque("elbow_yaw_l_joint", tau(4));
-        control_system.setJointTorque("wrist_pitch_l_joint", tau(5));
-        control_system.setJointTorque("wrist_roll_l_joint", tau(6));
+        control_system.setJointTorque("waist_yaw_joint", tau(0));
+        control_system.setJointTorque("shoulder_pitch_l_joint", tau(1));
+        control_system.setJointTorque("shoulder_roll_l_joint", tau(2));
+        control_system.setJointTorque("shoulder_yaw_l_joint", tau(3));
+        control_system.setJointTorque("elbow_pitch_l_joint", tau(4));
+        control_system.setJointTorque("elbow_yaw_l_joint", tau(5));
+        control_system.setJointTorque("wrist_pitch_l_joint", tau(6));
+        control_system.setJointTorque("wrist_roll_l_joint", tau(7));
         ros::spinOnce();
         loop_rate.sleep();
     }
-    // [ 2.96, 3.4,  2.96, 0,     2.96,1.04,  1.48]
-    // [-2.96,-0.26,-2.96, -2.96,-2.96,-1.04,-1.66]
+
     return 0;
 }

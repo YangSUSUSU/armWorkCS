@@ -132,12 +132,12 @@
       </geometry>
     </collision> -->
   </link>
-  <joint name="waist_yaw_joint" type="fixed">
+  <joint name="waist_yaw_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.0755"/>
     <parent link="pelvis"/>
     <child link="waist_link"/>
     <axis xyz="0 0 1"/>
-    <limit effort="90" lower="-2.96" upper="2.96" velocity="15"/>
+    <limit effort="90" lower="-1" upper="1" velocity="15"/>
    <dynamics damping="2" friction="2"/>
    <dynamics damping="0.5" friction="0.5"/>
 </joint>
@@ -1872,7 +1872,16 @@
     </actuator>
   </transmission>
 
-
+  <transmission name="wrist_yaw_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="waist_yaw_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+  </joint>
+    <actuator name="wrist_yaw_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
 
 
