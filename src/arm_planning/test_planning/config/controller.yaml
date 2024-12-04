@@ -48,9 +48,9 @@ impedance_Cartesian_B:
    rz: 1
 
 impedance_Cartesian_K:
-   x: 500
-   y: 500
-   z: 500
-   rx: 10
-   ry: 10
-   rz: 10
+   x: 800
+   y: 800
+   z: 800
+   rx: 100
+   ry: 100
+   rz: 100

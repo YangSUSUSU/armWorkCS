@@ -1884,7 +1884,82 @@
   </transmission>
 
 
+<transmission name="shoulder_pitch_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_pitch_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_pitch_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
+  <transmission name="shoulder_roll_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_roll_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_roll_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="shoulder_yaw_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_yaw_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_yaw_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_pitch_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_pitch_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="elbow_pitch_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_yaw_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_yaw_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="elbow_yaw_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_pitch_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_pitch_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+</joint>
+    <actuator name="wrist_pitch_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_roll_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_roll_r_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+     <dynamics damping="0.5" friction="0.5"/>
+  </joint>
+    <actuator name="wrist_roll_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
 
 

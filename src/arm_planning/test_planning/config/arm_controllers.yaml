@@ -44,4 +44,38 @@ arm_controllers:
     pid: {p:  1.0, i: 0.01, d: 0.01}
 
 
- 
+
+  joint8_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: shoulder_pitch_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+  joint9_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: shoulder_roll_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+  joint10_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: shoulder_yaw_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+  joint11_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: elbow_pitch_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+  joint12_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: elbow_yaw_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+  joint13_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: wrist_pitch_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}
+
+  joint14_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: wrist_roll_r_joint
+    pid: {p:  1.0, i: 0.01, d: 0.01}

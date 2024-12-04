@@ -27,16 +27,23 @@ ControlSystem::ControlSystem(const std::string& urdf_filename)
     torque_publishers_["elbow_yaw_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint5_effort_controller/command", 10);
     torque_publishers_["wrist_pitch_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint6_effort_controller/command", 10);
     torque_publishers_["wrist_roll_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint7_effort_controller/command", 10);
+    torque_publishers_["shoulder_pitch_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint8_effort_controller/command", 10);
+    torque_publishers_["shoulder_roll_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint9_effort_controller/command", 10);
+    torque_publishers_["shoulder_yaw_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint10_effort_controller/command", 10);
+    torque_publishers_["elbow_pitch_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint11_effort_controller/command", 10);
+    torque_publishers_["elbow_yaw_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint12_effort_controller/command", 10);
+    torque_publishers_["wrist_pitch_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint13_effort_controller/command", 10);
+    torque_publishers_["wrist_roll_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint14_effort_controller/command", 10);
     joint_pub = nh_.advertise<sensor_msgs::JointState>("/joint_states", 10);
-    desired_histories.resize(8);
-    joint_state.resize(8);
+    desired_histories.resize(15);
+    joint_state.resize(15);
     impedance_joint_M = Eigen::VectorXd::Zero(8);
     impedance_joint_B = Eigen::VectorXd::Zero(8);
     impedance_joint_K = Eigen::VectorXd::Zero(8);
     impedance_Cartesian_M =  Eigen::MatrixXd::Identity(6, 6);
     impedance_Cartesian_B =  Eigen::MatrixXd::Identity(6, 6);
     impedance_Cartesian_K =  Eigen::MatrixXd::Identity(6, 6);
-    last_tau = Eigen::VectorXd::Zero(8);
+    last_tau = Eigen::VectorXd::Zero(15);
     pinocchio::urdf::buildModel(urdf_filename, model_);
     int njoints = model_.njoints;
     std::vector<std::string> joint_names(njoints);
@@ -174,7 +181,9 @@ void ControlSystem::jointStateCallback(const sensor_msgs::JointState::ConstPtr& 
     // 更新关节历史状态
     std::vector<std::string> joint_names = {
         "waist_yaw_joint","shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
-        "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint"};
+        "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint",
+        "shoulder_pitch_r_joint", "shoulder_roll_r_joint", "shoulder_yaw_r_joint",
+        "elbow_pitch_r_joint", "elbow_yaw_r_joint", "wrist_pitch_r_joint", "wrist_roll_r_joint"};
 
     for (size_t i = 0; i < joint_names.size(); ++i) {
         auto pos_it = std::find(msg->name.begin(), msg->name.end(), joint_names[i]);
@@ -216,39 +225,41 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
 
 
     sensor_msgs::JointState joint_state_msg;
-    joint_state_msg.name.resize(8);
-    joint_state_msg.position.resize(8);
-    joint_state_msg.velocity.resize(8);
+    joint_state_msg.name.resize(15);
+    joint_state_msg.position.resize(15);
+    joint_state_msg.velocity.resize(15);
     joint_state_msg.name = 
     {
        "waist_yaw_joint", "shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
-        "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint"
+        "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint",
+        "shoulder_pitch_r_joint", "shoulder_roll_r_joint", "shoulder_yaw_r_joint",
+        "elbow_pitch_r_joint", "elbow_yaw_r_joint", "wrist_pitch_r_joint", "wrist_roll_r_joint"
     };
     joint_state_msg.header.stamp = ros::Time::now();
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 15; i++)
     {
         joint_state_msg.position[i]=q(i);
     }
     joint_pub.publish(joint_state_msg);
     // std::cout<<"====debug  3====="<<std::endl;
 
-    q_full.head(8) = q;  // 前7个关节位置
-    v_full.head(8) = v;  // 前7个关节速度
+    q_full.head(15) = q;  // 前7个关节位置
+    v_full.head(15) = v;  // 前7个关节速度
     // a_desired_full.head(7) = a_desired;  // 前7个关节加速度
 
-    Eigen::MatrixXd lambda = Eigen::MatrixXd::Identity(8, 8) * test_lambda; 
+    Eigen::MatrixXd lambda = Eigen::MatrixXd::Identity(15, 15) * test_lambda; 
     double eta = test_eta;  // 趋近率增益
     double k = 0.0015;   // 滑模控制增益
 
-    Eigen::VectorXd e = -(q.head(8) - q_desired);
+    Eigen::VectorXd e = -(q - q_desired);
     //=====================================================
         sensor_msgs::JointState joint_state;
-        joint_state.name.resize(8); 
-        joint_state.position.resize(8);
-        joint_state.velocity.resize(8);
-        joint_state.effort.resize(8);
+        joint_state.name.resize(15); 
+        joint_state.position.resize(15);
+        joint_state.velocity.resize(15);
+        joint_state.effort.resize(15);
         joint_state.header.stamp = ros::Time::now();
-        joint_state.name = {"0","1","2","3","4","5","6","7"};// 替换为你的关节名称
+        joint_state.name = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14"};// 替换为你的关节名称
         for (int i = 0; i < 8; ++i) 
         { 
             joint_state.position[i] = e(i);
@@ -259,7 +270,7 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
 
     // std::cout<<"====debug  4====="<<std::endl;
 
-    Eigen::VectorXd e_dot = -(v.head(8) - v_desired);
+    Eigen::VectorXd e_dot = -(v - v_desired);
     Eigen::VectorXd s = (e_dot + lambda * e);
     // std::cout<<"====debug  4.1====="<<std::endl;
 
@@ -285,18 +296,18 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     Eigen::MatrixXd M_full = data_.M;  // 计算完整的质量矩阵
     // std::cout<<"====debug  4.8====="<<std::endl;
 
-    Eigen::VectorXd tanhS = Eigen::VectorXd::Zero(8);
-    for (int i = 0; i < s.size(); ++i) {
-        tanhS(i) = std::tanh(s(i)/test_eta); // 逐元素计算 tanh
-    }
-    s(1)=2*s(1);
-    tanhS(1) = 2*tanhS(1);
+    // Eigen::VectorXd tanhS = Eigen::VectorXd::Zero(8);
+    // for (int i = 0; i < s.size(); ++i) {
+    //     tanhS(i) = std::tanh(s(i)/test_eta); // 逐元素计算 tanh
+    // }
+    // s(1)=2*s(1);
+    // tanhS(1) = 2*tanhS(1);
     Eigen::VectorXd tau = 
-                        M_full.topLeftCorner(8,8) * a_desired+
-                         C_full.topLeftCorner(8, 8) * v_desired
+                        M_full * a_desired +
+                         C_full * v_desired
                         // + G_full.head(7)+ test_k * s + test_c *tanhS; 
                         + 15*e + 0.5* e_dot
-                        + G_full.head(8); 
+                        + G_full; 
     // test_lambda = config["controller"]["lambda_gain"].as<double>();
     // test_eta = config["controller"]["eta_gain"].as<double>();
     // std::cout<<"====debug  5====="<<std::endl;
@@ -308,12 +319,18 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // std::cout<<"====debug  5.1====="<<std::endl;
 
     // 获取框架 ID
-    pinocchio::FrameIndex frame_id = model_.getFrameId("left_flange");
-    // std::cout << "frame_id: " <<frame_id << std::endl;
+    pinocchio::FrameIndex frame_id_left = model_.getFrameId("left_flange");
+    pinocchio::FrameIndex frame_id_right = model_.getFrameId("right_flange");
+    Eigen::MatrixXd jacobian_l = pinocchio::getFrameJacobian(model_, data_, frame_id_left, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_r = pinocchio::getFrameJacobian(model_, data_, frame_id_right, pinocchio::LOCAL_WORLD_ALIGNED);
+    // std::cout << "jacobian_r: " << std::endl;
+    // std::cout << jacobian_r << std::endl;
 
-    Eigen::MatrixXd jacobian = pinocchio::getFrameJacobian(model_, data_, frame_id, pinocchio::LOCAL_WORLD_ALIGNED);
     Eigen::MatrixXd jaco_left;
-    jaco_left = jacobian.block<6,8>(0,0);
+    jaco_left = jacobian_l.block<6,8>(0,0);
+
+    Eigen::MatrixXd jaco_right;
+    jaco_right = jacobian_r.block<6,7>(0,8);
     Eigen::CompleteOrthogonalDecomposition<Eigen::MatrixXd> cod(jaco_left.transpose());
     const Eigen::MatrixXd temp_jacoLeftT = jaco_left.transpose();
     Eigen::MatrixXd jaco_pseudo_inv = cod.pseudoInverse();
@@ -324,31 +341,36 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
 
     pinocchio::forwardKinematics(model_, data_, q_full);
     pinocchio::updateFramePlacements(model_, data_);
-    Eigen::Vector3d pos = data_.oMf[22].translation();
+    Eigen::Vector3d pos_l = data_.oMf[22].translation();
+    Eigen::Vector3d pos_r = data_.oMf[74].translation();
     Eigen::Quaterniond quaternion(data_.oMf[22].rotation());
     // std::cout << "Position: " << data_.oMf[22].translation().transpose() << std::endl;
     // std::cout << "Rotation (Quaternion): " << quaternion.coeffs().transpose() << std::endl;
     double time =ros::Time::now().toSec(); // 当前时间;
     // std::cout<<"====debug  5.3====="<<std::endl;
 
-    // Eigen::Quaterniond quaternion;
-    // quaternion.x()=0.0937198;
-    // quaternion.y()=-0.0698212;
-    // quaternion.z()=0.687292;
-    // quaternion.w()=0.716918;
+    Eigen::Quaterniond desired_quaternion;
+    desired_quaternion.x()=0.0937198;
+    desired_quaternion.y()=-0.0698212;
+    desired_quaternion.z()=0.687292;
+    desired_quaternion.w()=0.716918;
 
     Eigen::Quaterniond rot_now; 
     rot_now = quaternion;
-    Eigen::Matrix3d r_now = rot_now.toRotationMatrix();  
-        // // Eigen::AngleAxisd angle_axis(r_now);
-        // // Eigen::Vector3d temp_voir;
-        // // temp_voir = angle_axis.angle() * angle_axis.axis();
+    Eigen::Quaterniond e_quaternion; 
+    e_quaternion = rot_now.inverse() * desired_quaternion;
+    Eigen::Matrix3d r_now = rot_now.toRotationMatrix(); 
+    Eigen::Matrix3d r_e = e_quaternion.toRotationMatrix();  
+ 
+    Eigen::AngleAxisd angle_axis(r_e);
+    Eigen::Vector3d temp_voir;
+    temp_voir = angle_axis.angle() * angle_axis.axis();
         // Eigen::Matrix3d 
     Eigen::Vector3d temp_Rsin;
 
-    temp_Rsin(0)=0;
-    temp_Rsin(1)=0;
-    temp_Rsin(2)=0;
+    temp_Rsin(0)=temp_voir(0);
+    temp_Rsin(1)=temp_voir(1);
+    temp_Rsin(2)=temp_voir(2)+1*sin(0.5*time);
     temp_Rsin = r_now*temp_Rsin;
     // std::cout<<"====debug  5.4====="<<std::endl;
 
@@ -365,49 +387,70 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
         mid(i)=mid(i)+1.2*sin(time);
     }
     // std::cout<<"====debug  5.5====="<<std::endl;
+    // 0.322600,-0.25,0.05
+    Eigen::VectorXd carErr_right = Eigen::VectorXd::Zero(6); 
+    carErr_right(0)=0.322600-pos_r(0);
+    carErr_right(1)=-0.35-pos_r(1);
+    carErr_right(2)=0.05-pos_r(2);
+    carErr_right(3)=0;
+    carErr_right(4)=0;
+    carErr_right(5)=0;
 
-    Eigen::VectorXd carErr = Eigen::VectorXd::Zero(6); 
-    carErr(0)=0.341688-pos(0);
-    carErr(1)=0.399841-pos(1)+0.1*sin(time);
-    carErr(2)=0.057347-pos(2)+0.1*cos(time);
-    carErr(3)=temp_Rsin(0);
-    carErr(4)=temp_Rsin(1);
-    carErr(5)=temp_Rsin(2);
+    Eigen::VectorXd carErr_left = Eigen::VectorXd::Zero(6); 
+    carErr_left(0)=0.341688-pos_l(0);
+    carErr_left(1)=0.399841-pos_l(1)+0.1*sin(time);
+    carErr_left(2)=0.057347-pos_l(2)+0.1*cos(time);
+    carErr_left(3)=temp_Rsin(0);
+    carErr_left(4)=temp_Rsin(1);
+    carErr_left(5)=temp_Rsin(2);
     // std::cout<<"====debug  5.6====="<<std::endl;
     const Eigen::MatrixXd ocJac = jaco_left;
     // std::cout<<"====debug  5.61====="<<std::endl;
     Eigen::CompleteOrthogonalDecomposition<Eigen::MatrixXd> cod_a(ocJac);
     // std::cout<<"====debug  5.62====="<<std::endl;
     Eigen::MatrixXd jaco_pseudo_T_inv = cod_a.pseudoInverse();
-    const Eigen::VectorXd qmain = jaco_pseudo_T_inv * carErr;
+    const Eigen::VectorXd qmain = jaco_pseudo_T_inv * carErr_left;
     // std::cout<<"====debug  5.7====="<<std::endl;
     auto result = optimizeNullSpaceVelocity(ocJac, qmain,1.0,1.0);
-    std::cout<<result.transpose()<<std::endl;
+    // std::cout<<result.transpose()<<std::endl;
+    Eigen::VectorXd left_tau = Eigen::VectorXd::Zero(8);
+    Eigen::VectorXd right_tau = Eigen::VectorXd::Zero(7);
 
     if (sim>2500)
     {
-      null = test_lambda*(result-q)-0.1*v;
-      Eigen::VectorXd temp = dynTor.head(8);
-      Eigen::VectorXd tempv = v;
-      tau = cartesianImpedance(carErr,jaco_left,temp,tempv);
-      null= null_space_projection*null;
-      tau=5*null+tau;
+      null = test_lambda*(result-q.head(8)) + 0.1*(v_desired.head(8)-v.head(8));
+      Eigen::VectorXd temp_l = dynTor.head(8);
+      Eigen::VectorXd tempv_l = v.head(8);
+      Eigen::VectorXd temp_r = dynTor.tail(7);
+      Eigen::VectorXd tempv_r = v.tail(7);
+      left_tau = cartesianImpedance(carErr_left,jaco_left,temp_l,tempv_l);
+      right_tau = cartesianImpedance(carErr_right,jaco_right,temp_r,tempv_r);
+      //null= null_space_projection*null;
+      left_tau=null+left_tau;
+      tau.head(8)=left_tau;
+      tau.tail(7)=right_tau;
     }
+    
     sim++;
     last_tau = tau;
     // std::cout<<tau.transpose()<<std::endl;
     return 0.5*tau+last_tau*0.5;
 }
-Eigen::VectorXd ControlSystem::optimizeNullSpaceVelocity(  const Eigen::MatrixXd& J,    // 雅可比矩阵
+Eigen::VectorXd ControlSystem::optimizeNullSpaceVelocity(const Eigen::MatrixXd& J,    // 雅可比矩阵
                                             const Eigen::VectorXd& q_main,              // 主任务关节角速度增量
                                             double alpha,                               // 雅可比条件数最小化的权重
                                             double beta)                                // 关节角速度增量和最小化的权重
 
 {
     int n = J.rows();                       
-    int m = n;                               
-    Eigen::MatrixXd H = -500 * J.transpose() * J + 1000 * Eigen::MatrixXd::Identity(8, 8);
-    Eigen::VectorXd c = 100 * q_main;
+    int m = n;   
+    Eigen::MatrixXd JTJ = J.transpose() * J;
+    double determinant = JTJ.determinant();
+
+    // std::cout << "The determinant of J^T * J is: " << determinant << std::endl;
+                        
+    Eigen::MatrixXd H = 0.001 * J.transpose() * J + 1 * Eigen::MatrixXd::Identity(8, 8);
+    Eigen::VectorXd c = -1 * q_main;
     Eigen::MatrixXd A = Eigen::MatrixXd::Zero(14,8);
     A.block<6,8>(0,0) = J;
     Eigen::MatrixXd b = Eigen::MatrixXd::Identity(8,8);
@@ -417,13 +460,15 @@ Eigen::VectorXd ControlSystem::optimizeNullSpaceVelocity(  const Eigen::MatrixXd
 
     Eigen::VectorXd up = Eigen::VectorXd::Zero(14);
     Eigen::VectorXd lp = Eigen::VectorXd::Zero(14);
-    max<<1.5,2.96,3.4,2.96,0,2.96,1.04,1.48;
-    min<<-1.5,-2.96,-0.26,-2.96,-2.96,-2.96,-1.04,-1.66;
+    max<<0.5,2.96,3.4,2.96,0,2.96,1.04,1.48;
+    min<<-0.5,-2.96,-0.26,-2.96,-2.96,-2.96,-1.04,-1.66;
+    // max = max *2/400;
+    // min = min *2/400;
     up.segment(6, 8) = max;
     lp.segment(6, 8) = min;
     OsqpEigen::Solver solver;
-    solver.settings()->setWarmStart(true);
-    solver.settings()->setVerbosity(true);
+    // solver.settings()->setWarmStart(true);
+    solver.settings()->setVerbosity(false);
     // solver.settings()->setAbsoluteTolerance(1e-6);
     // solver.settings()->setRelativeTolerance(1e-6);
     solver.data()->setNumberOfVariables(8);
@@ -490,9 +535,9 @@ int main(int argc, char** argv) {
 
     Eigen::VectorXd q = Eigen::VectorXd::Zero(15);
     Eigen::VectorXd v = Eigen::VectorXd::Zero(15);
-    Eigen::VectorXd a_desired = Eigen::VectorXd::Zero(8);
-    Eigen::VectorXd q_desired = Eigen::VectorXd::Zero(8);
-    Eigen::VectorXd v_desired = Eigen::VectorXd::Zero(8);
+    Eigen::VectorXd a_desired = Eigen::VectorXd::Zero(15);
+    Eigen::VectorXd q_desired = Eigen::VectorXd::Zero(15);
+    Eigen::VectorXd v_desired = Eigen::VectorXd::Zero(15);
 
     ros::Rate loop_rate(400);
 
@@ -500,9 +545,9 @@ int main(int argc, char** argv) {
     {
         double time = ros::Time::now().toSec();
 
-        Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(8);
-        Eigen::VectorXd now_q(8);
-        Eigen::VectorXd now_qd(8);
+        Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(15);
+        Eigen::VectorXd now_q(15);
+        Eigen::VectorXd now_qd(15);
 
         Eigen::VectorXd max(7);
         Eigen::VectorXd min(7);
@@ -512,9 +557,10 @@ int main(int argc, char** argv) {
         Eigen::VectorXd mid;
         mid = (max+min)/2;
         
-        for (int i = 0; i < 8; ++i) 
+        for (int i = 0; i < 15; ++i) 
         {   
             desired_position(4) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
+            desired_position(11) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
             // desired_position(i)= mid(i)+0.5*sin(1.5*time);
 
             now_q(i)=control_system.joint_state[i].position;
@@ -540,6 +586,13 @@ int main(int argc, char** argv) {
         control_system.setJointTorque("elbow_yaw_l_joint", tau(5));
         control_system.setJointTorque("wrist_pitch_l_joint", tau(6));
         control_system.setJointTorque("wrist_roll_l_joint", tau(7));
+        control_system.setJointTorque("shoulder_pitch_r_joint", tau(8));
+        control_system.setJointTorque("shoulder_roll_r_joint", tau(9));
+        control_system.setJointTorque("shoulder_yaw_r_joint", tau(10));
+        control_system.setJointTorque("elbow_pitch_r_joint", tau(11));
+        control_system.setJointTorque("elbow_yaw_r_joint", tau(12));
+        control_system.setJointTorque("wrist_pitch_r_joint", tau(13));
+        control_system.setJointTorque("wrist_roll_r_joint", tau(14));
         ros::spinOnce();
         loop_rate.sleep();
     }
