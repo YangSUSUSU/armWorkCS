@@ -82,7 +82,7 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://test_planning/meshes/pelvis.STL"/>
-      </geometry> -->
+      </geometry>
     </visual>
     <!-- <collision>
       <origin
@@ -132,16 +132,99 @@
       </geometry>
     </collision> -->
   </link>
+   <!-- 腰部 Z 轴平移关节 -->
+  
+<joint name="waist_Z_joint" type="prismatic">
+  <origin rpy="0 0 0" xyz="0 0 -0.0755"/>
+  <parent link="pelvis"/>
+  <child link="waist_Z_link"/>
+  <axis xyz="0 0 1"/>
+  <limit effort="90" lower="-0.15" upper="0" velocity="0.5"/>
+  <dynamics damping="1" friction="1"/>
+  <gazebo>
+    <provideFeedback>true</provideFeedback>
+    <dynamics damping="1" friction="1"/>
+    <gravity>0</gravity>
+    <initial_position>0.0</initial_position>
+    <initial_velocity>0.0</initial_velocity> <!-- 设置初始速度 -->
+  </gazebo>
+</joint>
+<link name="waist_Z_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.018779 -0.000457 0.246485"/>
+      <mass value="1"/>
+      <inertia ixx="0.242914" ixy="-0.000059" ixz="0.00398" iyy="0.228995" iyz="-0.000628" izz="0.075987"/>
+    </inertial>
+  <visual>
+    <geometry>
+      <cylinder radius="0.05" length="0.1"/>
+    </geometry>
+    <material name="blue">
+      <color rgba="0 0 1 1"/>
+    </material>
+  </visual>
+</link>
+
+<!-- 腰部绕 X 轴旋转关节（Roll） -->
+<joint name="waist_roll_joint" type="revolute">
+  <origin rpy="0 0 0" xyz="0 0 0"/>
+  <parent link="waist_Z_link"/>
+  <child link="waist_roll_link"/>
+  <axis xyz="1 0 0"/>
+  <limit effort="90" lower="-0.25" upper="0.25" velocity="0.4"/>
+  <dynamics damping="0.1" friction="0.1"/>
+</joint>
+<link name="waist_roll_link">
+        <inertial>
+      <origin rpy="0 0 0" xyz="-0.018779 -0.000457 0.246485"/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.242914" ixy="-0.000059" ixz="0.00398" iyy="0.228995" iyz="-0.000628" izz="0.075987"/>
+    </inertial>
+  <visual>
+    <geometry>
+      <cylinder radius="0.05" length="0.1"/>
+    </geometry>
+    <material name="green">
+      <color rgba="0 1 0 1"/>
+    </material>
+  </visual>
+</link>
+
+<!-- 腰部绕 Y 轴旋转关节（Pitch） -->
+<joint name="waist_pitch_joint" type="revolute">
+
+  <origin rpy="0 0 0" xyz="0 0 0"/>
+  <parent link="waist_roll_link"/>
+  <child link="waist_pitch_link"/>
+  <axis xyz="0 1 0"/>
+  <limit effort="90" lower="-0.25" upper="0.25" velocity="0.4"/>
+  <dynamics damping="0.1" friction="0.1"/>
+</joint>
+<link name="waist_pitch_link">
+        <inertial>
+      <origin rpy="0 0 0" xyz="-0.018779 -0.000457 0.246485"/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.242914" ixy="-0.000059" ixz="0.00398" iyy="0.228995" iyz="-0.000628" izz="0.075987"/>
+    </inertial>
+  <visual>
+    <geometry>
+      <cylinder radius="0.05" length="0.1"/>
+    </geometry>
+    <material name="red">
+      <color rgba="1 0 0 1"/>
+    </material>
+  </visual>
+</link>
+  <!-- 腰部绕 Z 轴旋转关节（Yaw） -->
   <joint name="waist_yaw_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.0755"/>
-    <parent link="pelvis"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="waist_pitch_link"/>
     <child link="waist_link"/>
     <axis xyz="0 0 1"/>
     <limit effort="90" lower="-1" upper="1" velocity="15"/>
-   <dynamics damping="2" friction="2"/>
-   <dynamics damping="0.5" friction="0.5"/>
-</joint>
-<!-- 1. 腰部平移关节 -->
+    <dynamics damping="0.5" friction="0.5"/>
+  </joint>
+
 <!--  -->
   <link name="head_base_link">
     <inertial>
@@ -1559,8 +1642,8 @@
     <child link="R_middle_proximal"/>
     <axis xyz="0 0 1"/>
     <limit effort="10" lower="0" upper="1.7" velocity="5"/>
-   <dynamics damping="0.5" friction="0.5"/>
-</joint>
+    <dynamics damping="1" friction="1"/>
+  </joint>
   <link name="R_middle_intermediate">
     <inertial>
       <origin rpy="0 0 0" xyz="0.001921 0.020796 -0.005"/>
@@ -1793,9 +1876,212 @@
   <plugin name="collision_detector" filename="libcollision_plugin.so">
   <collision_name>collision</collision_name>
 </plugin>
-  <!-- 配置传动接口和关节 -->
-  
+  <!-- 配置传动接口和关节 nikoo1212 速度接口-->
+
+
+
+  <transmission name="waist_Z_joint_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="waist_Z_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="waist_Z_joint_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <transmission name="waist_roll_joint_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="waist_roll_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="waist_roll_joint_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="waist_pitch_joint_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="waist_pitch_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="waist_pitch_joint_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
   <transmission name="shoulder_pitch_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_pitch_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="shoulder_roll_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_roll_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="shoulder_yaw_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_yaw_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_yaw_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_pitch_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_pitch_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="elbow_pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_yaw_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_yaw_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="elbow_yaw_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_pitch_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_pitch_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="wrist_pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_roll_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_roll_l_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="wrist_roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_yaw_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="waist_yaw_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="wrist_yaw_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="shoulder_pitch_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_pitch_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_pitch_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="shoulder_roll_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_roll_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_roll_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="shoulder_yaw_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder_yaw_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="shoulder_yaw_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_pitch_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_pitch_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="elbow_pitch_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_yaw_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_yaw_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="elbow_yaw_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_pitch_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_pitch_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="wrist_pitch_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="wrist_roll_r_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_roll_r_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <dynamics damping="0.5" friction="0.5"/>
+    </joint>
+    <actuator name="wrist_roll_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <!-- 配置传动接口和关节 nikoo1212 力矩接口-->
+  
+  <!-- <transmission name="shoulder_pitch_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="shoulder_pitch_l_joint">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
@@ -1959,7 +2245,7 @@
     <actuator name="wrist_roll_r_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
+  </transmission> -->
 
 
 

@@ -14,7 +14,8 @@ find_package(orocos_kdl REQUIRED)
 find_package(Eigen3 REQUIRED)
 catkin_package(
     INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}   osqp OsqpEigen
+    LIBRARIES ${PROJECT_NAME} 
+    osqp OsqpEigen
     CATKIN_DEPENDS roscpp arm_kinematics_solver
     )
 find_package(iDynTree REQUIRED)
@@ -34,6 +35,7 @@ include_directories(
     ${PINOCCHIO_INCLUDE_DIRS} 
     ${urdfdom_INCLUDE_DIRS}
 )
+
 add_executable(test_gazebo src/test_gazebo.cpp)
 
 add_executable(test_planning src/test_arm.cpp)
@@ -64,4 +66,11 @@ target_link_libraries(test_gazebo
     ${PINOCCHIO_LIBRARIES} ${urdfdom_LIBRARIES}
     osqp
     OsqpEigen
+
 )
+# target_link_libraries(dualArmMpc
+#     osqp
+#     OsqpEigen
+#     ${EIGEN3_LIBRARIES}   # 确保链接 Eigen3
+#     ${PINOCCHIO_LIBRARIES} 
+# )

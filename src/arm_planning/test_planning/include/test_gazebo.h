@@ -114,7 +114,14 @@ public:
                                             const Eigen::VectorXd& q_main,              // 主任务关节角速度增量
                                             double alpha,                              // 雅可比条件数最小化的权重
                                             double beta);   
+    Eigen::VectorXd WQP(const Eigen::MatrixXd& Jl,
+                                const Eigen::MatrixXd& Jr,
+                                const Eigen::VectorXd& car_err,
+                                const Eigen::VectorXd& nowQ,
+                                const Eigen::VectorXd& Qr);
 
+
+    Eigen::VectorXd testWqp(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv);
     ros::NodeHandle nh_;
     ros::Subscriber joint_state_sub_;
     std::map<std::string, ros::Publisher> torque_publishers_;
@@ -132,7 +139,7 @@ public:
     double test_k = 0.0;
     double test_c = 0.0;
     int sim = 0 ;
-
+    const int joint_num = 14;
     Eigen::VectorXd impedance_joint_M;
     Eigen::VectorXd impedance_joint_B;
     Eigen::VectorXd impedance_joint_K;

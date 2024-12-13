@@ -6,12 +6,14 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <OsqpEigen/OsqpEigen.h>
-
+#include "robotPara.h"
+#include "dualArmMpc.h"
 
 #define SIM  
 
 SmoothingFilter::SmoothingFilter(size_t windowSize) : windowSize(windowSize), index(0) 
 {  
+    
     values.resize(windowSize, {0.0, 0.0, 0.0});  
 }  
   

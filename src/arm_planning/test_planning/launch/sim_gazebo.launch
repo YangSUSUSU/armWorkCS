@@ -2,47 +2,50 @@
     <!-- 加载URDF文件 -->
     <param name="robot_description" command="xacro $(find test_planning)/model/humanoid.urdf" />
 
-    <!-- 启动 Gazebo -->
+    <!-- 启动 Gazebo
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="paused" value="false"/>
         <arg name="use_sim_time" value="true"/>
         <arg name="gui" value="true"/>
         <arg name="headless" value="false"/>
         <arg name="debug" value="false"/>
-    </include>
+    </include> -->
     
     <!-- 将模型加载到Gazebo -->
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen" args="-param robot_description -urdf -model humanoid" />
 
     <!-- 加载控制器参数配置 -->
     <!-- <rosparam file="$(find test_planning)/config/arm_controllers.yaml" command="load" /> -->
-    <rosparam file="$(find test_planning)/config/arm_controllers.yaml" command="load" />
+    <!-- <rosparam file="$(find test_planning)/config/arm_controllers.yaml" command="load" /> -->
 
     <!-- 启动控制器管理器 -->
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
           ns="/arm_controllers"
           args="joint_state_controller
-                joint0_effort_controller
-                joint1_effort_controller
-                joint2_effort_controller
-                joint3_effort_controller
-                joint4_effort_controller
-                joint5_effort_controller
-                joint6_effort_controller
-                joint7_effort_controller
-                joint8_effort_controller
-                joint9_effort_controller 
-                joint10_effort_controller
-                joint11_effort_controller
-                joint12_effort_controller
-                joint13_effort_controller
-                joint14_effort_controller"/>
+                jointZ_velocity_controller
+                joint0x_velocity_controller
+                joint0y_velocity_controller
+                joint0z_velocity_controller
+                joint1_velocity_controller
+                joint2_velocity_controller
+                joint3_velocity_controller
+                joint4_velocity_controller
+                joint5_velocity_controller
+                joint6_velocity_controller
+                joint7_velocity_controller
+                joint8_velocity_controller
+                joint9_velocity_controller 
+                joint10_velocity_controller
+                joint11_velocity_controller
+                joint12_velocity_controller
+                joint13_velocity_controller
+                joint14_velocity_controller"/> -->
 
-    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/> -->
+    <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
           respawn="false" output="screen">
           <remap from="/joint_states" to="/arm_controllers/joint_states" />
-    </node>
-    <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
+    </node> -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find test_planning)/rviz/urdf.rviz" />
 </launch>
