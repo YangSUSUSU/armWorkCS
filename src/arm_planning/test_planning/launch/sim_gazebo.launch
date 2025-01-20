@@ -1,6 +1,10 @@
 <launch>
     <!-- 加载URDF文件 -->
-    <param name="robot_description" command="xacro $(find test_planning)/model/humanoid.urdf" />
+    <!-- <param name="robot_description" command="xacro $(find test_planning)/model/humanoid.urdf" /> -->
+    <!-- <param name="robot_description" command="xacro $(find test_planning)/x_humanoid_ultra_noeyes/urdf/humanoid.urdf" /> -->
+
+    <param name="robot_description" command="xacro $(find test_planning)/model2/urdf/dual_arm_and_hand_description.urdf" />
+
 
     <!-- 启动 Gazebo
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -12,7 +16,7 @@
     </include> -->
     
     <!-- 将模型加载到Gazebo -->
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen" args="-param robot_description -urdf -model humanoid" />
+    <!-- <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen" args="-param robot_description -urdf -model humanoid" /> -->
 
     <!-- 加载控制器参数配置 -->
     <!-- <rosparam file="$(find test_planning)/config/arm_controllers.yaml" command="load" /> -->

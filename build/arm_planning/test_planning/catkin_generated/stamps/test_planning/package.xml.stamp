@@ -12,8 +12,6 @@
   <build_export_depend>roscpp</build_export_depend>
   <exec_depend>roscpp</exec_depend>
 
-  <build_depend>arm_kinematics_solver</build_depend>
-  <build_export_depend>arm_kinematics_solver</build_export_depend>
 
   
 </package>

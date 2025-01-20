@@ -1,8 +1,0 @@
-prefix=/home/nikoo/workWS/armWorkCS/devel
-
-Name: aubo_arm_planning
-Description: Description of aubo_arm_planning
-Version: 0.0.0
-Cflags: -I/home/nikoo/workWS/armWorkCS/src/arm_planning/aubo_arm_planning/include
-Libs: -L${prefix}/lib -laubo_arm_planning -lqpOASES -ltoppra -losqp -lOsqpEigen
-Requires: arm_kinematics_solver roscpp std_msgs

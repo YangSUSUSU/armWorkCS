@@ -1,0 +1,1028 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="dual_arm_description">
+  <link name="base_footprint" />
+  <link name="base_link" />
+  <joint
+    name="base_link_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.5"
+      rpy="0 0 0" />
+    <parent
+      link="base_footprint" />
+    <child
+      link="base_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+
+  <link
+    name="waist_link">
+    <inertial>
+      <origin
+        xyz="-0.015645 0.000148 0.262500"
+        rpy="0 0 0" />
+      <mass
+        value="15.674354" />
+      <inertia
+        ixx="0.365707"
+        ixy="-0.000525"
+        ixz="0.002362"
+        iyy="0.354332"
+        iyz="-0.000277"
+        izz="0.089586" />
+    </inertial>
+    <visual>
+      <!-- <origin rpy="0 0 0" xyz="0.0 0.0 0.18"/>
+      <geometry>
+        <box size="0.2 0.25 0.36"/>
+      </geometry> -->
+
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/waist_link.STL" />
+      </geometry>
+
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.18"/>
+      <geometry>
+        <box size="0.2 0.25 0.36"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint"
+    type="fixed">
+    <origin
+      xyz="0.0 0 0.0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="waist_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit effort="1000" lower="-3.14" upper="3.14" velocity="100"/>
+  </joint>
+
+  <link
+    name="pelvis_link">
+    <inertial>
+      <origin
+        xyz=" -0.047395 -0.000028 -0.046657"
+        rpy="0 0 0" />
+      <mass
+        value="5.587228" />
+      <inertia
+        ixx="0.080339"
+        ixy="-0.000008"
+        ixz="0.006666"
+        iyy="0.029082"
+        iyz=" -0.000004"
+        izz="0.091570" />
+    </inertial>
+    <visual>
+      <!-- <origin
+        xyz="0.0 0.0 -0.05"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.20 0.40 0.08"/>
+      </geometry> -->
+      
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/pelvis.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0.0 0.0 -0.15"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.20 0.50 0.3"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="pelvis_joint"
+    type="fixed">
+    <origin
+      xyz="0.0 0 -0.00599999999999996"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="pelvis_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit effort="1000" lower="-3.14" upper="3.14" velocity="100"/>
+  </joint>
+
+  <joint name="left_fixed_joint" type="fixed">
+    <parent link= "base_link" />
+    <child link = "left_link0" />
+    <origin xyz="0 0.15911 0.42582" rpy="0 1.3083 1.5707963" />
+  </joint>
+  <link
+    name="left_link0">
+    <inertial>
+      <origin
+        xyz="0.000007 -0.000002 -0.015501"
+        rpy="0 0 0" />
+      <mass
+        value="1.036000" />
+      <inertia
+        ixx="0.000836" ixy="-0.000000" ixz="-0.000000" iyy="0.000835" iyz="-0.000000" izz="0.000658" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <!-- <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/collision/link0.STL" />
+      </geometry> -->
+      <origin xyz="0 0 -0.02" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.08"/>
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="left_link1">
+    <inertial>
+      <origin
+        xyz="0.000000 0.000725 -0.029524"
+        rpy="0 0 0" />
+      <mass
+        value="0.222000" />
+      <inertia
+        ixx="0.000545" ixy="-0.000000" ixz="-0.000000" iyy="0.000279" iyz="-0.000045" izz="0.000505" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <!-- <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/collision/link1.STL" />
+      </geometry> -->
+      <origin xyz="0 0 -0.05" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.08 0.11 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0767"
+      rpy="0 0 0" />
+    <parent
+      link="left_link0" />
+    <child
+      link="left_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-3.14159265358979" upper="0.785398163397448" effort="40" start_stop="82" velocity="3.14159265358979" />
+    <!-- <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="left_link2">
+    <inertial>
+      <origin
+        xyz="0.000000 -0.000473 0.006864"
+        rpy="0 0 0" />
+      <mass
+        value="1.226000" />
+      <inertia
+        ixx="0.001198" ixy="-0.000000" ixz="-0.000000" iyy="0.001180" iyz="-0.000003" izz="0.000952" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.04" length="0.11"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0"
+      rpy="1.5707963267948966192313216916398 -1.5707963267948966192313216916398 0" />
+    <parent
+      link="left_link1" />
+    <child
+      link="left_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-0.174" upper="1.74532925199433" effort="40" start_stop="82" velocity="3.14159265358979" />
+    <!-- <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="left_link3">
+    <inertial>
+      <origin
+        xyz="0.000247 0.003673 -0.081504"
+        rpy="0 0 0" />
+      <mass
+        value="1.824000" />
+      <inertia
+        ixx="0.014207" ixy="0.000002" ixz="-0.000016" iyy="0.013974" iyz="-0.000547" izz="0.001323" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 -0.11"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.22"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint3"
+    type="revolute">
+    <origin
+      xyz="0 -0.253 0"
+      rpy="1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="left_link2" />
+    <child
+      link="left_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-2.26892802759263" upper="2.26892802759263" effort="22" start_stop="42" velocity="4.18879020478639" />
+    <!-- <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="left_link4">
+    <inertial>
+      <origin
+        xyz="0.002765 -0.020714 0.006089"
+        rpy="0 0 0" />
+      <mass
+        value="0.123000" />
+      <inertia
+        ixx="0.000241" ixy="0.000004" ixz="0.000002" iyy="0.000211" iyz="-0.000006" izz="0.000125" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.04" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint4"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="left_link3" />
+    <child
+      link="left_link4" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-2.26892802759263" upper="0" effort="22" start_stop="42" velocity="4.18879020478639" />
+    <!-- <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="left_link5">
+    <inertial>
+      <origin
+        xyz="0.000563 0.005092 -0.108798"
+        rpy="0 0 0" />
+      <mass
+        value="1.010000" />
+      <inertia
+        ixx="0.002286" ixy="0.000027" ixz="-0.000035" iyy="0.002080" iyz="-0.000228" izz="0.000629" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/collision/link5.STL" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 0 -0.15 "
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.08"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 0 -0.08 "
+        rpy="1.5707963267 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.1"/>
+      </geometry>
+    </collision>
+    <!-- <collision>
+      <origin
+        xyz="0 0.05 -0.05 "
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.01 0.12"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 -0.05 -0.05 "
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.01 0.12"/>
+      </geometry>
+    </collision> -->
+  </link>
+  <joint
+    name="left_joint5"
+    type="revolute">
+    <origin
+      xyz="0 -0.2355 0"
+      rpy="1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="left_link4" />
+    <child
+      link="left_link5" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-2.26892802759263" upper="2.26892802759263" effort="8" start_stop="15" velocity="3.14159265358979" />
+    <!-- <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="left_link6">
+    <inertial>
+      <origin
+        xyz="0.000000 -0.005048 0.000947"
+        rpy="0 0 0" />
+      <mass
+        value="0.487000" />
+      <inertia
+        ixx="0.000270" ixy="-0.000000" ixz="-0.000000" iyy="0.000208" iyz="-0.000012" izz="0.000250" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267 0 0" />
+      <geometry>
+        <cylinder radius="0.032" length="0.09"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint6"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5707963267948966192313216916398 -1.5707963267948966192313216916398 0" />
+    <parent
+      link="left_link5" />
+    <child
+      link="left_link6" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-0.645771812" upper="0.645771812" effort="8" start_stop="15" velocity="3.14159265358979" />
+    <!-- <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="left_link7">
+    <inertial>
+      <origin
+        xyz="-0.000016 -0.066640 -0.015498"
+        rpy="0 0 0" />
+      <mass
+        value="0.228000" />
+      <inertia
+        ixx="0.000303" ixy="-0.000000" ixz="-0.000000" iyy="0.000168" iyz="0.000088" izz="0.000265" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/left_arm/visual/link7.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.05 0.04"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.06 0.05 0.01" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 -0.08 0.0"
+        rpy="1.5707963267 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.055" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint7"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5707963267948966192313216916398 1.5707963267948966192313216916398 0" />
+    <parent
+      link="left_link6" />
+    <child
+      link="left_link7" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-0.645771812" upper="0.645771812" effort="8" start_stop="15" velocity="3.14159265358979" />
+    <!-- <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link name="left_flange"/>
+  <joint name="left_flange_joint" type="fixed">
+    <origin rpy="1.5707963267948966192313216916398 0 0" xyz="0 -0.084 0"/>
+    <parent link="left_link7"/>
+    <child link="left_flange"/>
+  </joint>
+  <link name="left_tcp_link"/>
+  <joint
+    name="left_tcp"
+    type="fixed">
+    <!-- <origin xyz="0 -0.2315 0" rpy="1.5707963267948966192313216916398 0 0" /> -->
+    <origin xyz="0 -0.084 0" rpy="1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="left_link7" />
+    <child
+      link="left_tcp_link" />
+  </joint>
+  <!-- <joint
+    name="left_tcp"
+    type="fixed">
+    <origin
+      xyz="0 0 0.12"
+      rpy="0 0 0" />
+    <parent
+      link="left_flange" />
+    <child
+      link="left_tcp_link" />
+  </joint> -->
+
+  <joint name="right_fixed_joint" type="fixed">
+    <parent link= "base_link" />
+    <child link = "right_link0" />
+    <origin xyz="0 -0.15911 0.42582" rpy="0 1.3083 -1.5707963" />
+  </joint>
+
+  <link
+    name="right_link0">
+    <inertial>
+      <origin
+        xyz="0.000007 0.000002 0.015501"
+        rpy="0 0 0" />
+      <mass
+        value="1.036000" />
+      <inertia
+        ixx="0.000836" ixy="-0.000000" ixz="-0.000000" iyy="0.000835" iyz="-0.000000" izz="0.000658" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <!-- <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/collision/link0.STL" />
+      </geometry> -->
+      <origin xyz="0 0 -0.02" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.08"/>
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="right_link1">
+    <inertial>
+      <origin
+        xyz="0.000000 -0.000725 -0.029524"
+        rpy="0 0 0" />
+      <mass
+        value="0.222000" />
+      <inertia
+        ixx="0.000545" ixy="-0.000000" ixz="-0.000000" iyy="0.000279" iyz="0.000045" izz="0.000505" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <!-- <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/collision/link1.STL" />
+      </geometry> -->
+      <origin xyz="0 0 -0.05" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.08 0.11 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0767"
+      rpy="0 0 0" />
+    <parent
+      link="right_link0" />
+    <child
+      link="right_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-0.785398163397448" upper="3.14159265358979" effort="40" start_stop="82" velocity="3.14159265358979" />
+    <!-- <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="right_link2">
+    <inertial>
+      <origin
+        xyz="0.000000 0.000473 0.006864"
+        rpy="0 0 0" />
+      <mass
+        value="1.226000" />
+      <inertia
+        ixx="0.001198" ixy="-0.000000" ixz="-0.000000" iyy="0.001180" iyz="0.000003" izz="0.000952" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.04" length="0.11"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0"
+      rpy="-1.5707963267948966192313216916398 -1.5707963267948966192313216916398 0" />
+    <parent
+      link="right_link1" />
+    <child
+      link="right_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-1.74532925199433" upper="0.174" effort="40" start_stop="82" velocity="3.14159265358979" />
+    <!-- <property inertia="1.24" damping="0" stiffness="0" offset="0" motor_constant="5.31" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="right_link3">
+    <inertial>
+      <origin
+        xyz="0.000247 -0.003673 -0.081504"
+        rpy="0 0 0" />
+      <mass
+        value="1.824000" />
+      <inertia
+        ixx="0.014207" ixy="-0.000002" ixz="-0.000016" iyy="0.013974" iyz="0.000547" izz="0.001323" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 -0.11"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.22"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint3"
+    type="revolute">
+    <origin
+      xyz="0 0.253 0"
+      rpy="-1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="right_link2" />
+    <child
+      link="right_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-2.26892802759263" upper="2.26892802759263" effort="22" start_stop="42" velocity="4.18879020478639" />
+    <!-- <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="right_link4">
+    <inertial>
+      <origin
+        xyz="0.002765 0.020714 0.006089"
+        rpy="0 0 0" />
+      <mass
+        value="0.123000" />
+      <inertia
+        ixx="0.000241" ixy="-0.000004" ixz="0.000002" iyy="0.000211" iyz="0.000006" izz="0.000125" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.04" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint4"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="right_link3" />
+    <child
+      link="right_link4" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="0" upper="2.26892802759263" effort="22" start_stop="42" velocity="4.18879020478639" />
+    <!-- <property inertia="0.2" damping="0" stiffness="0" offset="0" motor_constant="4.5" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="right_link5">
+    <inertial>
+      <origin
+        xyz="0.000563 -0.005092 -0.108798"
+        rpy="0 0 0" />
+      <mass
+        value="1.010000" />
+      <inertia
+        ixx="0.002286" ixy="0.000027" ixz="-0.000035" iyy="0.002080" iyz="0.000228" izz="0.000629" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/collision/link5.STL" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 0 -0.15 "
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.08"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 0 -0.08 "
+        rpy="1.5707963267 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.1"/>
+      </geometry>
+    </collision>
+    <!-- <collision>
+      <origin
+        xyz="0 0.05 -0.05 "
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.01 0.12"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 -0.05 -0.05 "
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.01 0.12"/>
+      </geometry>
+    </collision> -->
+  </link>
+  <joint
+    name="right_joint5"
+    type="revolute">
+    <origin
+      xyz="0 0.2355 0"
+      rpy="-1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="right_link4" />
+    <child
+      link="right_link5" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-2.26892802759263" upper="2.26892802759263" effort="8" start_stop="15" velocity="3.14159265358979" />
+    <!-- <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="right_link6">
+    <inertial>
+      <origin
+        xyz="0.000000 0.005048 0.000947"
+        rpy="0 0 0" />
+      <mass
+        value="0.487000" />
+      <inertia
+        ixx="0.000270" ixy="-0.000000" ixz="-0.000000" iyy="0.000208" iyz="0.000012" izz="0.000250" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267 0 0" />
+      <geometry>
+        <cylinder radius="0.032" length="0.09"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint6"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="1.5707963267948966192313216916398 -1.5707963267948966192313216916398 0" />
+    <parent
+      link="right_link5" />
+    <child
+      link="right_link6" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-0.645771812" upper="0.645771812" effort="8" start_stop="15" velocity="3.14159265358979" />
+    <!-- <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link
+    name="right_link7">
+    <inertial>
+      <origin
+        xyz="-0.000016 -0.066640 -0.015498"
+        rpy="0 0 0" />
+      <mass
+        value="0.228000" />
+      <inertia
+        ixx="0.000303" ixy="-0.000000" ixz="-0.000000" iyy="0.000168" iyz="0.000088" izz="0.000265" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://dual_arm_description/meshes/right_arm/visual/link7.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.05 0.04"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.06 0.05 0.01" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 -0.08 0.0"
+        rpy="1.5707963267 0 0" />
+      <geometry>
+        <cylinder radius="0.03" length="0.055" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint7"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="1.5707963267948966192313216916398 -1.5707963267948966192313216916398 0" />
+    <parent
+      link="right_link6" />
+    <child
+      link="right_link7" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-0.645771812" upper="0.645771812" effort="8" start_stop="15" velocity="3.14159265358979" />
+    <!-- <property inertia="0.085" damping="0" stiffness="0" offset="0" motor_constant="4.63" ratio="100" protect_max_torque="0" equa_inertia="0" /> -->
+  </joint>
+  <link name="right_flange"/>
+  <joint name="right_flange_joint" type="fixed">
+    <origin rpy="1.5707963267948966192313216916398 0 0" xyz="0 -0.084 0"/>
+    <parent link="right_link7"/>
+    <child link="right_flange"/>
+  </joint>
+  <link name="right_tcp_link"/>
+  <joint
+    name="right_tcp"
+    type="fixed">
+    <!-- <origin xyz="0 -0.2315 0" rpy="1.5707963267948966192313216916398 0 0" /> -->
+    <origin xyz="0 -0.084 0" rpy="1.5707963267948966192313216916398 0 0" />
+    <parent
+      link="right_link7" />
+    <child
+      link="right_tcp_link" />
+  </joint>
+</robot>

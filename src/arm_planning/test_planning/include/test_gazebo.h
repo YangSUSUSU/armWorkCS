@@ -10,7 +10,11 @@
 #include <string>
 #include <iostream>
 #include <sensor_msgs/JointState.h>  
-
+#include <std_msgs/String.h>
+#include <nlohmann/json.hpp>
+// #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <chrono>  // 用于时间记录
 // Pinocchio
 #include <pinocchio/algorithm/crba.hpp>
 #include <pinocchio/parsers/urdf.hpp>
@@ -21,6 +25,7 @@
 #include <array>
 #include <vector>
 #include <OsqpEigen/OsqpEigen.h>
+using json = nlohmann::json;
 
 struct JointTrajectoryData 
 {
@@ -103,6 +108,7 @@ public:
 
      ControlSystem(const std::string& urdf_filename);
     ~ControlSystem();
+    void messageCallback(const std_msgs::String::ConstPtr& msg);
     void jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg);
     void setJointTorque(const std::string& joint_name, double effort);
     Eigen::VectorXd computeTorqueWithSlidingMode(const Eigen::VectorXd& q, const Eigen::VectorXd& v,
@@ -114,16 +120,48 @@ public:
                                             const Eigen::VectorXd& q_main,              // 主任务关节角速度增量
                                             double alpha,                              // 雅可比条件数最小化的权重
                                             double beta);   
+    //4
     Eigen::VectorXd WQP(const Eigen::MatrixXd& Jl,
                                 const Eigen::MatrixXd& Jr,
                                 const Eigen::VectorXd& car_err,
                                 const Eigen::VectorXd& nowQ,
                                 const Eigen::VectorXd& Qr);
+    void upDataCollision(Eigen::VectorXd& nowq);
+    Eigen::VectorXd upDataBoundGradient(const Eigen::VectorXd& nowq);
+    Eigen::MatrixXd upDataBoundH(const Eigen::VectorXd& nowq);
+    //3                           
+    Eigen::VectorXd interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv,Eigen::VectorXd& Rcar);
+    //2
+    Eigen::VectorXd tra(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv);
+    //1
+    Eigen::VectorXd dualArmSys(Eigen::VectorXd& nowX,
+                               std::vector<Eigen::VectorXd>& l_waypoints,
+                               std::vector<Eigen::VectorXd>& r_waypoints);
+    Eigen::VectorXd lr_Xr;
+    Eigen::VectorXd nowX;
+    bool left_done = false;
+    bool right_done = false;
+    bool allarm_done = true;
+    Eigen::VectorXd carE; 
+    double tolerance_last =  0.01;
+    double tolerance_first = 0.02;
+    // 存储左右臂的轨迹点
+    std::vector<Eigen::VectorXd> l_waypoints;  // 左臂轨迹
+    std::vector<Eigen::VectorXd> r_waypoints;  // 右臂轨迹
+    ros::Publisher lnowX_pub;  // 发布器
+    ros::Publisher rnowX_pub;  // 发布器
 
 
-    Eigen::VectorXd testWqp(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv);
+    std::unordered_map<int, std::chrono::steady_clock::time_point> waypoint_times_l;
+    std::unordered_map<int, std::chrono::steady_clock::time_point> waypoint_times_r;
+    int current_waypoint_index_l = 0;
+    int current_waypoint_index_r = 0;
+
+
     ros::NodeHandle nh_;
     ros::Subscriber joint_state_sub_;
+    ros::Subscriber car_json_sub;
+
     std::map<std::string, ros::Publisher> torque_publishers_;
     ros::Publisher jointErrorPub;
     ros::Publisher joint_pub;
@@ -148,6 +186,14 @@ public:
     Eigen::MatrixXd impedance_Cartesian_B;
     Eigen::MatrixXd impedance_Cartesian_K;
     Eigen::VectorXd last_tau;
+    Eigen::VectorXd collision_r;
+    double safe_d = 0.08;
+    Eigen::VectorXd m_testlp;
+    Eigen::MatrixXd m_test_conA;
+    Eigen::VectorXd joint_max;
+    Eigen::VectorXd joint_min;
+    double joint_bound_eta = 0.005;
+    Eigen::VectorXd granCollision;
 
 private:
 

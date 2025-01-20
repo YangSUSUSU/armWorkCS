@@ -6,9 +6,17 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+
+
+
 <robot name="humanoid">
   <!-- <link name="world"/> -->
-
+  <mujoco>
+        <compiler 
+        meshdir="meshes/" 
+        balanceinertia="true" 
+        discardvisual="false" />
+  </mujoco>
     <material name="Blue">
    <color rgba="0.678 0.847 0.802 1.0"/>
   </material>
@@ -81,7 +89,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/pelvis.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/pelvis.STL"/>
       </geometry>
     </visual>
     <!-- <collision>
@@ -90,7 +98,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/pelvis.STL" />
+          filename="pelvis.STL" />
       </geometry>
     </collision> -->
     <!-- <collision>
@@ -109,7 +117,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/waist_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/waist_link1.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -128,7 +136,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/waist_link.STL" />
+          filename="waist_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -191,7 +199,7 @@
 </link>
 
 <!-- 腰部绕 Y 轴旋转关节（Pitch） -->
-<joint name="waist_pitch_joint" type="revolute">
+<joint name="waist_pitch_joint" type="fixed">
 
   <origin rpy="0 0 0" xyz="0 0 0"/>
   <parent link="waist_roll_link"/>
@@ -235,7 +243,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/head_base_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/head_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -247,7 +255,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/head_base.STL" />
+          filename="head_base.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -267,7 +275,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/head_yaw_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/head_yaw_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -279,7 +287,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/head_yaw.STL" />
+          filename="head_yaw.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -299,7 +307,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/arm_base_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/arm_base_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -311,7 +319,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/arm_base_l_link.STL" />
+          filename="arm_base_l_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -331,7 +339,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/shoulder_pitch_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/shoulder_pitch_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -343,7 +351,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/shoulder_pitch_l_link.STL" />
+          filename="shoulder_pitch_l_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -364,7 +372,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/shoulder_roll_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/shoulder_roll_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -377,7 +385,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/shoulder_roll_l_link.STL" />
+          filename="shoulder_roll_l_link.STL" />
       </geometry>
     </collision> -->
     <collision>
@@ -404,7 +412,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/arm_yaw_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/arm_yaw_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -416,7 +424,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/arm_yaw_l_link.STL" />
+          filename="arm_yaw_l_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -439,7 +447,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/elbow_pitch_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/elbow_pitch_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -457,7 +465,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/elbow_pitch_l_link.STL" />
+          filename="elbow_pitch_l_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -480,7 +488,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/elbow_yaw_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/elbow_yaw_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -489,7 +497,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/elbow_yaw_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/elbow_yaw_l_link.STL"/>
       </geometry>
     </collision>
   </link>
@@ -512,7 +520,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/wrist_pitch_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/wrist_pitch_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -524,7 +532,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/wrist_pitch_l_link.STL" />
+          filename="wrist_pitch_l_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -547,7 +555,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/wrist_roll_l_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/wrist_roll_l_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -559,7 +567,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/wrist_roll_l_link.STL" />
+          filename="wrist_roll_l_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -588,7 +596,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/L_hand_base_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/L_hand_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -599,7 +607,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/L_hand_base_link.STL" />
+          <mesh filename="package://test_planning/model2/meshes/L_hand_base_link.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -612,7 +620,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link11_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link11_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -623,7 +631,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link11_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link11_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -644,7 +652,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link12_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link12_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -655,7 +663,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link12_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link12_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -676,7 +684,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link13_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link13_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -687,7 +695,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link13_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link13_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -709,7 +717,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link14_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link14_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -720,7 +728,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link14_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link14_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -742,7 +750,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link15_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link15_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -753,7 +761,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link15_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link15_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -791,7 +799,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link16_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link16_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -802,7 +810,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link16_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link16_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -841,7 +849,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link17_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link17_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -852,7 +860,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link17_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link17_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -873,7 +881,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link18_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link18_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -884,7 +892,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link18_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link18_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -923,7 +931,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link19_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link19_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -934,7 +942,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link19_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link19_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -955,7 +963,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link20_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link20_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -966,7 +974,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link20_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link20_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -1005,7 +1013,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link21_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link21_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1016,7 +1024,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link21_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link21_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -1037,7 +1045,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link22_L.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link22_L.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1048,7 +1056,7 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://test_planning/meshes/Link22_L.STL" />
+          <mesh filename="package://test_planning/model2/meshes/Link22_L.STL" />
         </geometry>
       </collision> -->
   </link>
@@ -1087,7 +1095,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/arm_base_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/arm_base_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1099,7 +1107,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/arm_base_r_link.STL" />
+          filename="arm_base_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1119,7 +1127,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/shoulder_pitch_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/shoulder_pitch_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1131,7 +1139,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/shoulder_pitch_r_link.STL" />
+          filename="shoulder_pitch_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1152,7 +1160,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/shoulder_roll_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/shoulder_roll_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1170,7 +1178,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/shoulder_roll_r_link.STL" />
+          filename="shoulder_roll_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1191,7 +1199,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/arm_yaw_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/arm_yaw_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1203,7 +1211,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/arm_yaw_r_link.STL" />
+          filename="arm_yaw_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1224,7 +1232,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/elbow_pitch_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/elbow_pitch_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1242,7 +1250,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/elbow_pitch_r_link.STL" />
+          filename="elbow_pitch_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1263,7 +1271,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/elbow_yaw_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/elbow_yaw_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1275,7 +1283,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/elbow_yaw_r_link.STL" />
+          filename="elbow_yaw_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1296,7 +1304,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/wrist_pitch_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/wrist_pitch_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1308,7 +1316,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/wrist_pitch_r_link.STL" />
+          filename="wrist_pitch_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1329,7 +1337,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/wrist_roll_r_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/wrist_roll_r_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
@@ -1341,7 +1349,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://test_planning/meshes/wrist_roll_r_link.STL" />
+          filename="wrist_roll_r_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1368,7 +1376,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/R_hand_base_link.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/R_hand_base_link.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1379,7 +1387,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/R_hand_base_link.STL" />
+        <mesh filename="package://test_planning/model2/meshes/R_hand_base_link.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1392,7 +1400,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link11_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link11_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1403,7 +1411,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link11_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link11_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1424,7 +1432,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link12_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link12_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1435,7 +1443,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link12_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link12_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1456,7 +1464,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link13_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link13_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1467,7 +1475,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link13_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link13_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1489,7 +1497,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link14_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link14_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1500,7 +1508,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link14_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link14_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1539,7 +1547,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link15_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link15_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1550,7 +1558,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link15_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link15_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1571,7 +1579,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link16_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link16_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1582,7 +1590,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link16_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link16_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1621,7 +1629,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link17_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link17_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1632,7 +1640,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link17_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link17_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1653,7 +1661,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link18_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link18_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1664,7 +1672,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link18_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link18_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1703,7 +1711,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link19_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link19_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1714,7 +1722,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link19_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link19_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1735,7 +1743,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link20_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link20_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1746,7 +1754,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link20_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link20_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1785,7 +1793,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link21_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link21_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1796,7 +1804,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link21_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link21_R.STL" />
       </geometry>
     </collision> -->
   </link>
@@ -1817,7 +1825,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link22_R.STL"/>
+        <mesh filename="package://test_planning/model2/meshes/Link22_R.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.1 0.1 0.1 1"/>
@@ -1828,7 +1836,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://test_planning/meshes/Link22_R.STL" />
+        <mesh filename="package://test_planning/model2/meshes/Link22_R.STL" />
       </geometry>
     </collision> -->
   </link>

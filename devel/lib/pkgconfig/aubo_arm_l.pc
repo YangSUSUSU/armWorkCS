@@ -1,8 +1,0 @@
-prefix=/home/nikoo/workWS/armWorkCS/devel
-
-Name: aubo_arm_l
-Description: Description of aubo_arm_l
-Version: 1.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

@@ -8,3 +8,4 @@
 
 # modified environment variables
 export PWD='/home/nikoo/workWS/armWorkCS/build'
+export PYTHONPATH='/opt/ros/noetic/lib/python3/dist-packages:/usr/local/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages'

@@ -6,18 +6,36 @@
 #include <pinocchio/algorithm/frames.hpp>
 #include <pinocchio/spatial/se3.hpp>
 #include "pinocchio/algorithm/joint-configuration.hpp"
+#include <pinocchio/algorithm/centroidal.hpp>
 #include <iostream>
 #include <pinocchio/algorithm/kinematics.hpp>
 #include <pinocchio/algorithm/frames.hpp>
 #include <cmath>
 #include "ini.h"  // 需要安装 inih 库
 #include <yaml-cpp/yaml.h>
-
-
+#include <random>
 
 ControlSystem::ControlSystem(const std::string& urdf_filename) 
 {
+    pinocchio::urdf::buildModel(urdf_filename, model_);
+    int njoints = model_.njoints;
+    std::vector<std::string> joint_names(njoints);
+    std::vector<int> joint_ids(njoints);
+
+    for (int i = 0; i < njoints; ++i) 
+    {
+        pinocchio::JointIndex joint_idx = i + 1;
+        joint_names[i] = model_.names[joint_idx];
+        joint_ids[i] = joint_idx;
+        std::cout << "Joint " << joint_idx << ": " << joint_names[i] << std::endl;
+    }
+    data_ = pinocchio::Data(model_);
+    lnowX_pub = nh_.advertise<geometry_msgs::PoseStamped>("/wbc_current_pose_l", 10);
+    rnowX_pub = nh_.advertise<geometry_msgs::PoseStamped>("/wbc_current_pose_r", 10);
+    car_json_sub = nh_.subscribe("/wbc_absolute_motion", 10, &ControlSystem::messageCallback, this);
+
     joint_state_sub_ = nh_.subscribe("/joint_states", 10, &ControlSystem::jointStateCallback, this);
+
     jointErrorPub= nh_.advertise<sensor_msgs::JointState>("/joint_error", 10);
     torque_publishers_["waist_yaw_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint0_effort_controller/command", 10);
     torque_publishers_["shoulder_pitch_l_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint1_effort_controller/command", 10);
@@ -34,9 +52,49 @@ ControlSystem::ControlSystem(const std::string& urdf_filename)
     torque_publishers_["elbow_yaw_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint12_effort_controller/command", 10);
     torque_publishers_["wrist_pitch_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint13_effort_controller/command", 10);
     torque_publishers_["wrist_roll_r_joint"] = nh_.advertise<std_msgs::Float64>("/arm_controllers/joint14_effort_controller/command", 10);
+
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+
     joint_pub = nh_.advertise<sensor_msgs::JointState>("/joint_states", 10);
+
+    //避障相关
+    collision_r = Eigen::VectorXd::Zero(16);
+    collision_r<< 0.15,0.15,0.15,0.15,
+                0.045,0.045,0.045,0.045,0.045,0.1,
+                0.045,0.045,0.045,0.045,0.045,0.1;
+    m_testlp = Eigen::VectorXd::Zero(9);
+    m_test_conA = Eigen::MatrixXd::Zero(9, 17);
+
     desired_histories.resize(18);
-    joint_state.resize(18);
+    joint_state.resize(17);
+    lr_Xr = Eigen::VectorXd::Zero(14);
+    nowX = Eigen::VectorXd::Zero(14);
+    carE = Eigen::VectorXd::Zero(12);
+    joint_max= Eigen::VectorXd::Zero(17);
+    joint_min= Eigen::VectorXd::Zero(17);
+    granCollision =Eigen::VectorXd::Zero(17);
+
+
+    joint_max<< 0,0.15,0.25,
+                0.79,2.87,2.27,0,2.27,0.8,0.8,
+                3.14,0.17,2.27,2.27,2.27,0.8,0.8;
+    joint_min<<-0.1,-0.15,-0.25,
+                -3.14,-0.17,-2.27,-2.27,-2.27,-0.8,-0.8,
+                -0.79,-2.87,-2.27,0,-2.27,-0.8,-0.8;
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
+    //===================================================================================================================================
     impedance_joint_M = Eigen::VectorXd::Zero(8);
     impedance_joint_B = Eigen::VectorXd::Zero(8);
     impedance_joint_K = Eigen::VectorXd::Zero(8);
@@ -44,19 +102,7 @@ ControlSystem::ControlSystem(const std::string& urdf_filename)
     impedance_Cartesian_B =  Eigen::MatrixXd::Identity(6, 6);
     impedance_Cartesian_K =  Eigen::MatrixXd::Identity(6, 6);
     last_tau = Eigen::VectorXd::Zero(15);
-    pinocchio::urdf::buildModel(urdf_filename, model_);
-    int njoints = model_.njoints;
-    std::vector<std::string> joint_names(njoints);
-    std::vector<int> joint_ids(njoints);
 
-    for (int i = 0; i < njoints; ++i) 
-    {
-        pinocchio::JointIndex joint_idx = i + 1;
-        joint_names[i] = model_.names[joint_idx];
-        joint_ids[i] = joint_idx;
-        std::cout << "Joint " << joint_idx << ": " << joint_names[i] << std::endl;
-    }
-    data_ = pinocchio::Data(model_);
 
     YAML::Node config = YAML::LoadFile("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/config/controller.yaml");
 
@@ -122,11 +168,6 @@ ControlSystem::ControlSystem(const std::string& urdf_filename)
         std::cerr << "impedance_controller section not found!" << std::endl;
     }
 
-
-
-
-
-
     if (config["impedance_Cartesian_M"]) 
     {
         // 获取 lambda_gain 和 eta_gain
@@ -175,18 +216,111 @@ ControlSystem::ControlSystem(const std::string& urdf_filename)
 
 ControlSystem::~ControlSystem() {}
 
+void ControlSystem::messageCallback(const std_msgs::String::ConstPtr& msg)
+{
+    // if (!allarm_done)
+    // {
+    //    return;
+    // }
+    
+    allarm_done = false;
+    left_done = false;
+    right_done = false;
+    carE.setConstant(100);
+    try {
+            // 获取消息中的字符串
+            std::string json_string = msg->data;
+
+            // 解析 JSON 字符串
+            json j = json::parse(json_string);
+
+            // 清空之前的轨迹点数据
+            l_waypoints.clear();
+            r_waypoints.clear();
+
+            // 解析 left_waypoints 和 right_waypoints
+            if (j.contains("left_waypoints")) {
+                std::vector<std::vector<double>> left_waypoints_data = j["left_waypoints"];
+                std::cout << "Left Waypoints:" << std::endl;
+                for (const auto& point : left_waypoints_data) {
+                    Eigen::VectorXd point_vec(point.size());
+                    for (size_t i = 0; i < point.size(); ++i) {
+                        point_vec(i) = point[i];
+                    }
+                    l_waypoints.push_back(point_vec);  // 存储左臂轨迹点
+                    // 输出调试信息
+                    for (const auto& value : point) {
+                        std::cout << value << " ";
+                    }
+                    std::cout << std::endl;
+                }
+            }
+
+            if (j.contains("right_waypoints")) {
+                std::vector<std::vector<double>> right_waypoints_data = j["right_waypoints"];
+                std::cout << "Right Waypoints:" << std::endl;
+                if (right_waypoints_data.empty()) {
+                    std::cout << "No waypoints available." << std::endl;
+                    right_done =true;
+                } else {
+                    for (const auto& point : right_waypoints_data) {
+                        Eigen::VectorXd point_vec(point.size());
+                        for (size_t i = 0; i < point.size(); ++i) {
+                        point_vec(i) = point[i];
+                    }
+                    r_waypoints.push_back(point_vec);  // 存储右臂轨迹点
+                    // 输出调试信息
+                    for (const auto& value : point) {
+                        std::cout << value << " ";
+                    }
+                    std::cout << std::endl;
+                }
+            }
+        }
+
+    } catch (const std::exception& e) {
+        ROS_ERROR("Failed to parse JSON: %s", e.what());
+    }
+
+}
 void ControlSystem::jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg) 
 {
    
     // 更新关节历史状态
     std::vector<std::string> joint_names = {
-        "waist_Z_joint",
-        "waist_roll_joint",
-        "waist_pitch_joint",
-        "waist_yaw_joint","shoulder_pitch_l_joint", "shoulder_roll_l_joint", "shoulder_yaw_l_joint",
-        "elbow_pitch_l_joint", "elbow_yaw_l_joint", "wrist_pitch_l_joint", "wrist_roll_l_joint",
-        "shoulder_pitch_r_joint", "shoulder_roll_r_joint", "shoulder_yaw_r_joint",
-        "elbow_pitch_r_joint", "elbow_yaw_r_joint", "wrist_pitch_r_joint", "wrist_roll_r_joint"};
+                   "waist_Z_joint",
+            "waist_roll_joint",
+            // "waist_pitch_joint",
+            "waist_yaw_joint",
+            "left_joint1",
+            "left_joint2",
+            "left_joint3",
+            "left_joint4",
+            "left_joint5",
+            "left_joint6",
+            "left_joint7",
+            "right_joint1",
+            "right_joint2",
+            "right_joint3",
+            "right_joint4",
+            "right_joint5",
+            "right_joint6",
+            "right_joint7"
+            // "shoulder_pitch_l_joint",
+            // "shoulder_roll_l_joint",
+            // "shoulder_yaw_l_joint",
+            // "elbow_pitch_l_joint",
+            // "elbow_yaw_l_joint",
+            // "wrist_pitch_l_joint",
+            // "wrist_roll_l_joint",
+            // "shoulder_pitch_r_joint",
+            // "shoulder_roll_r_joint",
+            // "shoulder_yaw_r_joint",
+            // "elbow_pitch_r_joint",
+            // "elbow_yaw_r_joint",
+            // "wrist_pitch_r_joint",
+            // "wrist_roll_r_joint"};
+            };
 
     for (size_t i = 0; i < joint_names.size(); ++i) {
         auto pos_it = std::find(msg->name.begin(), msg->name.end(), joint_names[i]);
@@ -196,8 +330,274 @@ void ControlSystem::jointStateCallback(const sensor_msgs::JointState::ConstPtr& 
             joint_state[i].update(msg->position[index], msg->velocity[index]);
         }
     }
+
+    Eigen::VectorXd nowq = Eigen::VectorXd::Zero(17);
+    for (int i = 0; i < 17; i++)
+    {
+        nowq(i) =   joint_state[i].position;
+    }
+
+    pinocchio::forwardKinematics(model_, data_, nowq);
+    pinocchio::updateFramePlacements(model_, data_);
+    pinocchio::FrameIndex frame_id_left = model_.getFrameId("L_hand_base_link");
+    pinocchio::FrameIndex frame_id_right = model_.getFrameId("R_hand_base_link");
+    Eigen::Vector3d pos_l = data_.oMf[frame_id_left].translation();
+    Eigen::Vector3d pos_r = data_.oMf[frame_id_right].translation();
+    pos_l(2) = pos_l(2) - 0.5;
+    pos_r(2) = pos_r(2) - 0.5;
+
+    Eigen::Quaterniond quat_l(data_.oMf[frame_id_left].rotation());
+    Eigen::Quaterniond quat_r(data_.oMf[frame_id_right].rotation());
+    nowX.head(3) = pos_l;
+    nowX(3+0)=quat_l.x();
+    nowX(3+1)=quat_l.y();
+    nowX(3+2)=quat_l.z();
+    nowX(3+3)=quat_l.w();
+    nowX.segment(7,3) = pos_r;
+    nowX(10+0)=quat_r.x();
+    nowX(10+1)=quat_r.y();
+    nowX(10+2)=quat_r.z();
+    nowX(10+3)=quat_r.w();
+
+
+
+
+    geometry_msgs::PoseStamped pose_msg_l;
+    geometry_msgs::PoseStamped pose_msg_r;
+
+    pose_msg_l.header.stamp = ros::Time::now();
+    pose_msg_l.header.frame_id = "base_link";
+
+    pose_msg_r.header.stamp = ros::Time::now();
+    pose_msg_r.header.frame_id = "base_link";
+
+    pose_msg_l.pose.position.x = nowX(0);
+    pose_msg_l.pose.position.y = nowX(1);
+    pose_msg_l.pose.position.z = nowX(2);
+    pose_msg_l.pose.orientation.x = nowX(3);
+    pose_msg_l.pose.orientation.y = nowX(4);
+    pose_msg_l.pose.orientation.z = nowX(5);
+    pose_msg_l.pose.orientation.w = nowX(6);
+    
+    pose_msg_r.pose.position.x = nowX(0+7);
+    pose_msg_r.pose.position.y = nowX(1+7);
+    pose_msg_r.pose.position.z = nowX(2+7);
+    pose_msg_r.pose.orientation.x = nowX(3+7);
+    pose_msg_r.pose.orientation.y = nowX(4+7);
+    pose_msg_r.pose.orientation.z = nowX(5+7);
+    pose_msg_r.pose.orientation.w = nowX(6+7);
+
+    lnowX_pub.publish(pose_msg_l);
+    rnowX_pub.publish(pose_msg_r);    // return pose_msg;
+    // std::cout<<nowX.transpose()<<std::endl;
+
+}
+Eigen::VectorXd ControlSystem::upDataBoundGradient(const Eigen::VectorXd& nowq)
+{
+    Eigen::VectorXd res_grad = Eigen::VectorXd::Zero(17);
+    for (int i = 0; i < 17; i++)
+    {
+        if(nowq(i)<joint_min(i) + joint_bound_eta)
+        {
+            res_grad(i) =  1000 * joint_bound_eta * ( nowq(i) - joint_min(i) );
+        }
+        else if (nowq(i)>joint_max(i) - joint_bound_eta)
+        {
+            res_grad(i) =  1000 * joint_bound_eta * ( nowq(i) - joint_max(i) );
+        }
+        else
+        {
+            res_grad(i) = 0.0;
+        }
+    }
+    return res_grad;
+}
+Eigen::MatrixXd ControlSystem::upDataBoundH(const Eigen::VectorXd& nowq)
+{
+    Eigen::VectorXd res_grad = Eigen::VectorXd::Zero(17);
+    Eigen::MatrixXd res_m = Eigen::MatrixXd::Identity(17, 17) ; 
+    for (int i = 0; i < 17; i++)
+    {
+        if(nowq(i)<joint_min(i) + joint_bound_eta)
+        {
+            res_m(i,i) =  1000 * joint_bound_eta * abs( nowq(i) - joint_min(i) );
+        }
+        else if (nowq(i)>joint_max(i) - joint_bound_eta)
+        {
+            res_m(i,i) =  1000 * joint_bound_eta * abs( nowq(i) - joint_max(i) );
+        }
+        else
+        {
+            res_m(i,i) = 0.0;
+        }
+    }
+     
+    return res_m;
 }
 
+void ControlSystem::upDataCollision(Eigen::VectorXd& nowq) 
+{
+    pinocchio::forwardKinematics(model_, data_, nowq);
+    pinocchio::updateFramePlacements(model_, data_);
+    pinocchio::FrameIndex b1 = model_.getFrameId("base_collision_1");
+    pinocchio::FrameIndex b2 = model_.getFrameId("base_collision_2");
+    pinocchio::FrameIndex b3 = model_.getFrameId("base_collision_3");
+    pinocchio::FrameIndex b4 = model_.getFrameId("base_collision_4");
+
+    // pinocchio::FrameIndex l1 = model_.getFrameId("left_collision_11");
+    pinocchio::FrameIndex l21 = model_.getFrameId("left_collision_21");
+    pinocchio::FrameIndex l22 = model_.getFrameId("left_collision_22");
+    pinocchio::FrameIndex l31 = model_.getFrameId("left_collision_31");
+    pinocchio::FrameIndex l41 = model_.getFrameId("left_collision_41");
+    pinocchio::FrameIndex l51 = model_.getFrameId("left_collision_51");
+    pinocchio::FrameIndex l61 = model_.getFrameId("left_collision_61");
+
+    // pinocchio::FrameIndex r1 = model_.getFrameId("right_collision_11");
+    pinocchio::FrameIndex r21 = model_.getFrameId("right_collision_21");
+    pinocchio::FrameIndex r22 = model_.getFrameId("right_collision_22");
+    pinocchio::FrameIndex r31 = model_.getFrameId("right_collision_31");
+    pinocchio::FrameIndex r41 = model_.getFrameId("right_collision_41");
+    pinocchio::FrameIndex r51 = model_.getFrameId("right_collision_51");
+    pinocchio::FrameIndex r61 = model_.getFrameId("right_collision_61");
+    pinocchio::computeJointJacobians(model_, data_, nowq);
+
+    Eigen::Vector3d pos_b1 = data_.oMf[b1].translation();
+    Eigen::Vector3d pos_b2 = data_.oMf[b2].translation();
+    Eigen::Vector3d pos_b3 = data_.oMf[b3].translation();
+    Eigen::Vector3d pos_b4 = data_.oMf[b4].translation();
+
+    Eigen::Vector3d pos_l21 = data_.oMf[l21].translation();
+    Eigen::Vector3d pos_l22 = data_.oMf[l22].translation();
+    Eigen::Vector3d pos_l31 = data_.oMf[l31].translation();
+    Eigen::Vector3d pos_l41 = data_.oMf[l41].translation();
+    Eigen::Vector3d pos_l51 = data_.oMf[l51].translation();
+    Eigen::Vector3d pos_l61 = data_.oMf[l61].translation();
+
+    Eigen::Vector3d pos_r21 = data_.oMf[r21].translation();
+    Eigen::Vector3d pos_r22 = data_.oMf[r22].translation();
+    Eigen::Vector3d pos_r31 = data_.oMf[r31].translation();
+    Eigen::Vector3d pos_r41 = data_.oMf[r41].translation();
+    Eigen::Vector3d pos_r51 = data_.oMf[r51].translation();
+    Eigen::Vector3d pos_r61 = data_.oMf[r61].translation();
+
+    // Eigen::MatrixXd jacobian_b1 = pinocchio::getFrameJacobian(model_, data_, b1, pinocchio::LOCAL_WORLD_ALIGNED);
+    // Eigen::MatrixXd jacobian_b2 = pinocchio::getFrameJacobian(model_, data_, b2, pinocchio::LOCAL_WORLD_ALIGNED);
+    // Eigen::MatrixXd jacobian_b3 = pinocchio::getFrameJacobian(model_, data_, b3, pinocchio::LOCAL_WORLD_ALIGNED);
+    // Eigen::MatrixXd jacobian_b4 = pinocchio::getFrameJacobian(model_, data_, b4, pinocchio::LOCAL_WORLD_ALIGNED);
+
+    Eigen::MatrixXd jacobian_l21 = pinocchio::getFrameJacobian(model_, data_, l21, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_l22 = pinocchio::getFrameJacobian(model_, data_, l22, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_l31 = pinocchio::getFrameJacobian(model_, data_, l31, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_l41 = pinocchio::getFrameJacobian(model_, data_, l41, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_l51 = pinocchio::getFrameJacobian(model_, data_, l51, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_l61 = pinocchio::getFrameJacobian(model_, data_, l61, pinocchio::LOCAL_WORLD_ALIGNED);
+
+    Eigen::MatrixXd jacobian_r21 = pinocchio::getFrameJacobian(model_, data_, r21, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_r22 = pinocchio::getFrameJacobian(model_, data_, r22, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_r31 = pinocchio::getFrameJacobian(model_, data_, r31, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_r41 = pinocchio::getFrameJacobian(model_, data_, r41, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_r51 = pinocchio::getFrameJacobian(model_, data_, r51, pinocchio::LOCAL_WORLD_ALIGNED);
+    Eigen::MatrixXd jacobian_r61 = pinocchio::getFrameJacobian(model_, data_, r61, pinocchio::LOCAL_WORLD_ALIGNED);
+
+    Eigen::MatrixXd jac_l21 = jacobian_l21.block<3,17>(0,0);
+    Eigen::MatrixXd jac_l22 = jacobian_l22.block<3,17>(0,0);
+    Eigen::MatrixXd jac_l31 = jacobian_l31.block<3,17>(0,0);
+    Eigen::MatrixXd jac_l41 = jacobian_l41.block<3,17>(0,0);
+    Eigen::MatrixXd jac_l51 = jacobian_l51.block<3,17>(0,0);
+    Eigen::MatrixXd jac_l61 = jacobian_l61.block<3,17>(0,0);
+
+    Eigen::MatrixXd jac_r21 = jacobian_r21.block<3,17>(0,0);
+    Eigen::MatrixXd jac_r22 = jacobian_r22.block<3,17>(0,0);
+    Eigen::MatrixXd jac_r31 = jacobian_r31.block<3,17>(0,0);
+    Eigen::MatrixXd jac_r41 = jacobian_r41.block<3,17>(0,0);
+    Eigen::MatrixXd jac_r51 = jacobian_r51.block<3,17>(0,0);
+    Eigen::MatrixXd jac_r61 = jacobian_r61.block<3,17>(0,0);
+    
+    (-(pos_b1 - pos_l61)/(pos_b1 - pos_l61).norm()).transpose()*jac_l61;
+    (-(pos_b2 - pos_l61)/(pos_b2 - pos_l61).norm()).transpose()*jac_l61;
+    (-(pos_b3 - pos_l61)/(pos_b3 - pos_l61).norm()).transpose()*jac_l61;
+    (-(pos_b4 - pos_l61)/(pos_b4 - pos_l61).norm()).transpose()*jac_l61;
+
+    (-(pos_b1 - pos_r61)/(pos_b1 - pos_r61).norm()).transpose()*jac_r61;
+    (-(pos_b2 - pos_r61)/(pos_b2 - pos_r61).norm()).transpose()*jac_r61;
+    (-(pos_b3 - pos_r61)/(pos_b3 - pos_r61).norm()).transpose()*jac_r61;
+    (-(pos_b4 - pos_r61)/(pos_b4 - pos_r61).norm()).transpose()*jac_r61;
+
+
+    (-(pos_l61 - pos_r61)/(pos_l61 - pos_r61).norm()).transpose()*jac_r61;
+    (-(pos_r61 - pos_l61)/(pos_r61 - pos_l61).norm()).transpose()*jac_l61;
+
+
+    Eigen::VectorXd lp = Eigen::VectorXd::Zero(9);
+    lp(0) = ((pos_b1 - pos_l61).norm() -(collision_r(0)+collision_r(9)+ safe_d));
+    lp(1) = ((pos_b2 - pos_l61).norm() -(collision_r(1)+collision_r(9)+ safe_d));
+    lp(2) = ((pos_b3 - pos_l61).norm() -(collision_r(2)+collision_r(9)+ safe_d));
+    lp(3) = ((pos_b4 - pos_l61).norm() -(collision_r(3)+collision_r(9)+ safe_d));
+
+
+
+    lp(4) = ((pos_b1 - pos_r61).norm() -(collision_r(0)+collision_r(15)+ safe_d));
+    lp(5) = ((pos_b2 - pos_r61).norm() -(collision_r(1)+collision_r(15)+ safe_d));
+    lp(6) = ((pos_b3 - pos_r61).norm() -(collision_r(2)+collision_r(15)+ safe_d));
+    lp(7) = ((pos_b4 - pos_r61).norm() -(collision_r(3)+collision_r(15)+ safe_d));
+
+    lp(8) = ((pos_l61 - pos_r61).norm() -(collision_r(15)+collision_r(9)+ safe_d));
+    // lp(9) = ((pos_r61 - pos_l61).norm() -(collision_r(15)+collision_r(9)+ safe_d));
+
+
+
+    Eigen::MatrixXd temp_conA = Eigen::MatrixXd::Zero(9,17);
+    temp_conA.block<1,17>(0,0) = (-(pos_b1 - pos_l61)/(pos_b1 - pos_l61).norm()).transpose()*jac_l61;
+    temp_conA.block<1,17>(1,0) = (-(pos_b2 - pos_l61)/(pos_b2 - pos_l61).norm()).transpose()*jac_l61;
+    temp_conA.block<1,17>(2,0) = (-(pos_b3 - pos_l61)/(pos_b3 - pos_l61).norm()).transpose()*jac_l61;
+    temp_conA.block<1,17>(3,0) = (-(pos_b4 - pos_l61)/(pos_b4 - pos_l61).norm()).transpose()*jac_l61;
+
+    temp_conA.block<1,17>(4,0) = (-(pos_b1 - pos_r61)/(pos_b1 - pos_r61).norm()).transpose()*jac_r61;
+    temp_conA.block<1,17>(5,0) = (-(pos_b2 - pos_r61)/(pos_b2 - pos_r61).norm()).transpose()*jac_r61;
+    temp_conA.block<1,17>(6,0) = (-(pos_b3 - pos_r61)/(pos_b3 - pos_r61).norm()).transpose()*jac_r61;
+    temp_conA.block<1,17>(7,0) = (-(pos_b4 - pos_r61)/(pos_b4 - pos_r61).norm()).transpose()*jac_r61;
+
+
+    temp_conA.block<1,17>(8,0) = (-(pos_l61 - pos_r61)/(pos_l61 - pos_r61).norm()).transpose()*jac_r61;
+    // temp_conA.block<1,17>(9,0) = 0.5*(-(pos_r61 - pos_l61)/(pos_r61 - pos_l61).norm()).transpose()*jac_l61;
+
+    #include <cmath>
+    // Eigen::VectorXd granCollision =Eigen::VectorXd::Zero(17);
+    Eigen::VectorXd weight =Eigen::VectorXd::Zero(9);
+    for (int i = 0; i < 9; i++)
+    {
+        if (lp(i) < 1.3 * safe_d)
+        {
+            weight(i) = exp(lp(i) + 0.5*safe_d);
+        }
+        granCollision = granCollision - weight(i) * (temp_conA.row(i)).transpose() ;
+    }
+
+    
+    //====先试试末端TODO
+    m_testlp = lp + 0.1*(lp-m_testlp);
+    m_test_conA = temp_conA;
+    // std::cout<<"===dis====="<<(pos_b2 - pos_l61).norm() -collision_r(2) -collision_r(9)<<std::endl;
+    // std::cout<<"====="<< temp_conA.block<1,17>(0,0) * nowq - lp(0)<<";"<<
+    //             temp_conA.block<1,17>(1,0) * nowq - lp(1)<<";"<<
+    //            temp_conA.block<1,17>(2,0) * nowq - lp(2)<<";"<< 
+    //            temp_conA.block<1,17>(3,0) * nowq - lp(3)<<";"<<std::endl;
+
+    // std::cout<<"====="<<pos_l61.transpose()<<std::endl;
+
+    // std::cout<<"==========jacobian_l21============="<<std::endl;
+    // std::cout<<jacobian_l21<<std::endl;
+    // std::cout<<"==========jacobian_l22============="<<std::endl;
+    // std::cout<<jacobian_l22<<std::endl;
+    // std::cout<<"==========jacobian_l31============="<<std::endl;
+    // std::cout<<jacobian_l31<<std::endl;
+    // std::cout<<"==========jacobian_l41============="<<std::endl;
+    // std::cout<<jacobian_l41<<std::endl;
+    // std::cout<<"==========jacobian_l51============="<<std::endl;
+    // std::cout<<jacobian_l51<<std::endl;
+    // std::cout<<"==========jacobian_l61============="<<std::endl;
+    // std::cout<<jacobian_l61<<std::endl;
+}
 void ControlSystem::setJointTorque(const std::string& joint_name, double effort) 
 {
     auto it = torque_publishers_.find(joint_name);
@@ -324,6 +724,10 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // 获取框架 ID
     pinocchio::FrameIndex frame_id_left = model_.getFrameId("left_flange");
     pinocchio::FrameIndex frame_id_right = model_.getFrameId("right_flange");
+
+    pinocchio::FrameIndex frame_id_base = model_.getFrameId("base_link");
+
+
     Eigen::MatrixXd jacobian_l = pinocchio::getFrameJacobian(model_, data_, frame_id_left, pinocchio::LOCAL_WORLD_ALIGNED);
     Eigen::MatrixXd jacobian_r = pinocchio::getFrameJacobian(model_, data_, frame_id_right, pinocchio::LOCAL_WORLD_ALIGNED);
     // std::cout << "jacobian_r: " << std::endl;
@@ -439,9 +843,160 @@ Eigen::VectorXd ControlSystem::computeTorqueWithSlidingMode(const Eigen::VectorX
     // std::cout<<tau.transpose()<<std::endl;
     return 0.5*tau+last_tau*0.5;
 }
-
-Eigen::VectorXd ControlSystem::testWqp(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv)
+Eigen::VectorXd ControlSystem::tra(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv)
 {
+    
+    // if (allarm_done)
+    // {
+    //    return Eigen::VectorXd::Zero(17);
+    // }
+    
+
+   lr_Xr = dualArmSys(nowX,l_waypoints,r_waypoints);
+   auto wqpResult = interfaceWQP(nowq,nowqv,lr_Xr);
+   return wqpResult;
+
+
+}
+
+Eigen::VectorXd ControlSystem::dualArmSys(Eigen::VectorXd& nowX,
+                               std::vector<Eigen::VectorXd>& l_waypoints,
+                               std::vector<Eigen::VectorXd>& r_waypoints)
+ {
+    Eigen::VectorXd l_current_position = nowX.head(7);  // 左臂当前位姿
+    Eigen::VectorXd r_current_position = nowX.tail(7);  // 右臂当前位姿
+    
+    Eigen::VectorXd desired_position(14);  // 14维期望位姿（7维左臂，7维右臂）
+    double temp_tolerance = 0.01;  // 误差容忍度
+
+    auto current_time = std::chrono::steady_clock::now();  // 当前时间
+    // std::cout<<carE.transpose()<<std::endl;
+
+    // 处理左臂的目标
+    if (!l_waypoints.empty() && !left_done) {
+        Eigen::VectorXd l_target = l_waypoints.front();
+        double l_error = (l_current_position - l_target).norm();
+
+        if (l_waypoints.size() == 1) {
+            temp_tolerance = tolerance_last;
+        } else {
+            temp_tolerance = tolerance_first;
+        }
+
+        // 记录左臂目标点的时间
+        if (waypoint_times_l.find(current_waypoint_index_l) == waypoint_times_l.end()) {
+            waypoint_times_l[current_waypoint_index_l] = current_time;  // 第一个目标点的起始时间
+        }
+
+        // 计算目标点与当前时间的差值
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - waypoint_times_l[current_waypoint_index_l]).count();
+        
+        if (elapsed_time > 7) {
+            std::cout << "Left arm waypoint " << current_waypoint_index_l + 1 << " took too long (" << elapsed_time << " seconds), skipping to next." << std::endl;
+            
+            if (l_waypoints.size() > 1) {
+                l_waypoints.erase(l_waypoints.begin());  // 删除当前目标点
+                current_waypoint_index_l++;  // 更新目标点索引
+                waypoint_times_l[current_waypoint_index_l] = current_time;  // 记录下一个目标点的起始时间
+            } else {
+                std::cout << "Unable to reach the last left arm waypoint within time limit." << std::endl;
+                left_done = true;
+            }
+        }
+
+        // 判断左臂是否到达目标位置
+        if (carE.head(6).cwiseAbs().maxCoeff() < temp_tolerance) {
+            std::cout << "Left arm waypoint completed with error: " << carE.head(6).cwiseAbs().maxCoeff() << std::endl;
+            
+            if (!l_waypoints.empty()) {
+                l_waypoints.erase(l_waypoints.begin());  // 删除完成的目标点
+                current_waypoint_index_l++;  // 更新目标点索引
+                waypoint_times_l[current_waypoint_index_l] = current_time;  // 记录下一个目标点的起始时间
+            }
+        }
+
+        if (!l_waypoints.empty()) {
+            desired_position.head(7) = l_waypoints.front();  // 更新左臂期望位置
+        } else {
+            desired_position.head(7) = l_current_position;  // 如果左臂的目标已完成所有点，直接将当前位姿作为期望位姿
+            left_done = true;  // 左臂完成所有目标点
+        }
+    } else {
+        desired_position.head(7) = l_current_position;  // 如果左臂目标点已经完成所有，直接将当前位姿赋给期望位姿
+        left_done = true;
+    }
+
+    // 处理右臂的目标
+    if (!r_waypoints.empty() && !right_done) {
+        Eigen::VectorXd r_target = r_waypoints.front();
+        // double r_error = (r_current_position - r_target).norm();
+
+        if (r_waypoints.size() == 1) {
+            temp_tolerance = tolerance_last;
+        } else {
+            temp_tolerance = tolerance_first;
+        }
+
+        // 记录右臂目标点的时间
+        if (waypoint_times_r.find(current_waypoint_index_r) == waypoint_times_r.end()) {
+            waypoint_times_r[current_waypoint_index_r] = current_time;  // 第一个目标点的起始时间
+        }
+
+        // 计算目标点与当前时间的差值
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - waypoint_times_r[current_waypoint_index_r]).count();
+        
+        if (elapsed_time > 7) {
+            std::cout << "Right arm waypoint " << current_waypoint_index_r + 1 << " took too long (" << elapsed_time << " seconds), skipping to next." << std::endl;
+            
+            if (r_waypoints.size() > 1) {
+                r_waypoints.erase(r_waypoints.begin());  // 删除当前目标点
+                current_waypoint_index_r++;  // 更新目标点索引
+                waypoint_times_r[current_waypoint_index_r] = current_time;  // 记录下一个目标点的起始时间
+            } else {
+                std::cout << "Unable to reach the last right arm waypoint within time limit." << std::endl;
+                right_done = true;
+            }
+        }
+
+        // 判断右臂是否到达目标位置
+        if (carE.tail(6).cwiseAbs().maxCoeff() < temp_tolerance) {
+            std::cout << "Right arm waypoint completed with error: " << carE.tail(6).cwiseAbs().maxCoeff() << std::endl;
+            
+            if (!r_waypoints.empty()) {
+                r_waypoints.erase(r_waypoints.begin());  // 删除完成的目标点
+                current_waypoint_index_r++;  // 更新目标点索引
+                waypoint_times_r[current_waypoint_index_r] = current_time;  // 记录下一个目标点的起始时间
+            }
+        }
+
+        if (!r_waypoints.empty()) {
+            desired_position.tail(7) = r_waypoints.front();  // 更新右臂期望位置
+        } else {
+            desired_position.tail(7) = r_current_position;  // 如果右臂的目标已完成所有点，直接将当前位姿作为期望位姿
+            std::cout<<"==right?=="<<desired_position.tail(6).transpose()<<std::endl;
+            right_done = true;  // 右臂完成所有目标点
+        }
+    }
+
+    // 如果左右臂之一完成所有目标点，返回期望位姿
+    if (left_done && right_done) {
+        allarm_done = true;
+        std::cout << "Dual arm has completed all waypoints." << std::endl;
+        waypoint_times_l.clear();  // 清空左臂目标点时间记录
+        waypoint_times_r.clear();  // 清空右臂目标点时间记录
+    }
+
+    return desired_position;  // 返回更新后的期望位姿
+}                              
+
+Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv,Eigen::VectorXd& Rcar)
+{
+    // if (allarm_done)
+    // {
+    //     Eigen::VectorXd tempRes = Eigen::VectorXd::Zero(17);
+    //     return tempRes;
+    // }
+    
     // std::cout<<"=====now_q======"<<nowq.transpose()<<std::endl;
 
     double time =ros::Time::now().toSec(); // 当前时间;
@@ -450,19 +1005,25 @@ Eigen::VectorXd ControlSystem::testWqp(Eigen::VectorXd& nowq,Eigen::VectorXd& no
     pinocchio::forwardKinematics(model_, data_, nowq);
     pinocchio::updateFramePlacements(model_, data_);
     // step1 获取lr 雅可比
-    pinocchio::FrameIndex frame_id_left = model_.getFrameId("left_flange");
-    pinocchio::FrameIndex frame_id_right = model_.getFrameId("right_flange");
+    // pinocchio::FrameIndex frame_id_left = model_.getFrameId("left_flange");
+    // pinocchio::FrameIndex frame_id_right = model_.getFrameId("right_flange");
+    pinocchio::FrameIndex frame_id_left = model_.getFrameId("L_hand_base_link");
+    pinocchio::FrameIndex frame_id_right = model_.getFrameId("R_hand_base_link");
     // std::cout<<"FrameIndex:"<<frame_id_left<<";"<<frame_id_right<<std::endl;
     Eigen::MatrixXd jacobian_l = pinocchio::getFrameJacobian(model_, data_, frame_id_left, pinocchio::LOCAL_WORLD_ALIGNED);
     Eigen::MatrixXd jacobian_r = pinocchio::getFrameJacobian(model_, data_, frame_id_right, pinocchio::LOCAL_WORLD_ALIGNED);
-
+    // auto j_c = data_.Jcom;
+    // auto c_p = data_.com[0];
+    // std::cout<<"==c_p=="<<c_p.transpose()<<std::endl;
+    // auto c_p = j_c * 
     // step2 获取笛卡尔err
 
-    Eigen::Vector3d pos_l = data_.oMf[27].translation();
-    Eigen::Vector3d pos_r = data_.oMf[79].translation();
-    Eigen::Quaterniond quat_l(data_.oMf[27].rotation());
-    Eigen::Quaterniond quat_r(data_.oMf[79].rotation());
-
+    Eigen::Vector3d pos_l = data_.oMf[frame_id_left].translation();
+    Eigen::Vector3d pos_r = data_.oMf[frame_id_right].translation();
+    Eigen::Quaterniond quat_l(data_.oMf[frame_id_left].rotation());
+    Eigen::Quaterniond quat_r(data_.oMf[frame_id_right].rotation());
+    pos_l(2) = pos_l(2) - 0.5;//base offset
+    pos_r(2) = pos_r(2) - 0.5;
 // 6D-left:0.445156;0.287187;0.215173;-0.0345472;-0.232099;0.673005;0.701428
 // 6D-right:0.422576;-0.303942;0.171599;0.701961;-0.684411;0.196978;0.00561809
     // std::cout<<"6D-left:"<<pos_l(0)<<";"
@@ -482,21 +1043,78 @@ Eigen::VectorXd ControlSystem::testWqp(Eigen::VectorXd& nowq,Eigen::VectorXd& no
     //         <<quat_r.w()<<std::endl;
 
 
-    Eigen::Vector3d pos_l_d(0.445156,0.287187,0.215173);
+    // Eigen::Vector3d pos_l_d(0.445156,0.287187,0.215173);
+    // Eigen::Quaterniond quat_l_d;
+    // quat_l_d.x()=-0.0345472;
+    // quat_l_d.y()=-0.232099;
+    // quat_l_d.z()=0.673005;
+    // quat_l_d.w()=0.701428;
+    // // car sin sign test 
+    // // double a = -0.303942+0.08*sin(0.5*time);
+    // // double b = 0.171599+0.08*sin(0.5*time);
+    
+    // Eigen::Vector3d pos_r_d(0.422576,-0.303942,0.171599);
+    // Eigen::Quaterniond quat_r_d;
+    // quat_r_d.x()=0.701961;
+    // quat_r_d.y()=-0.684411;
+    // quat_r_d.z()=0.196978;
+    // quat_r_d.w()=0.00561809;
+    // ========================================================================Rcar
+    // Eigen::Vector3d pos_l_d;
+    // pos_l_d(0)=Rcar(0);
+    // pos_l_d(1)=Rcar(1);
+    // pos_l_d(2)=Rcar(2);
+
+    // Eigen::Quaterniond quat_l_d;
+    // quat_l_d.x()=Rcar(3);
+    // quat_l_d.y()=Rcar(4);
+    // quat_l_d.z()=Rcar(5);
+    // quat_l_d.w()=Rcar(6);
+
+    // Eigen::Vector3d pos_r_d;
+    // pos_r_d(0)=Rcar(0+7);
+    // pos_r_d(1)=Rcar(1+7);
+    // pos_r_d(2)=Rcar(2+7);
+
+    // Eigen::Quaterniond quat_r_d;
+    // quat_r_d.x()=Rcar(3+7);
+    // quat_r_d.y()=Rcar(4+7);
+    // quat_r_d.z()=Rcar(5+7);
+    // quat_r_d.w()=Rcar(6+7);
+
+
+    Eigen::Vector3d pos_l_d(0.378,0.250,0.38);
     Eigen::Quaterniond quat_l_d;
-    quat_l_d.x()=-0.0345472;
-    quat_l_d.y()=-0.232099;
-    quat_l_d.z()=0.673005;
-    quat_l_d.w()=0.701428;
-    // car sin sign test 
-    // double a = -0.303942+0.08*sin(0.5*time);
-    // double b = 0.171599+0.08*sin(0.5*time);
-    Eigen::Vector3d pos_r_d(0.422576,-0.303942,0.171599);
+    quat_l_d.x()=0.481355;
+    quat_l_d.y()=-0.287633;
+    quat_l_d.z()=0.164375;
+    quat_l_d.w()=0.811508;
+    Eigen::Vector3d pos_r_d(0.378,-0.250,0.38);
     Eigen::Quaterniond quat_r_d;
-    quat_r_d.x()=0.701961;
-    quat_r_d.y()=-0.684411;
-    quat_r_d.z()=0.196978;
-    quat_r_d.w()=0.00561809;
+    quat_r_d.x()=0.80853;
+    quat_r_d.y()=-0.162;
+    quat_r_d.z()=0.29277;
+    quat_r_d.w()=0.48402;
+    // // car sin sign test 
+    // // double a = -0.303942+0.08*sin(0.5*time);
+    // // double b = 0.171599+0.08*sin(0.5*time);
+
+    // if (sim>8000)
+    // {
+    //     pos_l_d(0) = 0.8;
+    //     pos_l_d(1) = 0.42;
+    //     pos_l_d(2) = pos_l_d(2)+0.22;
+
+    //     pos_r_d(2) = pos_r_d(2)+0.22;
+    //     Eigen::Quaterniond quat_test;
+    //     quat_test.x()=0;
+    //     quat_test.y()=1.682;
+    //     quat_test.z()=-0.75;
+    //     quat_test.w()=0.732;
+    //     quat_r_d = quat_r_d*quat_test;
+    //     /* code */
+    // }
+    
     
     Eigen::Quaterniond e_quat_l; 
     e_quat_l = quat_l.inverse() * quat_l_d;
@@ -518,30 +1136,66 @@ Eigen::VectorXd ControlSystem::testWqp(Eigen::VectorXd& nowq,Eigen::VectorXd& no
     Eigen::VectorXd carErr_r = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd carErr_l = Eigen::VectorXd::Zero(6);
     carErr_l.head(3) = pos_l_d - pos_l;
-    // carErr_l.tail(3) = temp_rotError_l;
+    carErr_l.tail(3) = temp_rotError_l;
     carErr_r.head(3) = pos_r_d - pos_r;
-    // carErr_r.tail(3) = temp_rotError_r;
+    carErr_r.tail(3) = temp_rotError_r;
 
-    carErr_l(0)+=0.05*sin(0.3*time);
-    carErr_l(2)+=0.05*cos(0.3*time);
+    carErr_l(1)+=0.3*sin(2.3*time);
+    carErr_l(2)+=0.3*cos(2.3*time);
+    // // carErr_l(4)+=0.15*cos(2*time);
 
-    carErr_r(1)+=0.1*sin(-0.6*time);
-    carErr_r(2)+=0.1*cos(-0.6*time);
-    Eigen::VectorXd carE = Eigen::VectorXd::Zero(12); 
+    // carErr_r(1)+=0.3*sin(2.6*time);
+    // carErr_r(2)+=0.3*cos(2.6*time);
+    // carErr_r(4)+=0.15*cos(2*time);
     carE<<carErr_l,carErr_r;
 
-    Eigen::VectorXd Qr = Eigen::VectorXd::Zero(18);
-    // Qr = nowq;
-    Qr(6)= -20*sin(time)*3.14/180 - nowq(6);
-    Qr(13)= 20*sin(time)*3.14/180 - nowq(13);
+    // Eigen::VectorXd tempZero = Eigen::VectorXd::Zero(6);
+    // if (left_done)
+    // {
+    //     carE.head(6) = tempZero;
+    // }
+    // if (right_done)
+    // {
+    //    carE.tail(6) = tempZero;
+    // }
+    
+    
 
+    Eigen::VectorXd Qr = Eigen::VectorXd::Zero(17);
+    // nowq.head(3) = Eigen::VectorXd::Zero(3);
+    // Qr(6-1)= (20-30*sin(3*time))*3.14/180 - nowq(6-1);
+    // Qr(13-1)= (20+30*sin(3*time))*3.14/180 - nowq(13-1);
+    // Qr(12) = 45 *3.14/180 - nowq(12);
+    // Qr(5) = -45 *3.14/180 - nowq(6-1);
+                //     desired_position(3) =  -1.95;
+            //     desired_position(4) =  0.61;
+            //     desired_position(5) =  0.63;
+            //     desired_position(6) =  -1.57;
+            //     desired_position(7) =  0.8;
+            //     desired_position(8) =  -0.33;
+            //     desired_position(9) =  0;
+    // Qr(3) =  -1.95 - nowq(3);   
+    // Qr(4) =  0.61- nowq(4);  
+    // Qr(5) =  0.63- nowq(5);  
+    // Qr(6) =  -1.57- nowq(6);  
+    // Qr(7) =  0.8 - nowq(7);  
+    // Qr(8) =  - 0.33- nowq(8);  
+    // Qr(9) =  0 - nowq(9);  
+
+
+
+    
     // std::cout<<"=======wqp1.1========="<<std::endl;
-
+    // jacobian_l.block<6,3>(0,0)=Eigen::MatrixXd::Zero(6,3);
+    // jacobian_r.block<6,3>(0,0)=Eigen::MatrixXd::Zero(6,3);
+    upDataCollision(nowq);
     auto result = WQP(jacobian_l,
-                    jacobian_r,
-                    carE,
-                    nowq,
-                    Qr);
+                        jacobian_r,
+                        carE,
+                        nowq,
+                        Qr);
+
+                        // T*T
     // std::cout<<result.transpose()<<std::endl;
     return result;
 }
@@ -631,120 +1285,147 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
                                 const Eigen::VectorXd& Qr)
     {
 
-            std::cout<<"===shoulderError=="<<nowQ(6)*180/3.14<<";"<<nowQ(13)*180/3.14<<std::endl;
+            // nowQ.head(3) = Eigen::VectorXd::Zero(3);
+            for (int i = 0; i < 17; i++)
+            {
+                if (nowQ(i)<joint_min(i)-0.0003||joint_max(i)+0.0003<nowQ(i))
+                {
+                    // Eigen::VectorXd temp_q_max = 
+                    std::cout<<"===out of q bound==  "<<i<<nowQ(i)<<std::endl;
 
-            double eta_car = 10000;
-            double eta_qpos= 500;
-            Eigen::MatrixXd JointWeight = Eigen::MatrixXd::Identity(18, 18);
-            JointWeight(0,0) = 1;
-            JointWeight(1,1) = 0.01;
-            JointWeight(2,2) = 0.01;
-            JointWeight(3,3) = 0.01;
+                    // return Eigen::VectorXd::Zero(17);
+                        /* code */
+                }
+                
+            }
+            
+
+
+            const int num = 17;
+            // if (car0joint)
+            // {
+            //     double eta_car = 30000;
+            //     double eta_qpos= 0.01;
+            //     Qr.setConstant(0.0);
+            // }
+            // else
+            // {
+            //     double eta_car = 0;
+            //     double eta_qpos= 30000;
+            //     car_err.setConstant(0.0);
+            // }
+            
+            double eta_car = 30000;
+            double eta_qpos= 0.01;
+            // double eta_car = 0;
+            // double eta_qpos= 30000;
+            Eigen::MatrixXd JointWeight = Eigen::MatrixXd::Identity(17, 17);
+            // JointWeight(0,0) = 10000;
+            // JointWeight(1,1) = 10000;
+            // JointWeight(2,2) = 10000;
+            // auto boundH = upDataBoundH(nowQ);
+            // auto boundGrad = upDataBoundGradient(nowQ);
+
+            Eigen::VectorXd leftError = car_err.head(6);
+            leftError(3) = leftError(3) * 0.1;
+            leftError(4) = leftError(4) * 0.1;
+            leftError(5) = leftError(5) * 0.1;
+            Eigen::VectorXd rightError = car_err.tail(6);
+            rightError(3) = rightError(3) * 0.1;
+            rightError(4) = rightError(4) * 0.1;
+            rightError(5) = rightError(5) * 0.1;
+
 
             Eigen::MatrixXd H = eta_car * Jl.transpose()*Jl 
                             + eta_car * Jr.transpose()*Jr 
-                            + eta_qpos * Eigen::MatrixXd::Identity(18, 18) + JointWeight;
-            Eigen::VectorXd c =   -eta_car*Jl.transpose()*car_err.head(6) 
-                                  -eta_car*Jr.transpose()*car_err.tail(6)
-                                  - eta_qpos*Qr;
-            Eigen::MatrixXd A = Eigen::MatrixXd::Zero(66,18);
-            A.block<6,18>(0,0) = Jl;
-            A.block<6,18>(6,0) = Jr;
-            A.block<18,18>(12,0) = Eigen::MatrixXd::Identity(18, 18);
-            A.block<18,18>(30,0) = Eigen::MatrixXd::Identity(18, 18);
+                            + eta_qpos * Eigen::MatrixXd::Identity(17, 17) + 0.1*JointWeight;
 
-            Eigen::MatrixXd shoulderLim = Eigen::MatrixXd::Zero(18, 18);
-            shoulderLim(6,6)= 1;
-            // shoulderLim(8,8)= 1;
 
-            shoulderLim(13,13)= 1;
-            // shoulderLim(15,15)= 1;
-            Eigen::VectorXd shoulderU = Eigen::VectorXd::Zero(18);
-            Eigen::VectorXd shoulderL = Eigen::VectorXd::Zero(18);
-            shoulderU.setConstant(1);
-            shoulderL.setConstant(-1);
-            shoulderU(6) = Qr(6) + 100*3.1415926535/180;
-            // shoulderU(8) = Qr(8) + 5*3.1415926535/180;
-            shoulderU(13) = Qr(13) + 100*3.1415926535/180;
-            // shoulderU(15) = Qr(15) + 5*3.1415926535/180;
+            Eigen::VectorXd c =     -5*eta_car*Jl.transpose()*car_err.head(6)
+                                    -5*eta_car*Jr.transpose()*car_err.tail(6)
+                                    -1*eta_qpos*Qr 
+                                    +5*granCollision;
 
-            shoulderL(6) = Qr(6)- 100*3.1415926535/180;
-            // shoulderL(8) = Qr(8)- 5*3.1415926535/180;
-            shoulderL(13) = Qr(13) - 100*3.1415926535/180;
-            // shoulderL(15) = Qr(15) - 5*3.1415926535/180;
-
-            //  5*3.1415926535/180;
-            A.block<18,18>(48,0) = shoulderLim;
+            Eigen::MatrixXd A = Eigen::MatrixXd::Zero(55,17);
+            A.block<6,17>(0,0) = Jl;
+            A.block<6,17>(6,0) = Jr;
+            A.block<17,17>(12,0) = Eigen::MatrixXd::Identity(17, 17);
+            A.block<17,17>(29,0) = Eigen::MatrixXd::Identity(17, 17);
+            A.block<9,17>(46,0) = m_test_conA;
             // std::cout<<"=======wqp1.2========="<<std::endl;
 
             //==========约束1 笛卡尔线速度角速度
             Eigen::VectorXd Car_max = Eigen::VectorXd::Zero(12);
-            Car_max.setConstant(1);
+            Car_max.setConstant(0.1);
 
             Eigen::VectorXd Car_min = Eigen::VectorXd::Zero(12);
-            Car_min.setConstant(-1);
+            Car_min.setConstant(-0.1);
             //==========约束2 关节速度
 
-            Eigen::VectorXd qv_max = Eigen::VectorXd::Zero(18);
+            Eigen::VectorXd qv_max = Eigen::VectorXd::Zero(17);
             qv_max.setConstant(1);
-            qv_max(0) = 0.01 ;
-            qv_max(1) = 0.02 ;
-            qv_max(2) = 0.02 ;
-            qv_max(3) = 0.002 ;
-            Eigen::VectorXd qv_min = Eigen::VectorXd::Zero(18);
+            qv_max(0) = 0.2*0.5 ;
+            qv_max(1) = 0.002*0.5 ;
+            qv_max(2) = 0.002*0.5 ;
+            // qv_max(3) = 0.02*5 ;
+            Eigen::VectorXd qv_min = Eigen::VectorXd::Zero(17);
             qv_min .setConstant(-1);
-            qv_min(0) = -0.01 ;
-            qv_min(1) = -0.02 ;
-            qv_min(2) = -0.02 ;
-            qv_min(3) = -0.02 ;
-            //==========约束3 关节位置
+            qv_min(0) = -0.2*0.5 ;
+            qv_min(1) = -0.002*0.5 ;
+            qv_min(2) = -0.002*0.5 ;
+
             // △q ＜ qmax -qnow
-            Eigen::VectorXd q_max = Eigen::VectorXd::Zero(18);
-            Eigen::VectorXd q_min = Eigen::VectorXd::Zero(18);
-            q_max<<0,0.25,0.25,0.25, //腰部关节
-            2.96,3.4,2.96,0,2.96,1.04,1.48,//l
-            2.96,3.4,2.96,0,2.96,1.04,1.48;//r
-            q_min<<-0.15,-0.25,-0.25,-0.25,
-            -2.96,-0.26,-2.96,-2.96,-2.96,-1.04,-1.66,
-            -2.96,-0.26,-2.96,-2.96,-2.96,-1.04,-1.66;
-            //
-            Eigen::VectorXd up = Eigen::VectorXd::Zero(66);
-            Eigen::VectorXd lp = Eigen::VectorXd::Zero(66);
+            Eigen::VectorXd q_max = Eigen::VectorXd::Zero(17);
+            Eigen::VectorXd q_min = Eigen::VectorXd::Zero(17);
 
+            q_max<<0,0.15,0.25,
+            0.79,2.27,2.27,0,2.27,0.8,0.8,
+            3.14,0.17,2.27,2.27,2.27,0.8,0.8;
+            q_min<<-0.1,-0.15,-0.25,
+            -3.14,-0.17,-2.27,-2.27,-2.27,-0.8,-0.8,
+            -0.79,-1.75,-2.27,0,-2.27,-0.8,-0.8;
+            Eigen::VectorXd up = Eigen::VectorXd::Zero(55);
+            Eigen::VectorXd lp = Eigen::VectorXd::Zero(55);
 
-            // std::cout<<"=======wqp1.3========="<<std::endl;
 
             Eigen::VectorXd car_temp_ = Eigen::VectorXd::Zero(6);
-            car_temp_<< 1,1,1,
-                        1,1,1;
-            up.head(6) = car_temp_ ;
-            up.segment(6, 6) = car_temp_;
-            lp.head(6) = -car_temp_ ;
-            lp.segment(6, 6) = -car_temp_;
+            car_temp_<< 1.05,1.05,1.05,
+                        1.05,1.05,1.05;
+            up.head(6) = 50*car_temp_ ;
+            up.segment(6, 6) = 50*car_temp_;
+            lp.head(6) = -50*car_temp_ ;
+            lp.segment(6, 6) = -50*car_temp_;
 
-            up.segment(12, 18) = qv_max;
-            lp.segment(12, 18) = qv_min;
+            up.segment(12, 17) = 50*qv_max;
+            lp.segment(12, 17) = 50*qv_min;
 
-            up.segment(30, 18) = q_max-nowQ;
-            lp.segment(30, 18) = q_min-nowQ;
-            up.tail(18) = shoulderU;
-            lp.tail(18) = shoulderL;
+            up.segment(29, 17) = 2*(q_max-nowQ);
+            lp.segment(29, 17) = 2*(q_min-nowQ);
+
+            // up.segment(46, 17) = shoulderU;
+            // lp.segment(46, 17) = shoulderL;
+            Eigen::VectorXd epsilon = Eigen::VectorXd::Zero(9);
+            epsilon.setConstant(100);
+
+            up.tail(9) =  epsilon;
+            // lp.tail(10) = -epsilon;
+
+            lp.tail(9) = -m_testlp/2;
+
 
             OsqpEigen::Solver solver;
 
-
-            int n = 18;
+            int n = 17;
             solver.settings()->setWarmStart(false);
             solver.settings()->setVerbosity(false);
-            solver.data()->setNumberOfVariables(18);
-            solver.data()->setNumberOfConstraints(66);
+            solver.data()->setNumberOfVariables(17);
+            solver.data()->setNumberOfConstraints(55);
             Eigen::SparseMatrix<double> H_sparse = H.sparseView();
             if (!solver.data()->setHessianMatrix(H_sparse)) 
             {
                 std::cerr << "Error setting Hessian matrix" << std::endl;
                 return Eigen::VectorXd::Zero(n);
             }
-
             if (!solver.data()->setGradient(c)) {
                 std::cerr << "Error setting gradient vector" << std::endl;
                 return Eigen::VectorXd::Zero(n);
@@ -754,24 +1435,28 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
                 std::cerr << "Error setting constraint matrix" << std::endl;
                 return Eigen::VectorXd::Zero(n);
             }
-
             if (!solver.data()->setLowerBound(lp)) {
                 std::cerr << "Error setting lower bounds" << std::endl;
                 return Eigen::VectorXd::Zero(n);
             }
-
             if (!solver.data()->setUpperBound(up)) {
                 std::cerr << "Error setting upper bounds" << std::endl;
                 return Eigen::VectorXd::Zero(n);
             }
-
             if (!solver.initSolver()) {
                 std::cerr << "Solver initialization failed" << std::endl;
                 return Eigen::VectorXd::Zero(n);
             }
-
             auto result = solver.solve();
-            return solver.getSolution();
+            if (!solver.solve())
+            {
+                std::cout<<"========="<<std::endl;
+                return Eigen::VectorXd::Zero(n);
+            }
+            auto tempRes = solver.getSolution();
+            solver.clearSolver();
+
+            return tempRes;
     }
  Eigen::MatrixXd ControlSystem:: pseudoInverse(const Eigen::MatrixXd &input)
 {
@@ -787,12 +1472,12 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
 
   return svd.matrixV() * S_.transpose() * svd.matrixU().transpose();
 }
+
 int main(int argc, char** argv) {
     ros::init(argc, argv, "joint_control_node");
 
-    ControlSystem control_system("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/model/humanoid.urdf");
-    // ros::Publisher joint_pub;
-    // control_system->joint_pub = nh_.advertise<sensor_msgs::JointState>("/joint_states", 10);
+    ControlSystem control_system("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/model2/urdf/dual_arm_and_hand_description.urdf");
+
 
     Eigen::VectorXd q = Eigen::VectorXd::Zero(18);
     Eigen::VectorXd v = Eigen::VectorXd::Zero(18);
@@ -806,9 +1491,9 @@ int main(int argc, char** argv) {
     {
         double time = ros::Time::now().toSec();
 
-        Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(18);
-        Eigen::VectorXd now_q(18);
-        Eigen::VectorXd now_qd(18);
+        Eigen::VectorXd desired_position = Eigen::VectorXd::Zero(17);
+        Eigen::VectorXd now_q(17);
+        Eigen::VectorXd now_qd(17);
 
         Eigen::VectorXd max(7);
         Eigen::VectorXd min(7);
@@ -817,18 +1502,37 @@ int main(int argc, char** argv) {
 
         Eigen::VectorXd mid;
         mid = (max+min)/2;
-        
-        for (int i = 0; i < 18; ++i) 
+        desired_position(3) =  0.0;
+        desired_position(4) =  145*3.1415926535/180;
+        desired_position(5) =  0;
+        desired_position(6) =  - 120*3.1415926535/180;
+        desired_position(7) =  0;
+        desired_position(8) =  - 40*3.1415926535/180;
+        desired_position(9) =  0;
+
+        desired_position(10) = 0.0;
+        desired_position(11) = -145*3.1415926535/180;
+        desired_position(12) = 0;
+        desired_position(13) = 120*3.1415926535/180;
+        desired_position(14) = 0;
+        desired_position(15) = 40*3.1415926535/180;
+        desired_position(16) = 0;
+
+
+
+        // desired_position(3+11-1) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
+        for (int i = 0; i < 17; ++i) 
         {   
-            desired_position(3+4) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
-            desired_position(3+11) = -3.1415926535/2; // 设置每个关节的期望位置为 0.5 * sin(time)
-            // desired_position(i)= mid(i)+0.5*sin(1.5*time);
+
 
             now_q(i)=control_system.joint_state[i].position;
             now_qd(i)=control_system.joint_state[i].velocity;
 
         }
-        auto wqpQ = control_system.testWqp(now_q,now_qd);
+        // control_system.upDataCollision(now_q);
+
+        Eigen::VectorXd xr = Eigen::VectorXd::Zero(14);
+        auto wqpQ = control_system.tra(now_q,now_qd);
         // desired_position(3)= -mid(3)+0.5*sin(0.5*time);
         // 更新期望轨迹中的位置
         control_system.traj_data.addPosition(desired_position);
@@ -837,39 +1541,176 @@ int main(int argc, char** argv) {
         Eigen::VectorXd desired_velocity = control_system.traj_data.getVelocities();
         Eigen::VectorXd desired_acceleration = control_system.traj_data.getAccelerations();
         sensor_msgs::JointState joint_state;
-        joint_state.name.resize(18); 
-        joint_state.position.resize(18);
-        joint_state.velocity.resize(18);
-        joint_state.effort.resize(18);
+        joint_state.name.resize(17); 
+        joint_state.position.resize(17);
+        joint_state.velocity.resize(17);
+        joint_state.effort.resize(17);
         joint_state.header.stamp = ros::Time::now();
         joint_state.name = 
         {
             "waist_Z_joint",
             "waist_roll_joint",
-            "waist_pitch_joint",
+            // "waist_pitch_joint",
             "waist_yaw_joint",
-            "shoulder_pitch_l_joint",
-            "shoulder_roll_l_joint",
-            "shoulder_yaw_l_joint",
-            "elbow_pitch_l_joint",
-            "elbow_yaw_l_joint",
-            "wrist_pitch_l_joint",
-            "wrist_roll_l_joint",
-            "shoulder_pitch_r_joint",
-            "shoulder_roll_r_joint",
-            "shoulder_yaw_r_joint",
-            "elbow_pitch_r_joint",
-            "elbow_yaw_r_joint",
-            "wrist_pitch_r_joint",
-            "wrist_roll_r_joint"};
-        for (int i = 0; i < 18; ++i) 
+            "left_joint1",
+            "left_joint2",
+            "left_joint3",
+            "left_joint4",
+            "left_joint5",
+            "left_joint6",
+            "left_joint7",
+            "right_joint1",
+            "right_joint2",
+            "right_joint3",
+            "right_joint4",
+            "right_joint5",
+            "right_joint6",
+            "right_joint7"
+            // "shoulder_pitch_l_joint",
+            // "shoulder_roll_l_joint",
+            // "shoulder_yaw_l_joint",
+            // "elbow_pitch_l_joint",
+            // "elbow_yaw_l_joint",
+            // "wrist_pitch_l_joint",
+            // "wrist_roll_l_joint",
+            // "shoulder_pitch_r_joint",
+            // "shoulder_roll_r_joint",
+            // "shoulder_yaw_r_joint",
+            // "elbow_pitch_r_joint",
+            // "elbow_yaw_r_joint",
+            // "wrist_pitch_r_joint",
+            // "wrist_roll_r_joint"};
+        };
+        
+        // Eigen::Vector4d noiseWQP(wqpQ(0),wqpQ(1),wqpQ(2),wqpQ(3));
+        // // 创建随机数生成器
+        // std::random_device rd;  // 随机种子
+        // std::mt19937 gen(rd()); // 随机数生成器
+        // std::uniform_real_distribution<double> dist(-0.0015, 0.0015); // 噪声范围为 30%
+
+        // // 为每个分量添加 10% 噪声
+        // for (int i = 0; i < noiseWQP.size(); ++i) {
+        //     double noise = dist(gen) * wqpQ(i); // 生成基于分量大小的噪声
+        //     noiseWQP(i) += noise;
+        // }
+        // wqpQ.head(4) = noiseWQP;
+        // wqpQ(1)  = 0.0;
+        // wqpQ(2)  = 0.0;
+
+        // wqpQ.head(3) = Eigen::VectorXd::Zero(3);
+        for (int i = 0; i < 17; ++i) 
         { 
-            if(control_system.sim>2500){
-                joint_state.position[i] = 0.01*wqpQ(i)+now_q(i);
+
+            if(control_system.sim>2500&&control_system.sim<4500){
+                // joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
+                desired_position(3) =  -116 * 3.14/180;
+                desired_position(4) =  124 * 3.14/180;
+                desired_position(5) =  35 * 3.14/180;;
+                desired_position(6) =  -107* 3.14/180;;
+                desired_position(7) =  0;
+                desired_position(8) =  0;
+                desired_position(9) =  0;
+
+                desired_position(3+7) =  1.95;
+                desired_position(4+7) =  -2.164;
+                desired_position(5+7) =  -0.61;
+                desired_position(6+7) =  1.87;
+                desired_position(7+7) =  0;
+                desired_position(8+7) =  0;
+                desired_position(9+7) =  0;
+                joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+
             }
+            else if (control_system.sim<=2500)
+            {
+                desired_position(0+3) = 0.0 ;
+                desired_position(1+3) = 145.0 * 3.14/180 ;
+                desired_position(2+3) = 0.0 ;
+                desired_position(3+3) = -120.0 * 3.14/180 ;
+                desired_position(4+3) = 0.0 ;
+                desired_position(5+3) = -40.0 * 3.14/180 ; ;
+                desired_position(6+3) = 0.0 ;
+    
+               joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+
+            }
+            // if (control_system.sim<=2500)
+            // {
+            //     desired_position(0+3) = 0.0 ;
+            //     desired_position(1+3) = 145.0 * 3.14/180 ;
+            //     desired_position(2+3) = 0.0 ;
+            //     desired_position(3+3) = -120.0 * 3.14/180 ;
+            //     desired_position(4+3) = 0.0 ;
+            //     desired_position(5+3) = -40.0 * 3.14/180 ; ;
+            //     desired_position(6+3) = 0.0 ;
+            //     joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+
+            // }
+            // else
+            // {
+            //     joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
+
+            // }
+
+            else if (control_system.sim>=4500&&control_system.sim<6500)
+            {   
+                desired_position(3) =  -111*3.14/180;
+                desired_position(4) =  35* 3.14/180;;
+                desired_position(5) =  36* 3.14/180;;
+                desired_position(6) =  -90* 3.14/180;;
+                desired_position(7) =  45* 3.14/180;;
+                desired_position(8) =  -19* 3.14/180;;
+                desired_position(9) =  0;
+
+
+                desired_position(3+7) =  1.95;
+                desired_position(4+7) =  -0.61;
+                desired_position(5+7) =  -0.63;
+                desired_position(6+7) =  1.57;
+                desired_position(7+7) =  -0.8;
+                desired_position(8+7) =  0.33;
+                desired_position(9+7) =  0;
+
+                joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+            }
+            // else if (control_system.sim>=6500&&control_system.sim<8500)
+            // {   
+            //     // desired_position(3) =  0;
+            //     // desired_position(4) =  95 * 3.14/180;;
+            //     // desired_position(5) =  0 * 3.14/180;;
+            //     // desired_position(6) =  -65* 3.14/180;;
+            //     // desired_position(7) =  0* 3.14/180;;
+            //     // desired_position(8) =  -43* 3.14/180;;
+            //     // desired_position(9) =  0;
+            //     // desired_position(0+3) = 0.0 ;
+            //     // desired_position(1+3) = 145.0 * 3.14/180 ;
+            //     // desired_position(2+3) = 0.0 ;
+            //     // desired_position(3+3) = -120.0 * 3.14/180 ;
+            //     // desired_position(4+3) = 0.0 ;
+            //     // desired_position(5+3) = -40.0 * 3.14/180 ; ;
+            //     // desired_position(6+3) = 0.0 ;
+            //     // desired_position(3) =  -111*3.14/180;
+            //     // desired_position(4) =  35* 3.14/180;;
+            //     // desired_position(5) =  36* 3.14/180;;
+            //     // desired_position(6) =  -90* 3.14/180;;
+            //     // desired_position(7) =  45* 3.14/180;;
+            //     // desired_position(8) =  -19* 3.14/180;;
+            //     // desired_position(9) =  0;
+
+            //     // desired_position(3+7) =  1.95;
+            //     // desired_position(4+7) =  -0.61;
+            //     // desired_position(5+7) =  -0.63;
+            //     // desired_position(6+7) =  1.57;
+            //     // desired_position(7+7) =  -0.8;
+            //     // desired_position(8+7) =  0.33;
+            //     // desired_position(9+7) =  0;
+
+            //     joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+            // }
             else
             {
-                joint_state.position[i] = desired_position(i);
+                joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
+
             }
 
         }

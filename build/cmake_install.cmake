@@ -131,16 +131,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/nikoo/workWS/armWorkCS/build/gtest/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/arm_planning/llm_msgs/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/arm_planning/gripper_use/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/trajectory_planner/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_l/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/arm_planning/aubo_arm_urdf/aubo_arm_r/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/trac_ik/trac_ik_lib/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/arm_planning/arm_kinematics_solver/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/arm_planning/aubo_arm_planning/cmake_install.cmake")
   include("/home/nikoo/workWS/armWorkCS/build/arm_planning/test_planning/cmake_install.cmake")
-  include("/home/nikoo/workWS/armWorkCS/build/trac_ik/trac_ik_examples/cmake_install.cmake")
 
 endif()
 

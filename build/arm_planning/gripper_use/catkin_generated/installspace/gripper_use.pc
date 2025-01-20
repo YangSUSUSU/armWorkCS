@@ -1,8 +1,0 @@
-prefix=/home/nikoo/workWS/armWorkCS/install
-
-Name: gripper_use
-Description: Description of gripper_use
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: roscpp std_msgs
