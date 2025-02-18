@@ -4,12 +4,28 @@
   <mujoco>
     <compiler meshdir="../meshes" balanceinertia="true" discardvisual="false"/>
   </mujoco>
+
+  <link name="base_footprint" />
+  <!-- <link name="base_link" /> -->
+  <joint
+    name="base_link_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 1.08"
+      rpy="0 0 0" />
+    <parent
+      link="base_footprint" />
+    <child
+      link="pelvis" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
   <link name="pelvis">
-    <inertial>
+    <!-- <inertial>
       <origin xyz="-0.0596 0.000003 -0.116082" rpy="0 0 0" />
-      <mass value="4.585 " />
+      <mass value="4.585" />
       <inertia ixx="0.028847" ixy="0.000001" ixz="0.003563" iyy="0.021907" iyz="0.0" izz="0.039862" />
-    </inertial>
+    </inertial> -->
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>

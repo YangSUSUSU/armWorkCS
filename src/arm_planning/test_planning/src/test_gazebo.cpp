@@ -14,7 +14,7 @@
 #include "ini.h"  // 需要安装 inih 库
 #include <yaml-cpp/yaml.h>
 #include <random>
-
+ #include <interactive_markers/interactive_marker_server.h>
 ControlSystem::ControlSystem(const std::string& urdf_filename) 
 {
     pinocchio::urdf::buildModel(urdf_filename, model_);
@@ -33,6 +33,7 @@ ControlSystem::ControlSystem(const std::string& urdf_filename)
     lnowX_pub = nh_.advertise<geometry_msgs::PoseStamped>("/wbc_current_pose_l", 10);
     rnowX_pub = nh_.advertise<geometry_msgs::PoseStamped>("/wbc_current_pose_r", 10);
     car_json_sub = nh_.subscribe("/wbc_absolute_motion", 10, &ControlSystem::messageCallback, this);
+    // joint_sub = nh_.subscribe("/wbc_joint_motion", 10, &ControlSystem::jointmessageCallback, this);
 
     joint_state_sub_ = nh_.subscribe("/joint_states", 10, &ControlSystem::jointStateCallback, this);
 
@@ -283,12 +284,13 @@ void ControlSystem::messageCallback(const std_msgs::String::ConstPtr& msg)
     }
 
 }
+
 void ControlSystem::jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg) 
 {
    
     // 更新关节历史状态
     std::vector<std::string> joint_names = {
-                   "waist_Z_joint",
+            "waist_Z_joint",
             "waist_roll_joint",
             // "waist_pitch_joint",
             "waist_yaw_joint",
@@ -852,7 +854,7 @@ Eigen::VectorXd ControlSystem::tra(Eigen::VectorXd& nowq,Eigen::VectorXd& nowqv)
     // }
     
 
-   lr_Xr = dualArmSys(nowX,l_waypoints,r_waypoints);
+//    lr_Xr = dualArmSys(nowX,l_waypoints,r_waypoints);
    auto wqpResult = interfaceWQP(nowq,nowqv,lr_Xr);
    return wqpResult;
 
@@ -1060,41 +1062,43 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     // quat_r_d.z()=0.196978;
     // quat_r_d.w()=0.00561809;
     // ========================================================================Rcar
-    // Eigen::Vector3d pos_l_d;
-    // pos_l_d(0)=Rcar(0);
-    // pos_l_d(1)=Rcar(1);
-    // pos_l_d(2)=Rcar(2);
+    Eigen::Vector3d pos_l_d;
+    pos_l_d(0)=Rcar(0);
+    pos_l_d(1)=Rcar(1);
+    pos_l_d(2)=Rcar(2);
 
-    // Eigen::Quaterniond quat_l_d;
-    // quat_l_d.x()=Rcar(3);
-    // quat_l_d.y()=Rcar(4);
-    // quat_l_d.z()=Rcar(5);
-    // quat_l_d.w()=Rcar(6);
-
-    // Eigen::Vector3d pos_r_d;
-    // pos_r_d(0)=Rcar(0+7);
-    // pos_r_d(1)=Rcar(1+7);
-    // pos_r_d(2)=Rcar(2+7);
-
-    // Eigen::Quaterniond quat_r_d;
-    // quat_r_d.x()=Rcar(3+7);
-    // quat_r_d.y()=Rcar(4+7);
-    // quat_r_d.z()=Rcar(5+7);
-    // quat_r_d.w()=Rcar(6+7);
-
-
-    Eigen::Vector3d pos_l_d(0.378,0.250,0.38);
     Eigen::Quaterniond quat_l_d;
-    quat_l_d.x()=0.481355;
-    quat_l_d.y()=-0.287633;
-    quat_l_d.z()=0.164375;
-    quat_l_d.w()=0.811508;
-    Eigen::Vector3d pos_r_d(0.378,-0.250,0.38);
+    quat_l_d.x()=Rcar(3);
+    quat_l_d.y()=Rcar(4);
+    quat_l_d.z()=Rcar(5);
+    quat_l_d.w()=Rcar(6);
+
+    Eigen::Vector3d pos_r_d;
+    pos_r_d(0)=Rcar(0+7);
+    pos_r_d(1)=Rcar(1+7);
+    pos_r_d(2)=Rcar(2+7);
+
     Eigen::Quaterniond quat_r_d;
-    quat_r_d.x()=0.80853;
-    quat_r_d.y()=-0.162;
-    quat_r_d.z()=0.29277;
-    quat_r_d.w()=0.48402;
+    quat_r_d.x()=Rcar(3+7);
+    quat_r_d.y()=Rcar(4+7);
+    quat_r_d.z()=Rcar(5+7);
+    quat_r_d.w()=Rcar(6+7);
+
+
+    // Eigen::Vector3d pos_l_d(0.378,0.250,0.38);
+    // Eigen::Quaterniond quat_l_d;
+    // quat_l_d.x()=0.481355;
+    // quat_l_d.y()=-0.287633;
+    // quat_l_d.z()=0.164375;
+    // quat_l_d.w()=0.811508;
+    // Eigen::Vector3d pos_r_d(0.378,-0.250,0.38);
+    // Eigen::Quaterniond quat_r_d;
+    // quat_r_d.x()=0.80853;
+    // quat_r_d.y()=-0.162;
+    // quat_r_d.z()=0.29277;
+    // quat_r_d.w()=0.48402;
+
+    
     // // car sin sign test 
     // // double a = -0.303942+0.08*sin(0.5*time);
     // // double b = 0.171599+0.08*sin(0.5*time);
@@ -1135,13 +1139,14 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     temp_rotError_r = mat_r_now * temp_rotError_r;
     Eigen::VectorXd carErr_r = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd carErr_l = Eigen::VectorXd::Zero(6);
+    carErr_l.head(3) = (pos_l_d - pos_l).normalized()*10.0;
     carErr_l.head(3) = pos_l_d - pos_l;
     carErr_l.tail(3) = temp_rotError_l;
     carErr_r.head(3) = pos_r_d - pos_r;
     carErr_r.tail(3) = temp_rotError_r;
 
-    carErr_l(1)+=0.3*sin(2.3*time);
-    carErr_l(2)+=0.3*cos(2.3*time);
+    // carErr_l(1)+=0.3*sin(2.3*time);
+    // carErr_l(2)+=0.3*cos(2.3*time);
     // // carErr_l(4)+=0.15*cos(2*time);
 
     // carErr_r(1)+=0.3*sin(2.6*time);
@@ -1149,7 +1154,8 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     // carErr_r(4)+=0.15*cos(2*time);
     carE<<carErr_l,carErr_r;
 
-    // Eigen::VectorXd tempZero = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd tempZero = Eigen::VectorXd::Zero(6);
+    carE.tail(6) = tempZero;
     // if (left_done)
     // {
     //     carE.head(6) = tempZero;
@@ -1197,6 +1203,7 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
 
                         // T*T
     // std::cout<<result.transpose()<<std::endl;
+    // result.head(3) = Eigen::VectorXd::Zero(3);
     return result;
 }
 
@@ -1293,7 +1300,7 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
                     // Eigen::VectorXd temp_q_max = 
                     std::cout<<"===out of q bound==  "<<i<<nowQ(i)<<std::endl;
 
-                    // return Eigen::VectorXd::Zero(17);
+                    return Eigen::VectorXd::Zero(17);
                         /* code */
                 }
                 
@@ -1315,25 +1322,25 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             //     car_err.setConstant(0.0);
             // }
             
-            double eta_car = 30000;
-            double eta_qpos= 0.01;
+            double eta_car = 300000;
+            double eta_qpos= 50;
             // double eta_car = 0;
             // double eta_qpos= 30000;
             Eigen::MatrixXd JointWeight = Eigen::MatrixXd::Identity(17, 17);
-            // JointWeight(0,0) = 10000;
-            // JointWeight(1,1) = 10000;
-            // JointWeight(2,2) = 10000;
+            JointWeight(0,0) = 300000;
+            JointWeight(1,1) = 300000;
+            JointWeight(2,2) = 300000;
             // auto boundH = upDataBoundH(nowQ);
             // auto boundGrad = upDataBoundGradient(nowQ);
 
             Eigen::VectorXd leftError = car_err.head(6);
-            leftError(3) = leftError(3) * 0.1;
-            leftError(4) = leftError(4) * 0.1;
-            leftError(5) = leftError(5) * 0.1;
+            leftError(3) = leftError(3) * 0.9;
+            leftError(4) = leftError(4) * 0.9;
+            leftError(5) = leftError(5) * 0.9;
             Eigen::VectorXd rightError = car_err.tail(6);
-            rightError(3) = rightError(3) * 0.1;
-            rightError(4) = rightError(4) * 0.1;
-            rightError(5) = rightError(5) * 0.1;
+            rightError(3) = rightError(3) * 0.9;
+            rightError(4) = rightError(4) * 0.9;
+            rightError(5) = rightError(5) * 0.9;
 
 
             Eigen::MatrixXd H = eta_car * Jl.transpose()*Jl 
@@ -1341,10 +1348,10 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
                             + eta_qpos * Eigen::MatrixXd::Identity(17, 17) + 0.1*JointWeight;
 
 
-            Eigen::VectorXd c =     -5*eta_car*Jl.transpose()*car_err.head(6)
-                                    -5*eta_car*Jr.transpose()*car_err.tail(6)
+            Eigen::VectorXd c =     -5*eta_car*Jl.transpose()*leftError
+                                    -5*eta_car*Jr.transpose()*rightError
                                     -1*eta_qpos*Qr 
-                                    +5*granCollision;
+                                    +0.01*granCollision;
 
             Eigen::MatrixXd A = Eigen::MatrixXd::Zero(55,17);
             A.block<6,17>(0,0) = Jl;
@@ -1363,14 +1370,14 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             //==========约束2 关节速度
 
             Eigen::VectorXd qv_max = Eigen::VectorXd::Zero(17);
-            qv_max.setConstant(1);
-            qv_max(0) = 0.2*0.5 ;
+            qv_max.setConstant(3.14);
+            qv_max(0) = 0.002*0.5 ;
             qv_max(1) = 0.002*0.5 ;
             qv_max(2) = 0.002*0.5 ;
             // qv_max(3) = 0.02*5 ;
             Eigen::VectorXd qv_min = Eigen::VectorXd::Zero(17);
-            qv_min .setConstant(-1);
-            qv_min(0) = -0.2*0.5 ;
+            qv_min .setConstant(-3.14);
+            qv_min(0) = -0.002*0.5 ;
             qv_min(1) = -0.002*0.5 ;
             qv_min(2) = -0.002*0.5 ;
 
@@ -1378,7 +1385,7 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             Eigen::VectorXd q_max = Eigen::VectorXd::Zero(17);
             Eigen::VectorXd q_min = Eigen::VectorXd::Zero(17);
 
-            q_max<<0,0.15,0.25,
+            q_max<<0.0,0.15,0.25,
             0.79,2.27,2.27,0,2.27,0.8,0.8,
             3.14,0.17,2.27,2.27,2.27,0.8,0.8;
             q_min<<-0.1,-0.15,-0.25,
@@ -1389,26 +1396,26 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
 
 
             Eigen::VectorXd car_temp_ = Eigen::VectorXd::Zero(6);
-            car_temp_<< 1.05,1.05,1.05,
-                        1.05,1.05,1.05;
-            up.head(6) = 50*car_temp_ ;
-            up.segment(6, 6) = 50*car_temp_;
-            lp.head(6) = -50*car_temp_ ;
-            lp.segment(6, 6) = -50*car_temp_;
+            car_temp_<< 2.05,2.05,2.05,
+                        2.05,2.05,2.05;
+            up.head(6) = 5*car_temp_ ;
+            up.segment(6, 6) = 5*car_temp_;
+            lp.head(6) = -5*car_temp_ ;
+            lp.segment(6, 6) = -5*car_temp_;
 
-            up.segment(12, 17) = 50*qv_max;
-            lp.segment(12, 17) = 50*qv_min;
+            up.segment(12, 17) = qv_max;
+            lp.segment(12, 17) = qv_min;
 
-            up.segment(29, 17) = 2*(q_max-nowQ);
-            lp.segment(29, 17) = 2*(q_min-nowQ);
+            up.segment(29, 17) = 0.5*(q_max-nowQ);
+            lp.segment(29, 17) = 0.5*(q_min-nowQ);
 
             // up.segment(46, 17) = shoulderU;
             // lp.segment(46, 17) = shoulderL;
             Eigen::VectorXd epsilon = Eigen::VectorXd::Zero(9);
-            epsilon.setConstant(100);
+            epsilon.setConstant(10000);
 
             up.tail(9) =  epsilon;
-            // lp.tail(10) = -epsilon;
+            lp.tail(9) = -epsilon;
 
             lp.tail(9) = -m_testlp/2;
 
@@ -1458,7 +1465,26 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
 
             return tempRes;
     }
- Eigen::MatrixXd ControlSystem:: pseudoInverse(const Eigen::MatrixXd &input)
+void ControlSystem::processFeedback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback )
+{
+    ROS_INFO_STREAM( feedback->marker_name << " is now at "
+        << feedback->pose.position.x << ", " << feedback->pose.position.y
+        << ", " << feedback->pose.position.z );
+}
+
+Eigen::VectorXd m_lr = Eigen::VectorXd::Zero(14);
+void processFeedback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback )
+{
+     m_lr(0) = feedback->pose.position.x;
+     m_lr(1) = feedback->pose.position.y;
+     m_lr(2) = feedback->pose.position.z;
+     m_lr(3) = feedback->pose.orientation.x ;
+     m_lr(4) = feedback->pose.orientation.y ;
+     m_lr(5) = feedback->pose.orientation.z ;
+     m_lr(6) = feedback->pose.orientation.w ;
+
+}
+Eigen::MatrixXd ControlSystem:: pseudoInverse(const Eigen::MatrixXd &input)
 {
   double lambda_ = 0.5;
 
@@ -1472,12 +1498,87 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
 
   return svd.matrixV() * S_.transpose() * svd.matrixU().transpose();
 }
+void ControlSystem::initInteractiveMarker()
+{
+    interactive_markers::InteractiveMarkerServer server("simple_marker");  
+    // create an interactive marker for our server
+    visualization_msgs::InteractiveMarker int_marker;
+    int_marker.header.frame_id = "pelvis_link";
+    int_marker.name = "my_marker";
+    int_marker.description = "Simple 1-DOF Control";
+    int_marker.scale = 0.4;
 
+    int_marker.pose.position.x = 0.378; 
+    int_marker.pose.position.y = 0.250;
+    int_marker.pose.position.z = 0.38;
+
+    int_marker.pose.orientation.x = 0.481355;
+    int_marker.pose.orientation.y = -0.287633;
+    int_marker.pose.orientation.z = 0.164375;
+    int_marker.pose.orientation.w =0.811508;
+  // create a grey box marker
+    visualization_msgs::Marker box_marker;
+    box_marker.type = visualization_msgs::Marker::CUBE;
+    box_marker.scale.x = 0.1;
+    box_marker.scale.y = 0.1;
+    box_marker.scale.z = 0.1;
+    box_marker.color.r = 0.5;
+    box_marker.color.g = 0.5;
+    box_marker.color.b = 0.5;
+    box_marker.color.a = 0.3;
+
+    // create a non-interactive control which contains the box
+    visualization_msgs::InteractiveMarkerControl box_control;
+    box_control.always_visible = true;
+    box_control.markers.push_back( box_marker );
+
+    // add the control to the interactive marker
+    int_marker.controls.push_back( box_control );
+
+    // create a control which will move the box
+    // this control does not contain any markers,
+    // which will cause RViz to insert two arrows
+    visualization_msgs::InteractiveMarkerControl control;
+    control.orientation.w = 1;
+    control.orientation.x = 1;
+    control.orientation.y = 0;
+    control.orientation.z = 0;
+    control.name = "rotate_x";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    int_marker.controls.push_back(control);
+    control.name = "move_x";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+    int_marker.controls.push_back(control);
+    //   control.scale = 0.5;
+    control.orientation.w = 1;
+    control.orientation.x = 0;
+    control.orientation.y = 1;
+    control.orientation.z = 0;
+    control.name = "rotate_z";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    int_marker.controls.push_back(control);
+    control.name = "move_z";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+    int_marker.controls.push_back(control);
+    control.orientation.w = 1;
+    control.orientation.x = 0;
+    control.orientation.y = 0;
+    control.orientation.z = 1;
+    control.name = "rotate_y";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    int_marker.controls.push_back(control);
+    control.name = "move_y";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+    int_marker.controls.push_back(control);
+    // add the control to the interactive marker
+    int_marker.controls.push_back(box_control);
+    server.applyChanges();
+
+}
 int main(int argc, char** argv) {
     ros::init(argc, argv, "joint_control_node");
 
     ControlSystem control_system("/home/nikoo/workWS/armWorkCS/src/arm_planning/test_planning/model2/urdf/dual_arm_and_hand_description.urdf");
-
 
     Eigen::VectorXd q = Eigen::VectorXd::Zero(18);
     Eigen::VectorXd v = Eigen::VectorXd::Zero(18);
@@ -1486,6 +1587,88 @@ int main(int argc, char** argv) {
     Eigen::VectorXd v_desired = Eigen::VectorXd::Zero(18);
 
     ros::Rate loop_rate(400);
+    interactive_markers::InteractiveMarkerServer server("simple_marker");  
+    // create an interactive marker for our server
+    visualization_msgs::InteractiveMarker int_marker;
+    int_marker.header.frame_id = "pelvis_link";
+    int_marker.name = "my_marker";
+    int_marker.description = "Simple 1-DOF Control";
+    int_marker.scale = 0.4;
+
+    int_marker.pose.position.x = 0.378; 
+    int_marker.pose.position.y = 0.250;
+    int_marker.pose.position.z = 0.38;
+
+    int_marker.pose.orientation.x = 0.481355;
+    int_marker.pose.orientation.y = -0.287633;
+    int_marker.pose.orientation.z = 0.164375;
+    int_marker.pose.orientation.w =0.811508;
+  // create a grey box marker
+    visualization_msgs::Marker box_marker;
+    box_marker.type = visualization_msgs::Marker::CUBE;
+    box_marker.scale.x = 0.1;
+    box_marker.scale.y = 0.1;
+    box_marker.scale.z = 0.1;
+    box_marker.color.r = 0.5;
+    box_marker.color.g = 0.5;
+    box_marker.color.b = 0.5;
+    box_marker.color.a = 0.3;
+
+    // create a non-interactive control which contains the box
+    visualization_msgs::InteractiveMarkerControl box_control;
+    box_control.always_visible = true;
+    box_control.markers.push_back( box_marker );
+
+    // add the control to the interactive marker
+    int_marker.controls.push_back( box_control );
+
+    // create a control which will move the box
+    // this control does not contain any markers,
+    // which will cause RViz to insert two arrows
+    visualization_msgs::InteractiveMarkerControl control;
+    control.orientation.w = 1;
+    control.orientation.x = 1;
+    control.orientation.y = 0;
+    control.orientation.z = 0;
+    control.name = "rotate_x";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    int_marker.controls.push_back(control);
+    control.name = "move_x";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+    int_marker.controls.push_back(control);
+    //   control.scale = 0.5;
+    control.orientation.w = 1;
+    control.orientation.x = 0;
+    control.orientation.y = 1;
+    control.orientation.z = 0;
+    control.name = "rotate_z";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    int_marker.controls.push_back(control);
+    control.name = "move_z";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+    int_marker.controls.push_back(control);
+    control.orientation.w = 1;
+    control.orientation.x = 0;
+    control.orientation.y = 0;
+    control.orientation.z = 1;
+    control.name = "rotate_y";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    int_marker.controls.push_back(control);
+    control.name = "move_y";
+    control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+    int_marker.controls.push_back(control);
+    // add the control to the interactive marker
+    int_marker.controls.push_back(box_control);
+
+  // add the interactive marker to our collection &
+  // tell the server to call processFeedback() when feedback arrives for it
+    server.insert(int_marker,&processFeedback);
+//   server.insert(int_marker,&processFeedback, this, _1));
+
+  // 'commit' changes and send to all clients
+    server.applyChanges();
+    control_system.initInteractiveMarker();
+
 
     while (ros::ok()) 
     {
@@ -1502,21 +1685,37 @@ int main(int argc, char** argv) {
 
         Eigen::VectorXd mid;
         mid = (max+min)/2;
-        desired_position(3) =  0.0;
-        desired_position(4) =  145*3.1415926535/180;
-        desired_position(5) =  0;
-        desired_position(6) =  - 120*3.1415926535/180;
-        desired_position(7) =  0;
-        desired_position(8) =  - 40*3.1415926535/180;
-        desired_position(9) =  0;
 
-        desired_position(10) = 0.0;
-        desired_position(11) = -145*3.1415926535/180;
-        desired_position(12) = 0;
-        desired_position(13) = 120*3.1415926535/180;
-        desired_position(14) = 0;
-        desired_position(15) = 40*3.1415926535/180;
-        desired_position(16) = 0;
+                desired_position(3) =  -111*3.14/180;
+                desired_position(4) =  35* 3.14/180;;
+                desired_position(5) =  36* 3.14/180;;
+                desired_position(6) =  -90* 3.14/180;;
+                desired_position(7) =  45* 3.14/180;;
+                desired_position(8) =  -19* 3.14/180;;
+                desired_position(9) =  0;
+
+                desired_position(3+7) =  1.34;
+                desired_position(4+7) =  0;
+                desired_position(5+7) =  1.92;
+                desired_position(6+7) =  1.23;
+                desired_position(7+7) =  -1.75;
+                desired_position(8+7) =  0;
+                desired_position(9+7) =  0;
+        // desired_position(3) =  0.0;
+        // desired_position(4) =  145*3.1415926535/180;
+        // desired_position(5) =  0;
+        // desired_position(6) =  - 120*3.1415926535/180;
+        // desired_position(7) =  0;
+        // desired_position(8) =  - 40*3.1415926535/180;
+        // desired_position(9) =  0;
+
+        // desired_position(10) = 0.0;
+        // desired_position(11) = -145*3.1415926535/180;
+        // desired_position(12) = 0;
+        // desired_position(13) = 120*3.1415926535/180;
+        // desired_position(14) = 0;
+        // desired_position(15) = 40*3.1415926535/180;
+        // desired_position(16) = 0;
 
 
 
@@ -1532,7 +1731,10 @@ int main(int argc, char** argv) {
         // control_system.upDataCollision(now_q);
 
         Eigen::VectorXd xr = Eigen::VectorXd::Zero(14);
+        
+        control_system.lr_Xr = m_lr;
         auto wqpQ = control_system.tra(now_q,now_qd);
+        // wqpQ = wqpQ.normalized();
         // desired_position(3)= -mid(3)+0.5*sin(0.5*time);
         // 更新期望轨迹中的位置
         control_system.traj_data.addPosition(desired_position);
@@ -1594,8 +1796,9 @@ int main(int argc, char** argv) {
         //     noiseWQP(i) += noise;
         // }
         // wqpQ.head(4) = noiseWQP;
-        // wqpQ(1)  = 0.0;
-        // wqpQ(2)  = 0.0;
+        wqpQ(0)  = 0.0;
+        wqpQ(1)  = 0.0;
+        wqpQ(2)  = 0.0;
 
         // wqpQ.head(3) = Eigen::VectorXd::Zero(3);
         for (int i = 0; i < 17; ++i) 
@@ -1603,33 +1806,48 @@ int main(int argc, char** argv) {
 
             if(control_system.sim>2500&&control_system.sim<4500){
                 // joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
-                desired_position(3) =  -116 * 3.14/180;
-                desired_position(4) =  124 * 3.14/180;
-                desired_position(5) =  35 * 3.14/180;;
-                desired_position(6) =  -107* 3.14/180;;
-                desired_position(7) =  0;
-                desired_position(8) =  0;
+                desired_position(3) =  -111*3.14/180;
+                desired_position(4) =  45* 3.14/180;
+                desired_position(5) =  46* 3.14/180;
+                desired_position(6) =  -90* 3.14/180;
+                desired_position(7) =  45* 3.14/180;
+                desired_position(8) =  -19* 3.14/180;
                 desired_position(9) =  0;
-
-                desired_position(3+7) =  1.95;
-                desired_position(4+7) =  -2.164;
-                desired_position(5+7) =  -0.61;
-                desired_position(6+7) =  1.87;
-                desired_position(7+7) =  0;
-                desired_position(8+7) =  0;
+                
+                desired_position(3+7) =  111*3.14/180;
+                desired_position(4+7) =  -35* 3.14/180;;
+                desired_position(5+7) =  -36* 3.14/180;;
+                desired_position(6+7) =  90* 3.14/180;;
+                desired_position(7+7) =  -45* 3.14/180;;
+                desired_position(8+7) =  19* 3.14/180;;
                 desired_position(9+7) =  0;
+                // desired_position(3+7) =  1.34;
+                // desired_position(4+7) =  0;
+                // desired_position(5+7) =  1.92;
+                // desired_position(6+7) =  1.23;
+                // desired_position(7+7) =  -1.75;
+                // desired_position(8+7) =  0;
+                // desired_position(9+7) =  0;
                 joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
 
             }
             else if (control_system.sim<=2500)
             {
-                desired_position(0+3) = 0.0 ;
-                desired_position(1+3) = 145.0 * 3.14/180 ;
-                desired_position(2+3) = 0.0 ;
-                desired_position(3+3) = -120.0 * 3.14/180 ;
-                desired_position(4+3) = 0.0 ;
-                desired_position(5+3) = -40.0 * 3.14/180 ; ;
-                desired_position(6+3) = 0.0 ;
+                desired_position(3) =  -111*3.14/180;
+                desired_position(4) =  35* 3.14/180;;
+                desired_position(5) =  36* 3.14/180;;
+                desired_position(6) =  -90* 3.14/180;;
+                desired_position(7) =  45* 3.14/180;;
+                desired_position(8) =  -19* 3.14/180;;
+                desired_position(9) =  0;
+
+                desired_position(3+7) =  111*3.14/180;
+                desired_position(4+7) =  -35* 3.14/180;;
+                desired_position(5+7) =  -36* 3.14/180;;
+                desired_position(6+7) =  90* 3.14/180;;
+                desired_position(7+7) =  -45* 3.14/180;;
+                desired_position(8+7) =  19* 3.14/180;;
+                desired_position(9+7) =  0;
     
                joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
 
@@ -1652,64 +1870,67 @@ int main(int argc, char** argv) {
 
             // }
 
-            else if (control_system.sim>=4500&&control_system.sim<6500)
-            {   
-                desired_position(3) =  -111*3.14/180;
-                desired_position(4) =  35* 3.14/180;;
-                desired_position(5) =  36* 3.14/180;;
-                desired_position(6) =  -90* 3.14/180;;
-                desired_position(7) =  45* 3.14/180;;
-                desired_position(8) =  -19* 3.14/180;;
-                desired_position(9) =  0;
-
-
-                desired_position(3+7) =  1.95;
-                desired_position(4+7) =  -0.61;
-                desired_position(5+7) =  -0.63;
-                desired_position(6+7) =  1.57;
-                desired_position(7+7) =  -0.8;
-                desired_position(8+7) =  0.33;
-                desired_position(9+7) =  0;
-
-                joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
-            }
-            // else if (control_system.sim>=6500&&control_system.sim<8500)
+            // else if (control_system.sim>=4500&&control_system.sim<6500)
             // {   
-            //     // desired_position(3) =  0;
-            //     // desired_position(4) =  95 * 3.14/180;;
-            //     // desired_position(5) =  0 * 3.14/180;;
-            //     // desired_position(6) =  -65* 3.14/180;;
-            //     // desired_position(7) =  0* 3.14/180;;
-            //     // desired_position(8) =  -43* 3.14/180;;
-            //     // desired_position(9) =  0;
-            //     // desired_position(0+3) = 0.0 ;
-            //     // desired_position(1+3) = 145.0 * 3.14/180 ;
-            //     // desired_position(2+3) = 0.0 ;
-            //     // desired_position(3+3) = -120.0 * 3.14/180 ;
-            //     // desired_position(4+3) = 0.0 ;
-            //     // desired_position(5+3) = -40.0 * 3.14/180 ; ;
-            //     // desired_position(6+3) = 0.0 ;
-            //     // desired_position(3) =  -111*3.14/180;
-            //     // desired_position(4) =  35* 3.14/180;;
-            //     // desired_position(5) =  36* 3.14/180;;
-            //     // desired_position(6) =  -90* 3.14/180;;
-            //     // desired_position(7) =  45* 3.14/180;;
-            //     // desired_position(8) =  -19* 3.14/180;;
-            //     // desired_position(9) =  0;
+            //     desired_position(3) =  -111*3.14/180;
+            //     desired_position(4) =  35* 3.14/180;;
+            //     desired_position(5) =  36* 3.14/180;;
+            //     desired_position(6) =  -90* 3.14/180;;
+            //     desired_position(7) =  45* 3.14/180;;
+            //     desired_position(8) =  -19* 3.14/180;;
+            //     desired_position(9) =  0;
 
-            //     // desired_position(3+7) =  1.95;
-            //     // desired_position(4+7) =  -0.61;
-            //     // desired_position(5+7) =  -0.63;
-            //     // desired_position(6+7) =  1.57;
-            //     // desired_position(7+7) =  -0.8;
-            //     // desired_position(8+7) =  0.33;
+
+            //     desired_position(3+7) =  1.34;
+            //     desired_position(4+7) =  0;
+            //     desired_position(5+7) =  1.92 - 0.75;
+            //     desired_position(6+7) =  1.23;
+            //     desired_position(7+7) =  -1.75;
+            //     desired_position(8+7) =  0;
+            //     desired_position(9+7) =  0;
+            //     // desired_position(3+7) =  111*3.14/180;
+            //     // desired_position(4+7) =  -35* 3.14/180;;
+            //     // desired_position(5+7) =  -36* 3.14/180;;
+            //     // desired_position(6+7) =  90* 3.14/180;;
+            //     // desired_position(7+7) =  -45* 3.14/180;;
+            //     // desired_position(8+7) =  19* 3.14/180;;
             //     // desired_position(9+7) =  0;
 
-            //     joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+            //     joint_state.position[i] = now_q(i) + 0.025*(desired_position(i) -now_q(i));
+            // }
+            // else if (control_system.sim>=6500&&control_system.sim<8500)
+            // {   
+            //                  desired_position(3) =  -111*3.14/180;
+            //     desired_position(4) =  35* 3.14/180;;
+            //     desired_position(5) =  36* 3.14/180;;
+            //     desired_position(6) =  -90* 3.14/180;;
+            //     desired_position(7) =  45* 3.14/180;;
+            //     desired_position(8) =  -19* 3.14/180;;
+            //     desired_position(9) =  0;
+
+
+            //     desired_position(3+7) =  1.34;
+            //     desired_position(4+7) =  0;
+            //     desired_position(5+7) =  1.92 + 0.75;
+            //     desired_position(6+7) =  1.23;
+            //     desired_position(7+7) =  -1.75;
+            //     desired_position(8+7) =  0;
+            //     desired_position(9+7) =  0;
+            //     // desired_position(3+7) =  111*3.14/180;
+            //     // desired_position(4+7) =  -35* 3.14/180;;
+            //     // desired_position(5+7) =  -36* 3.14/180;;
+            //     // desired_position(6+7) =  90* 3.14/180;;
+            //     // desired_position(7+7) =  -45* 3.14/180;;
+            //     // desired_position(8+7) =  19* 3.14/180;;
+            //     // desired_position(9+7) =  0;
+
+            //     joint_state.position[i] = now_q(i) + 0.025*(desired_position(i) -now_q(i));
             // }
             else
             {
                 joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
+                // joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+
 
             }
 

@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
+        - /InteractiveMarkers1
       Splitter Ratio: 0.5062836408615112
     Tree Height: 719
   - Class: rviz/Selection
@@ -270,6 +271,41 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        left_collision_11:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_collision_21:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_collision_22:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_collision_31:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_collision_41:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_collision_51:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_collision_61:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         left_flange:
           Alpha: 1
           Show Axes: false
@@ -319,6 +355,41 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
         pelvis_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_11:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_21:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_22:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_31:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_41:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_51:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_collision_61:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -397,9 +468,18 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: true
+      Show Descriptions: true
+      Show Visual Aids: true
+      Update Topic: /simple_marker/update
+      Value: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 238; 238; 236
     Default Light: true
     Fixed Frame: pelvis_link
     Frame Rate: 30
@@ -441,9 +521,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.11539857089519501
+      Pitch: 0.35539841651916504
       Target Frame: <Fixed Frame>
-      Yaw: 0.07540623843669891
+      Yaw: 0.5753926634788513
     Saved: ~
 Window Geometry:
   Displays:

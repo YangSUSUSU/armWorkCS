@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     sensor_msgs
     geometry_msgs
+    interactive_markers
 )
 # 找到 Orocos KDL 库
 
@@ -47,8 +48,22 @@ include_directories(
     ${EIGEN3_INCLUDE_DIR}
 )
 include_directories(${PROJECT_SOURCE_DIR}/include)
-add_executable(test_gazebo src/test_gazebo.cpp)
 
+
+add_executable(test_gazebo src/test_gazebo.cpp)
+add_executable(test_jointCtrl src/test_jointCtrl.cpp)
+target_link_libraries(test_jointCtrl
+    ${catkin_LIBRARIES})
+
+add_executable(test_stand src/test_stand.cpp)
+target_link_libraries(test_stand
+                    ${catkin_LIBRARIES}
+                    ${YAML_CPP_LIBRARIES}
+                    ${PINOCCHIO_LIBRARIES} ${urdfdom_LIBRARIES}
+                    osqp
+                    OsqpEigen
+                    ${MUJOCO_LIB}
+                    ${GLFW3_LIBRARY})
 # add_executable(test_planning src/test_arm.cpp)
 
 # add_executable(test_planning_force_calibration src/test_load_calibration.cpp)

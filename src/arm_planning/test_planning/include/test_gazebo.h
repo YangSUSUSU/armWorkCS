@@ -12,6 +12,8 @@
 #include <sensor_msgs/JointState.h>  
 #include <std_msgs/String.h>
 #include <nlohmann/json.hpp>
+#include <interactive_markers/interactive_marker_server.h>
+
 // #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <chrono>  // 用于时间记录
@@ -108,6 +110,8 @@ public:
 
      ControlSystem(const std::string& urdf_filename);
     ~ControlSystem();
+    void processFeedback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback );
+    void initInteractiveMarker();
     void messageCallback(const std_msgs::String::ConstPtr& msg);
     void jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg);
     void setJointTorque(const std::string& joint_name, double effort);
@@ -192,7 +196,7 @@ public:
     Eigen::MatrixXd m_test_conA;
     Eigen::VectorXd joint_max;
     Eigen::VectorXd joint_min;
-    double joint_bound_eta = 0.005;
+    double joint_bound_eta = 0.05;
     Eigen::VectorXd granCollision;
 
 private:
