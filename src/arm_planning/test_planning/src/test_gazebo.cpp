@@ -401,11 +401,11 @@ Eigen::VectorXd ControlSystem::upDataBoundGradient(const Eigen::VectorXd& nowq)
     {
         if(nowq(i)<joint_min(i) + joint_bound_eta)
         {
-            res_grad(i) =  1000 * joint_bound_eta * ( nowq(i) - joint_min(i) );
+            res_grad(i) =  1/( nowq(i) - joint_min(i) +0.000001);
         }
         else if (nowq(i)>joint_max(i) - joint_bound_eta)
         {
-            res_grad(i) =  1000 * joint_bound_eta * ( nowq(i) - joint_max(i) );
+            res_grad(i) =  1/( nowq(i) - joint_max(i)  +0.000001);
         }
         else
         {
@@ -568,16 +568,22 @@ void ControlSystem::upDataCollision(Eigen::VectorXd& nowq)
     Eigen::VectorXd weight =Eigen::VectorXd::Zero(9);
     for (int i = 0; i < 9; i++)
     {
-        if (lp(i) < 1.3 * safe_d)
+        if (abs(lp(i)) < 1.2 * safe_d)
         {
-            weight(i) = exp(lp(i) + 0.5*safe_d);
+            weight(i) = exp(0.00002*lp(i) + 0.000005*safe_d);
+            granCollision = granCollision - weight(i) * (temp_conA.row(i)).transpose() ;
         }
-        granCollision = granCollision - weight(i) * (temp_conA.row(i)).transpose() ;
-    }
 
-    
+    }
+    if((lp.array().abs() > 1.2 * safe_d).all())
+    {
+        granCollision =Eigen::VectorXd::Zero(17);
+    }
+    std::cout<<granCollision.transpose()<<std::endl;
     //====先试试末端TODO
-    m_testlp = lp + 0.1*(lp-m_testlp);
+    // m_testlp = lp + 0.1*(lp-m_testlp);
+    m_testlp = lp;
+
     m_test_conA = temp_conA;
     // std::cout<<"===dis====="<<(pos_b2 - pos_l61).norm() -collision_r(2) -collision_r(9)<<std::endl;
     // std::cout<<"====="<< temp_conA.block<1,17>(0,0) * nowq - lp(0)<<";"<<
@@ -1091,12 +1097,12 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     // quat_l_d.y()=-0.287633;
     // quat_l_d.z()=0.164375;
     // quat_l_d.w()=0.811508;
-    // Eigen::Vector3d pos_r_d(0.378,-0.250,0.38);
-    // Eigen::Quaterniond quat_r_d;
-    // quat_r_d.x()=0.80853;
-    // quat_r_d.y()=-0.162;
-    // quat_r_d.z()=0.29277;
-    // quat_r_d.w()=0.48402;
+
+    pos_r_d<<0.378,-0.188,0.38;
+    quat_r_d.x()=0.80853;
+    quat_r_d.y()=-0.162;
+    quat_r_d.z()=0.29277;
+    quat_r_d.w()=0.48402;
 
     
     // // car sin sign test 
@@ -1155,7 +1161,7 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     carE<<carErr_l,carErr_r;
 
     Eigen::VectorXd tempZero = Eigen::VectorXd::Zero(6);
-    carE.tail(6) = tempZero;
+    // carE.tail(6) = tempZero;
     // if (left_done)
     // {
     //     carE.head(6) = tempZero;
@@ -1192,8 +1198,8 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
 
     
     // std::cout<<"=======wqp1.1========="<<std::endl;
-    // jacobian_l.block<6,3>(0,0)=Eigen::MatrixXd::Zero(6,3);
-    // jacobian_r.block<6,3>(0,0)=Eigen::MatrixXd::Zero(6,3);
+    jacobian_l.block<6,3>(0,0)=Eigen::MatrixXd::Zero(6,3);
+    jacobian_r.block<6,3>(0,0)=Eigen::MatrixXd::Zero(6,3);
     upDataCollision(nowq);
     auto result = WQP(jacobian_l,
                         jacobian_r,
@@ -1295,7 +1301,7 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             // nowQ.head(3) = Eigen::VectorXd::Zero(3);
             for (int i = 0; i < 17; i++)
             {
-                if (nowQ(i)<joint_min(i)-0.0003||joint_max(i)+0.0003<nowQ(i))
+                if (nowQ(i)<joint_min(i)||joint_max(i)<nowQ(i))
                 {
                     // Eigen::VectorXd temp_q_max = 
                     std::cout<<"===out of q bound==  "<<i<<nowQ(i)<<std::endl;
@@ -1331,7 +1337,7 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             JointWeight(1,1) = 300000;
             JointWeight(2,2) = 300000;
             // auto boundH = upDataBoundH(nowQ);
-            // auto boundGrad = upDataBoundGradient(nowQ);
+            auto boundGrad = upDataBoundGradient(nowQ);
 
             Eigen::VectorXd leftError = car_err.head(6);
             leftError(3) = leftError(3) * 0.9;
@@ -1345,13 +1351,14 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
 
             Eigen::MatrixXd H = eta_car * Jl.transpose()*Jl 
                             + eta_car * Jr.transpose()*Jr 
-                            + eta_qpos * Eigen::MatrixXd::Identity(17, 17) + 0.1*JointWeight;
+                            + eta_qpos * Eigen::MatrixXd::Identity(17, 17) + 0.0001*JointWeight;
 
 
-            Eigen::VectorXd c =     -5*eta_car*Jl.transpose()*leftError
-                                    -5*eta_car*Jr.transpose()*rightError
-                                    -1*eta_qpos*Qr 
-                                    +0.01*granCollision;
+            Eigen::VectorXd c =     -1*eta_car*Jl.transpose()*leftError
+                                    -1*eta_car*Jr.transpose()*rightError
+                                    -1*eta_qpos*Qr ;
+                                    -10*boundGrad;
+                                     10*granCollision;
 
             Eigen::MatrixXd A = Eigen::MatrixXd::Zero(55,17);
             A.block<6,17>(0,0) = Jl;
@@ -1406,8 +1413,8 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             up.segment(12, 17) = qv_max;
             lp.segment(12, 17) = qv_min;
 
-            up.segment(29, 17) = 0.5*(q_max-nowQ);
-            lp.segment(29, 17) = 0.5*(q_min-nowQ);
+            up.segment(29, 17) = 0.0025*(q_max-nowQ);
+            lp.segment(29, 17) = 0.0025*(q_min-nowQ);
 
             // up.segment(46, 17) = shoulderU;
             // lp.segment(46, 17) = shoulderL;
@@ -1734,7 +1741,7 @@ int main(int argc, char** argv) {
         
         control_system.lr_Xr = m_lr;
         auto wqpQ = control_system.tra(now_q,now_qd);
-        // wqpQ = wqpQ.normalized();
+        wqpQ = wqpQ.normalized();
         // desired_position(3)= -mid(3)+0.5*sin(0.5*time);
         // 更新期望轨迹中的位置
         control_system.traj_data.addPosition(desired_position);

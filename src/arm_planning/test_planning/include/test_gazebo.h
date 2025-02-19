@@ -196,7 +196,7 @@ public:
     Eigen::MatrixXd m_test_conA;
     Eigen::VectorXd joint_max;
     Eigen::VectorXd joint_min;
-    double joint_bound_eta = 0.05;
+    double joint_bound_eta = 0.025;
     Eigen::VectorXd granCollision;
 
 private:
