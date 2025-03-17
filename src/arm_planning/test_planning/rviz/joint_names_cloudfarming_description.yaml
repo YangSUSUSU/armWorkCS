@@ -1,0 +1,1 @@
+controller_joint_names: ['', 'lifting_platform', 'box1', 'box2', 'box3', 'box4', 'box5', 'front_left_wheel_turn', 'front_left_wheel', 'front_right_wheel_turn', 'front_right_wheel', 'back_left_wheel_turn', 'back_left_wheel', 'back_right_wheel_turn', 'back_right_wheel', ]

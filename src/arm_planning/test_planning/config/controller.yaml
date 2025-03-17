@@ -1,0 +1,56 @@
+controller:
+  lambda_gain: 1.5
+  eta_gain: 0.1
+  k: 0.5
+  c: 0.55
+
+impedance_M:
+   j1: 1
+   j2: 1
+   j3: 1
+   j4: 1
+   j5: 1
+   j6: 1
+   j7: 1
+
+impedance_B:
+   j1: 1
+   j2: 1
+   j3: 1
+   j4: 1
+   j5: 1
+   j6: 1
+   j7: 1
+
+impedance_K:
+   j1: 1
+   j2: 1
+   j3: 1
+   j4: 1
+   j5: 1
+   j6: 1
+   j7: 1
+
+impedance_Cartesian_M:
+   x: 1
+   y: 1
+   z: 1
+   rx: 1
+   ry: 1
+   rz: 1
+
+impedance_Cartesian_B:
+   x: 1
+   y: 1
+   z: 1
+   rx: 1
+   ry: 1
+   rz: 1
+
+impedance_Cartesian_K:
+   x: 800
+   y: 800
+   z: 800
+   rx: 100
+   ry: 100
+   rz: 100

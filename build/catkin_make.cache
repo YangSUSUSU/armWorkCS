@@ -1,0 +1,2 @@
+arm_planning/test_planning
+-DCATKIN_DEVEL_PREFIX=/home/nikoo/workWS/armWorkCS/devel -DCMAKE_INSTALL_PREFIX=/home/nikoo/workWS/armWorkCS/install -G Unix Makefiles
