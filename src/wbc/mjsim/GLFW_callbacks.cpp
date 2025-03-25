@@ -14,6 +14,8 @@ UIctr::UIctr(mjModel *modelIn, mjData *dataIn) {
     opt=mjvOption();
     scn=mjvScene();
     con=mjrContext();
+    m_robot = &RobotData::getInstance();
+    // m_state = m_robot->getRobotState();
 }
 
 
@@ -76,8 +78,8 @@ void UIctr::createWindow(const char* windowTitle, bool saveVideo) {
     mjv_defaultOption(&opt);
     mjv_defaultScene(&scn);
     mjr_defaultContext(&con);
-    mjv_makeScene(mj_model, &scn, 2000);                // space for 2000 objects
-    mjr_makeContext(mj_model, &con, mjFONTSCALE_150);   // model-specific context
+    mjv_makeScene(mj_model, &scn, 20000);                // space for 2000 objects
+    mjr_makeContext(mj_model, &con, mjFONTSCALE_250);   // model-specific context
     mjv_moveCamera(mj_model, mjMOUSE_ROTATE_H, 0.0, 0.0, &scn, &cam);
 
     // install GLFW mouse and keyboard callbacks
@@ -117,6 +119,13 @@ void UIctr::updateScene() {
     mjrRect viewport = {0, 0, 0, 0};
     glfwMakeContextCurrent(window);
     glfwGetFramebufferSize(window, &viewport.width, &viewport.height);
+        
+    recordTrajectoryLhand();
+    drawTrajectory(&scn);
+    if (trajectory.size()>100)
+    {
+        trajectory.erase(trajectory.begin());
+    }
 
 //        UIctr::opt.frame = mjFRAME_WORLD; //mjFRAME_BODY
 //        UIctr::opt.flags[mjVIS_COM]  = 1 ; //mjVIS_JOINT;
@@ -138,6 +147,7 @@ void UIctr::updateScene() {
     // process pending GUI events, call GLFW callbacks
     glfwPollEvents();
 
+    
     if (save_video)
     {
         mjr_readPixels(image_rgb_, image_depth_, viewport, &con);
@@ -279,3 +289,51 @@ UIctr::ButtonState UIctr::getButtonState() {
     buttonRead.key_space= false;
     return tmp;
 }
+void UIctr::recordTrajectoryLhand() 
+{
+    // state = robot->getRobotState();
+
+    m_state = m_robot->getRobotState();
+    auto lhandpos = m_state.LHandPos;
+    std::cout<<"=lhandpos="<<lhandpos.transpose()<<std::endl;
+    std::array<double, 3> pos = {
+        (double)lhandpos(0),
+        (double)lhandpos(1),
+        (double)lhandpos(2)
+    };
+
+        trajectory.push_back(pos);
+
+        // 超出最大长度时，移除最早的轨迹点
+        if (trajectory.size() > MAX_TRAJECTORY_SIZE) {
+            trajectory.erase(trajectory.begin());
+        }
+}
+
+void UIctr::drawTrajectory(mjvScene* scn) 
+{
+    if (trajectory.size() < 2) return;
+
+    int i =  trajectory.size();
+        mjvGeom geom;
+
+        // 定义颜色、尺寸和旋转矩阵
+        mjtNum size[3] = {100, 100, 100};
+        mjtNum pos[3] = {0.0, 0.0, 0.0};
+        mjtNum mat[9] = {1.0, 0.0, 0.0,
+                         0.0, 1.0, 0.0,
+                         0.0, 0.0, 1.0};
+        float rgba[4] = {1.0f, 0.0f, 0.5f, 1.0f}; // 红色
+
+        // 将 float 转换为 mjtNum
+        double from[3] = {trajectory[i - 1][0], trajectory[i - 1][1], trajectory[i - 1][2]};
+        double to[3] = {trajectory[i][0], trajectory[i][1], trajectory[i][2]};
+
+        // 初始化几何体
+        mjv_initGeom(&geom, mjGEOM_LINE, size, pos, mat, rgba);
+        mjv_connector(&geom, mjGEOM_LINE, 20.0, from, to);
+        // std::cout<<"=lhandpos="<<from[0]<<std::endl;
+        mjv_addGeoms(mj_model, mj_data, &opt, nullptr, 2, scn);
+    
+}
+    

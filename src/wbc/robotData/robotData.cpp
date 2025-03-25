@@ -207,8 +207,8 @@ RobotStructs RobotData::getRobotState()
     // pinocchio::FrameIndex handRID = modelFree.getFrameId("hand_r_temp_link");
     robotStructs.LHandPos  = dataFree.oMf[handLID].translation();
     robotStructs.RHandPos  = dataFree.oMf[handRID].translation();
-    std::cout<<"==handLpose="<< robotStructs.LHandPos.transpose()<<std::endl;
-    std::cout<<"==handRpose="<< robotStructs.RHandPos.transpose()<<std::endl;
+    // std::cout<<"==handLpose="<< robotStructs.LHandPos.transpose()<<std::endl;
+    // std::cout<<"==handRpose="<< robotStructs.RHandPos.transpose()<<std::endl;
 
     
     Eigen::Vector3d pos_b1 = dataFree.oMf[b1].translation();

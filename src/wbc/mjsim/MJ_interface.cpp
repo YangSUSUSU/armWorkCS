@@ -86,12 +86,18 @@ void MJ_Interface::robotStateUpData()
     m_state.q(i)=mj_data->sensordata[mj_model->sensor_adr[bposID]+i];
     double temp[4] = {0};
     for (int i=0;i<4;i++)
+    {
         temp[i]=mj_data->sensordata[mj_model->sensor_adr[orientataionSensorId]+i];
+    }
+    std::cout<<"=====quat====" <<temp[0] <<";"<< temp[1]<<";"<< temp[2] <<";"<< temp[3]<<std::endl;
+
     //  pinocchio   xyzw    mujoco  wxyz
     m_state.q(0+3) = temp[1];
     m_state.q(1+3) = temp[2];
     m_state.q(2+3) = temp[3];
     m_state.q(3+3) = temp[0];//mujoco  w 
+
+    
 
     double baseQuat[4] = {0};
     for (int i=0;i<4;i++)
@@ -198,27 +204,21 @@ void MJ_Interface::setMotorsTorque(Eigen::VectorXd& input)
     double dt = 0.01;  // 控制周期，根据实际情况调整
 
     // 积分期望加速度生成期望速度和位置
-    qd_des += qdd_des * dt;  // 期望速度
-    q_des += 0.5* qdd_des * dt * dt;     // 期望位置
-    // std::cout<<"====7====="<<sim<<std::endl;
-
-    // // PD 控制参数
-    // double Kp = 2500;  // 比例增益
-    // double Kd = 0.025;    // 微分增益
-
+    qd_des += qdd_des * dt;
+    q_des += 0.5* qdd_des * dt * dt;
     // PD 控制参数
-    Eigen::VectorXd Kp = Eigen::VectorXd::Zero(21);  // 比例增益
-    Eigen::VectorXd Kd = Eigen::VectorXd::Zero(21);  // 比例增益
-    Kp<<2000.0,  2000.0,  2000.2,  2000,  1600.0,  500.0,
-        2000.0,  2000.0,  2000.2,  2000,  1600.0,  500.0, 
-        2000,
-        700,700,700,700,
-        700,700,700,700;
-    Kd<<20,    20,    20,   20.0,   10,  2.5,
-        20,    20,    20,   20.0,   10,  2.5,
-        20,
-        2.5, 2.5, 2.5, 2.5,
-        2.5, 2.5, 2.5, 2.5;
+    Eigen::VectorXd Kp = Eigen::VectorXd::Zero(21); 
+    Eigen::VectorXd Kd = Eigen::VectorXd::Zero(21);
+    Kp<<3000.0,  3000.0,  3000.2,  2500,  1800.0,  1800.0,
+        3000.0,  3000.0,  3000.2,  2500,  1800.0,  1800.0, 
+        3000,
+        1200,1200,1200,1200,
+        1200,1200,1200,1200;
+    Kd<<18,    18,    18,   12.0,   4.5,  4.5,
+        18,    18,    18,   12.0,   4.5,  4.5,
+        18,
+        10, 10, 10, 10,
+        10, 10, 10, 10;
 
     // 计算 PD 控制力矩
     Eigen::VectorXd pos_error = q_des - nowq1;       // 位置误差
@@ -233,8 +233,10 @@ void MJ_Interface::setMotorsTorque(Eigen::VectorXd& input)
     // 将力矩下发至电机 tau_ff(i)+ tau_ff(i)+ 
     for (int i = 0; i < 21; i++) 
     {
-        mj_data->ctrl[i] = tau_ff(i)+ 1*Kp(i) * pos_error(i) + 0.6 * Kd(i)  * vel_error(i);
-        // std::cout<<"====9====="<<i<<"--"<<mj_data->ctrl[i]  - tau_ff(i)<<std::endl;
+        // mj_data->ctrl[i] = tau_ff(i)+ 1*Kp(i) * pos_error(i) + 0.6 * Kd(i)  * vel_error(i);
+
+        mj_data->ctrl[i] = tau_ff(i);// + 1.0*Kp(i) * pos_error(i) + 0.6 * Kd(i)  * vel_error(i);
+        // std::cout<<"====9====="<<i<<"--"<<mj_data->ctrl[i]  <<std::endl;
 
     }
     // mj_data->ctrl[12]= 100 * (0- mj_data->qpos[jntId_qpos[12]]) -5 * mj_data->qvel[jntId_qvel[12]];
@@ -244,13 +246,13 @@ void MJ_Interface::setMotorsTorque(Eigen::VectorXd& input)
     // }
     Eigen::VectorXd qr = Eigen::VectorXd::Zero(jointNum);
 
-    for (int i=13;i<21;i++)
-    {
-        // mj_data->ctrl[i] = 500 * pos_error(i) + 3 *  vel_error(i);
-        // std::cout<<"=====jointNum===="<<i<<"--"<< 50 * (qr(i) - mj_data->qpos[jntId_qpos[i]]) - 0.1 * mj_data->qvel[jntId_qvel[i]]<<std::endl;
-                // std::cout<<"====9====="<<i<<"--"<<mj_data->ctrl[i]<<std::endl;
+    // for (int i=17;i<21;i++)
+    // {
+    //     // mj_data->ctrl[i] =  500 * (qr(i) - mj_data->qpos[jntId_qpos[i]]) - 3* mj_data->qvel[jntId_qvel[i]];
+    //     // std::cout<<"=====jointNum===="<<i<<"--"<< 50 * (qr(i) - mj_data->qpos[jntId_qpos[i]]) - 0.1 * mj_data->qvel[jntId_qvel[i]]<<std::endl;
+    //             // std::cout<<"====9====="<<i<<"--"<<mj_data->ctrl[i]<<std::endl;
 
-    }
+    // }
     }
     else
     {

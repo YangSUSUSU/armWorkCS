@@ -12,6 +12,8 @@ Feel free to use in any purpose, and cite OpenLoong-Dynamics-Control in any styl
 #include <string>
 #include <memory>
 #include <iostream>
+#include "../robotData/robotData.h"
+#include "../robotData/robotStructs.h"
 class UIctr{
 public:
     GLFWwindow *window;
@@ -54,13 +56,16 @@ public:
 
     ButtonState getButtonState();
 
-
+    void drawTrajectory(mjvScene* scn);
+    void recordTrajectoryLhand(); 
 
     void Close();
 
     void enableTracking();
-
-
+    std::vector<std::array<double, 3>> trajectory;
+    const int MAX_TRAJECTORY_SIZE = 100; // 轨迹最大长度
+    RobotData *m_robot;
+    RobotStructs m_state;
 private:
     unsigned char* image_rgb_;
     float* image_depth_;

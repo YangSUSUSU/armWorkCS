@@ -20,6 +20,7 @@
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>Eigen3</depend>
+  <depend>osqp</depend>
   <depend>pinocchio</depend>
   <depend>osqpEigen</depend>
   <buildtool_depend>catkin</buildtool_depend>

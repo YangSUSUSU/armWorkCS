@@ -2,7 +2,7 @@
     <!-- 加载URDF文件 -->
     <!-- <param name="robot_description" command="xacro $(find test_planning)/model/humanoid.urdf" /> -->
     <!-- <param name="robot_description" command="xacro $(find test_planning)/x_humanoid_ultra_noeyes/urdf/humanoid.urdf" /> -->
-    <param name="robot_description" command="xacro $(find test_planning)/tiangong2_EVT_V2/urdf/tiangong2_EVT_V2.urdf" />
+    <param name="robot_description" command="xacro $(find test_planning)/tiangong2_EVT_V2/urdf/tiangong7dofarm.urdf" />
 
 
     <!-- <param name="robot_description" command="xacro $(find test_planning)/model2/urdf/dual_arm_and_hand_description.urdf" /> -->
@@ -47,7 +47,7 @@
                 joint13_velocity_controller
                 joint14_velocity_controller"/> -->
 
-    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
+    <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/> -->
     <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
           respawn="false" output="screen">
           <remap from="/joint_states" to="/arm_controllers/joint_states" />

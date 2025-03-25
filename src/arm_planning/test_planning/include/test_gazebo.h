@@ -40,15 +40,15 @@ struct JointTrajectoryData
     {
         // 初始化为7个关节的向量
         for (int i = 0; i < 4; ++i) {
-            positions[i] = Eigen::VectorXd::Zero(15);
-            velocities[i] = Eigen::VectorXd::Zero(15);
-            accelerations[i] = Eigen::VectorXd::Zero(15);
+            positions[i] = Eigen::VectorXd::Zero(16);
+            velocities[i] = Eigen::VectorXd::Zero(16);
+            accelerations[i] = Eigen::VectorXd::Zero(16);
         }
     }
 
     void addPosition(const Eigen::VectorXd& new_position) 
     {
-        if (new_position.size() != 15) return;
+        if (new_position.size() != 16) return;
 
         // 更新历史位置
         for (int i = 3; i > 0; --i) {
@@ -69,7 +69,7 @@ struct JointTrajectoryData
         }
 
         // 计算最新速度
-        for (size_t i = 0; i < 15; ++i) 
+        for (size_t i = 0; i < 16; ++i) 
         {
             velocities[0][i] = (positions[0][i] - positions[1][i]) / dt;
         }
@@ -83,7 +83,7 @@ struct JointTrajectoryData
         }
 
         // 计算最新加速度
-        for (size_t i = 0; i < 15; ++i) 
+        for (size_t i = 0; i < 16; ++i) 
         {
             accelerations[0][i] = (velocities[0][i] - velocities[1][i]) / dt;
         }

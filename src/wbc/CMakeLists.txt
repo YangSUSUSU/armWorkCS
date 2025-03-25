@@ -1,9 +1,20 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.27.0)
 project(wbc)
 
 
 set(MUJOCO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/mujoco)
 set(MUJOCO_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/lib/libmujoco.so)
+# 手动指定 OsqpEigen 的路径
+set(OSQPEIGEN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/OsqpEigen)
+set(OSQPEIGEN_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/lib/libOsqpEigen.so.0.6.4)
+
+set(OSQP_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/osqp)
+set(OSQP_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/lib/libosqp.so) 
+set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set(CMAKE_INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
+# find_package(OSQP REQUIRED)
 
 find_package(glfw3 REQUIRED)
 
@@ -27,8 +38,10 @@ catkin_package(
     LIBRARIES ${PROJECT_NAME}
     ${MUJOCO_INCLUDE_DIRS}
     ${MUJOCO_LIBRARIES}
-    osqp
-    OsqpEigen
+    ${OSQP_INCLUDE_DIRS}
+    ${OSQP_LIBRARIES}
+    ${OSQPEIGEN_INCLUDE_DIRS}
+    ${OSQPEIGEN_LIBRARIES}
     CATKIN_DEPENDS roscpp
     )
 link_directories(
@@ -40,7 +53,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${PINOCCHIO_INCLUDE_DIRS}
-  # ${OSQPEIGEN_INCLUDE_DIRS}
+  ${OSQP_INCLUDE_DIRS} 
+  ${OSQPEIGEN_INCLUDE_DIRS}
   ${MUJOCO_INCLUDE_DIRS} 
   ${CMAKE_CURRENT_SOURCE_DIR}/algorithm
   ${CMAKE_CURRENT_SOURCE_DIR}/mjsim
@@ -73,8 +87,9 @@ target_link_libraries(testMain
   ${PINOCCHIO_LIBRARIES}
   ${MUJOCO_LIBRARIES}
   glfw
-  osqp
-  OsqpEigen
+  ${CMAKE_CURRENT_SOURCE_DIR}/lib/libosqp.so  # 直接指定本地库路径
+  # ${OSQP_LIBRARIES}  
+  ${OSQPEIGEN_LIBRARIES}
   ${GLFW3_LIBRARY}
 )
 target_link_libraries(test1
@@ -84,8 +99,7 @@ target_link_libraries(test1
   ${OSQPEIGEN_LIBRARIES}
   ${MUJOCO_LIBRARIES}
   glfw
-  osqp
-  OsqpEigen
+  ${OSQP_LIBRARIES}  
   ${GLFW3_LIBRARY}
 )
 
