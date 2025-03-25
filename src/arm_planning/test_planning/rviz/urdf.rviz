@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /RobotModel1
         - /InteractiveMarkers1
-        - /InteractiveMarkers1/Status1
       Splitter Ratio: 0.5325581431388855
     Tree Height: 746
   - Class: rviz/Selection
@@ -84,6 +83,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         elbow_pitch_l_link:
           Alpha: 1
           Show Axes: false
@@ -273,7 +276,7 @@ Visualization Manager:
   Global Options:
     Background Color: 238; 238; 236
     Default Light: true
-    Fixed Frame: elbow_yaw_r_link
+    Fixed Frame: pelvis
     Frame Rate: 30
   Name: root
   Tools:

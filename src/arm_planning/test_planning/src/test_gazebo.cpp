@@ -573,7 +573,7 @@ void ControlSystem::upDataCollision(Eigen::VectorXd& nowq)
     {
         granCollision =Eigen::VectorXd::Zero(16);
     }
-    std::cout<<granCollision.transpose()<<std::endl;
+    // std::cout<<granCollision.transpose()<<std::endl;
     //====先试试末端TODO
     // m_testlp = lp + 0.1*(lp-m_testlp);
     m_testlp = lp;
@@ -1093,11 +1093,11 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     // quat_l_d.z()=0.164375;
     // quat_l_d.w()=0.811508;
 
-    pos_r_d<<0.378,-0.188,0.38;
-    quat_r_d.x()=0.80853;
-    quat_r_d.y()=-0.162;
-    quat_r_d.z()=0.29277;
-    quat_r_d.w()=0.48402;
+    pos_r_d<<0.48,-0.28,0.15;
+    quat_r_d.x()=-0.2380853;
+    quat_r_d.y()=-0.562;
+    quat_r_d.z()= 0.4229277;
+    quat_r_d.w()=0.6648402;
 
     
     // // car sin sign test 
@@ -1169,6 +1169,10 @@ Eigen::VectorXd ControlSystem::interfaceWQP(Eigen::VectorXd& nowq,Eigen::VectorX
     
 
     Eigen::VectorXd Qr = Eigen::VectorXd::Zero(16);
+    Qr(4) = - 45 *3.14/180;
+    Qr(4+7) = 45 *3.14/180;
+
+
     // nowq.head(3) = Eigen::VectorXd::Zero(3);
     // Qr(6-1)= (20-30*sin(3*time))*3.14/180 - nowq(6-1);
     // Qr(13-1)= (20+30*sin(3*time))*3.14/180 - nowq(13-1);
@@ -1324,7 +1328,7 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             // }
             
             double eta_car = 300000;
-            double eta_qpos= 50;
+            double eta_qpos= 500;
             // double eta_car = 0;
             // double eta_qpos= 30000;
             Eigen::MatrixXd JointWeight = Eigen::MatrixXd::Identity(16, 16);
@@ -1373,13 +1377,13 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
 
             Eigen::VectorXd qv_max = Eigen::VectorXd::Zero(16);
             qv_max.setConstant(3.14);
-            // qv_max(0) = 0.002*0.5 ;
+            qv_max(0) = 1.5 ;
             // qv_max(1) = 0.002*0.5 ;
             // qv_max(2) = 0.002*0.5 ;
             // qv_max(3) = 0.02*5 ;
             Eigen::VectorXd qv_min = Eigen::VectorXd::Zero(16);
             qv_min .setConstant(-3.14);
-            // qv_min(0) = -0.002*0.5 ;
+            qv_min(0) = -1.5 ;
             // qv_min(1) = -0.002*0.5 ;
             // qv_min(2) = -0.002*0.5 ;
 
@@ -1387,12 +1391,12 @@ Eigen::VectorXd ControlSystem::WQP(const Eigen::MatrixXd& Jl,
             Eigen::VectorXd q_max = Eigen::VectorXd::Zero(16);
             Eigen::VectorXd q_min = Eigen::VectorXd::Zero(16);
 
-            q_max<<0.10,2.15,
-            0.79,2.27,2.27,0,2.27,1.4,1.4,
-            3.14,0.17,2.27,2.27,2.27,1.4,1.4;
-            q_min<<-0.1,-2.15,
-            -3.14,-0.17,-2.27,-2.27,-2.27,-1.4,-1.4,
-            -0.79,-1.75,-2.27,0,-2.27,-1.4,-1.4;
+            q_max<<0.10,3.13,
+            2.96,3.47,2.96,0.26,2.96,1.65,0.79,
+            2.96,0.26,2.96,0.26,2.96,1.65,0.79;
+            q_min<<-0.1,-3.13,
+            -2.96,-0.26,-2.96,-2.61,-2.27,-1.3,-1.04,
+            -2.96,-3.47,-2.96,-2.61,-2.96,-1.3,-1.04;
             Eigen::VectorXd up = Eigen::VectorXd::Zero(53);
             Eigen::VectorXd lp = Eigen::VectorXd::Zero(53);
 
@@ -1510,14 +1514,14 @@ void ControlSystem::initInteractiveMarker()
     int_marker.description = "Simple 1-DOF Control";
     int_marker.scale = 0.4;
 
-    int_marker.pose.position.x = 0.378; 
-    int_marker.pose.position.y = 0.250;
-    int_marker.pose.position.z = 0.38;
+    int_marker.pose.position.x = 0.49; 
+    int_marker.pose.position.y = 0.280;
+    int_marker.pose.position.z = 0.17;
 
-    int_marker.pose.orientation.x = 0.481355;
-    int_marker.pose.orientation.y = -0.287633;
-    int_marker.pose.orientation.z = 0.164375;
-    int_marker.pose.orientation.w =0.811508;
+    int_marker.pose.orientation.x =  0.23;
+    int_marker.pose.orientation.y = -0.58;
+    int_marker.pose.orientation.z =  0.4;
+    int_marker.pose.orientation.w =  0.66;
   // create a grey box marker
     visualization_msgs::Marker box_marker;
     box_marker.type = visualization_msgs::Marker::CUBE;
@@ -1597,14 +1601,14 @@ int main(int argc, char** argv) {
     int_marker.description = "Simple 1-DOF Control";
     int_marker.scale = 0.4;
 
-    int_marker.pose.position.x = 0.378; 
-    int_marker.pose.position.y = 0.250;
-    int_marker.pose.position.z = 0.38;
+    int_marker.pose.position.x = 0.49; 
+    int_marker.pose.position.y = 0.280;
+    int_marker.pose.position.z = 0.17;
 
-    int_marker.pose.orientation.x = 0.481355;
-    int_marker.pose.orientation.y = -0.287633;
-    int_marker.pose.orientation.z = 0.164375;
-    int_marker.pose.orientation.w =0.811508;
+    int_marker.pose.orientation.x =  0.23;
+    int_marker.pose.orientation.y = -0.58;
+    int_marker.pose.orientation.z =  0.4;
+    int_marker.pose.orientation.w =  0.66;
   // create a grey box marker
     visualization_msgs::Marker box_marker;
     box_marker.type = visualization_msgs::Marker::CUBE;
@@ -1689,21 +1693,16 @@ int main(int argc, char** argv) {
         Eigen::VectorXd mid;
         mid = (max+min)/2;
 
-                // desired_position(3) =  -111*3.14/180;
-                // desired_position(4) =  35* 3.14/180;;
-                // desired_position(5) =  36* 3.14/180;;
-                // desired_position(6) =  -90* 3.14/180;;
-                // desired_position(7) =  45* 3.14/180;;
-                // desired_position(8) =  -19* 3.14/180;;
-                // desired_position(9) =  0;
+        desired_position(2) =  -0.94;
+        desired_position(3) =   0.34;
+        desired_position(4) =  -0.84;
+        desired_position(5) =  -0.68;
 
-                // desired_position(3+7) =  1.34;
-                // desired_position(4+7) =  0;
-                // desired_position(5+7) =  1.92;
-                // desired_position(6+7) =  1.23;
-                // desired_position(7+7) =  -1.75;
-                // desired_position(8+7) =  0;
-                // desired_position(9+7) =  0;
+        desired_position(2+7) =  -0.92;
+        desired_position(3+7) =  -0.34;
+        desired_position(4+7) =   0.89;
+        desired_position(5+7) =  -0.68;
+
         // desired_position(3) =  0.0;
         // desired_position(4) =  145*3.1415926535/180;
         // desired_position(5) =  0;
@@ -1767,138 +1766,47 @@ int main(int argc, char** argv) {
         };
         for (int i = 0; i < 16; ++i) 
         { 
+            joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
 
-            if(control_system.sim>2500&&control_system.sim<4500){
-                // joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
-                // desired_position(3) =  -111*3.14/180;
-                // desired_position(4) =  45* 3.14/180;
-                // desired_position(5) =  46* 3.14/180;
-                // desired_position(6) =  -90* 3.14/180;
-                // desired_position(7) =  45* 3.14/180;
-                // desired_position(8) =  -19* 3.14/180;
-                // desired_position(9) =  0;
+            // if(control_system.sim>2500&&control_system.sim<4500){
+            //     // joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
+            //     // desired_position(3) =  -111*3.14/180;
+            //     // desired_position(4) =  45* 3.14/180;
+            //     // desired_position(5) =  46* 3.14/180;
+            //     // desired_position(6) =  -90* 3.14/180;
+            //     // desired_position(7) =  45* 3.14/180;
+            //     // desired_position(8) =  -19* 3.14/180;
+            //     // desired_position(9) =  0;
                 
-                // desired_position(3+7) =  111*3.14/180;
-                // desired_position(4+7) =  -35* 3.14/180;;
-                // desired_position(5+7) =  -36* 3.14/180;;
-                // desired_position(6+7) =  90* 3.14/180;;
-                // desired_position(7+7) =  -45* 3.14/180;;
-                // desired_position(8+7) =  19* 3.14/180;;
-                // desired_position(9+7) =  0;
+            //     // desired_position(3+7) =  111*3.14/180;
+            //     // desired_position(4+7) =  -35* 3.14/180;;
+            //     // desired_position(5+7) =  -36* 3.14/180;;
+            //     // desired_position(6+7) =  90* 3.14/180;;
+            //     // desired_position(7+7) =  -45* 3.14/180;;
+            //     // desired_position(8+7) =  19* 3.14/180;;
+            //     // desired_position(9+7) =  0;
 
 
-                // desired_position(3+7) =  1.34;
-                // desired_position(4+7) =  0;
-                // desired_position(5+7) =  1.92;
-                // desired_position(6+7) =  1.23;
-                // desired_position(7+7) =  -1.75;
-                // desired_position(8+7) =  0;
-                // desired_position(9+7) =  0;
-                joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
-
-            }
-            else if (control_system.sim<=2500)
-            {
-                // desired_position(3) =  -111*3.14/180;
-                // desired_position(4) =  35* 3.14/180;;
-                // desired_position(5) =  36* 3.14/180;;
-                // desired_position(6) =  -90* 3.14/180;;
-                // desired_position(7) =  45* 3.14/180;;
-                // desired_position(8) =  -19* 3.14/180;;
-                // desired_position(9) =  0;
-
-                // desired_position(3+7) =  111*3.14/180;
-                // desired_position(4+7) =  -35* 3.14/180;;
-                // desired_position(5+7) =  -36* 3.14/180;;
-                // desired_position(6+7) =  90* 3.14/180;;
-                // desired_position(7+7) =  -45* 3.14/180;;
-                // desired_position(8+7) =  19* 3.14/180;;
-                // desired_position(9+7) =  0;
-    
-               joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
-
-            }
-            // if (control_system.sim<=2500)
-            // {
-            //     desired_position(0+3) = 0.0 ;
-            //     desired_position(1+3) = 145.0 * 3.14/180 ;
-            //     desired_position(2+3) = 0.0 ;
-            //     desired_position(3+3) = -120.0 * 3.14/180 ;
-            //     desired_position(4+3) = 0.0 ;
-            //     desired_position(5+3) = -40.0 * 3.14/180 ; ;
-            //     desired_position(6+3) = 0.0 ;
+            //     // desired_position(3+7) =  1.34;
+            //     // desired_position(4+7) =  0;
+            //     // desired_position(5+7) =  1.92;
+            //     // desired_position(6+7) =  1.23;
+            //     // desired_position(7+7) =  -1.75;
+            //     // desired_position(8+7) =  0;
+            //     // desired_position(9+7) =  0;
             //     joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
 
             // }
+            if (control_system.sim<=2500)
+            {
+                joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+            }
             // else
             // {
-            //     joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
+            //     // joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
+
 
             // }
-
-            // else if (control_system.sim>=4500&&control_system.sim<6500)
-            // {   
-            //     desired_position(3) =  -111*3.14/180;
-            //     desired_position(4) =  35* 3.14/180;;
-            //     desired_position(5) =  36* 3.14/180;;
-            //     desired_position(6) =  -90* 3.14/180;;
-            //     desired_position(7) =  45* 3.14/180;;
-            //     desired_position(8) =  -19* 3.14/180;;
-            //     desired_position(9) =  0;
-
-
-            //     desired_position(3+7) =  1.34;
-            //     desired_position(4+7) =  0;
-            //     desired_position(5+7) =  1.92 - 0.75;
-            //     desired_position(6+7) =  1.23;
-            //     desired_position(7+7) =  -1.75;
-            //     desired_position(8+7) =  0;
-            //     desired_position(9+7) =  0;
-            //     // desired_position(3+7) =  111*3.14/180;
-            //     // desired_position(4+7) =  -35* 3.14/180;;
-            //     // desired_position(5+7) =  -36* 3.14/180;;
-            //     // desired_position(6+7) =  90* 3.14/180;;
-            //     // desired_position(7+7) =  -45* 3.14/180;;
-            //     // desired_position(8+7) =  19* 3.14/180;;
-            //     // desired_position(9+7) =  0;
-
-            //     joint_state.position[i] = now_q(i) + 0.025*(desired_position(i) -now_q(i));
-            // }
-            // else if (control_system.sim>=6500&&control_system.sim<8500)
-            // {   
-            //                  desired_position(3) =  -111*3.14/180;
-            //     desired_position(4) =  35* 3.14/180;;
-            //     desired_position(5) =  36* 3.14/180;;
-            //     desired_position(6) =  -90* 3.14/180;;
-            //     desired_position(7) =  45* 3.14/180;;
-            //     desired_position(8) =  -19* 3.14/180;;
-            //     desired_position(9) =  0;
-
-
-            //     desired_position(3+7) =  1.34;
-            //     desired_position(4+7) =  0;
-            //     desired_position(5+7) =  1.92 + 0.75;
-            //     desired_position(6+7) =  1.23;
-            //     desired_position(7+7) =  -1.75;
-            //     desired_position(8+7) =  0;
-            //     desired_position(9+7) =  0;
-            //     // desired_position(3+7) =  111*3.14/180;
-            //     // desired_position(4+7) =  -35* 3.14/180;;
-            //     // desired_position(5+7) =  -36* 3.14/180;;
-            //     // desired_position(6+7) =  90* 3.14/180;;
-            //     // desired_position(7+7) =  -45* 3.14/180;;
-            //     // desired_position(8+7) =  19* 3.14/180;;
-            //     // desired_position(9+7) =  0;
-
-            //     joint_state.position[i] = now_q(i) + 0.025*(desired_position(i) -now_q(i));
-            // }
-            else
-            {
-                joint_state.position[i] = 0.0025*wqpQ(i)+now_q(i);
-                // joint_state.position[i] = now_q(i) + 0.0025*(desired_position(i) -now_q(i));
-
-
-            }
 
         }
         control_system.sim+=1;

@@ -235,7 +235,7 @@ void MJ_Interface::setMotorsTorque(Eigen::VectorXd& input)
     {
         // mj_data->ctrl[i] = tau_ff(i)+ 1*Kp(i) * pos_error(i) + 0.6 * Kd(i)  * vel_error(i);
 
-        mj_data->ctrl[i] = tau_ff(i);// + 1.0*Kp(i) * pos_error(i) + 0.6 * Kd(i)  * vel_error(i);
+        mj_data->ctrl[i] = tau_ff(i) + 1.0*Kp(i) * pos_error(i) + 0.6 * Kd(i)  * vel_error(i);
         // std::cout<<"====9====="<<i<<"--"<<mj_data->ctrl[i]  <<std::endl;
 
     }
